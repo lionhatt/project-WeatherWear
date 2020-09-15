@@ -1,30 +1,31 @@
 function getWeatherApiKey() {
-    var weatherApiKey = "dcb3883295f5de3cfa7d16b16a5a61ae";
+    var weatherApiKey = "20ce152fba104603b4cb45bef144122a";
     return weatherApiKey;
 }
 
 function createWeatherUrl() {
     var apiKey = getWeatherApiKey();
-    var location = "melbourne";
-    var baseUrl = "http://api.weatherstack.com/current?";
+    var location = "melbourne,australia";
+    var baseUrl = "https://api.weatherbit.io/v2.0/forecast/hourly";
     var queryUrl = baseUrl +
-        "access_key=" + apiKey +
-        "&query=" + location;
+        "?key=" + apiKey +
+        "&city=" + location;
     return queryUrl;
 }
 
 function processWeatherData(response) {
     console.log(response);
-    console.log(`Weather Description: ${response.current.weather_descriptions[0]}`);
-    console.log(`Temperature: ${response.current.temperature}`);
-    console.log(`Feels Like: ${response.current.feelslike}`);
-    console.log(`UV Index: ${response.current.uv_index}`);
-    console.log(`Precipitation: ${response.current.precip}`);
-    console.log(`Wind Speed: ${response.current.wind_speed}`);
-    console.log(`Icon URL: ${response.current.weather_icons[0]}`);
+    console.log(`Weather Description: ${response.data[0].weather.description}`);
+    console.log(`Temperature: ${response.data[0].temp}`);
+    console.log(`UV Index: ${response.data[0].uv}`);
+    console.log(`Precipitation: ${response.data[0].precip}`);
+    console.log(`Wind Speed: ${response.data[0].wind_spd}`);
+    console.log(`Icon: ${response.data[0].weather.icon}`);
 
-    console.log(`Location: ${response.location.name}`);
-    console.log(`Counrty: ${response.location.country}`);
+    console.log(`Location: ${response.city_name}`);
+    console.log(`Country: ${response.country_code}`);
+    console.log(`Latitude: ${response.lat}`);
+    console.log(`Longitude: ${response.lon}`);
 }
 
 function callWeatherApi() {
