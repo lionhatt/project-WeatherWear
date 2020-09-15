@@ -15,17 +15,21 @@ function createWeatherUrl() {
 
 function processWeatherData(response) {
     console.log(response);
-    console.log(`Weather Description: ${response.data[0].weather.description}`);
-    console.log(`Temperature: ${response.data[0].temp}`);
-    console.log(`UV Index: ${response.data[0].uv}`);
-    console.log(`Precipitation: ${response.data[0].precip}`);
-    console.log(`Wind Speed: ${response.data[0].wind_spd}`);
-    console.log(`Icon: ${response.data[0].weather.icon}`);
-
     console.log(`Location: ${response.city_name}`);
     console.log(`Country: ${response.country_code}`);
     console.log(`Latitude: ${response.lat}`);
     console.log(`Longitude: ${response.lon}`);
+
+    for (var i = 0; i < response.data.length; i++) {
+        console.log(`------------------------------`);
+        console.log(`Weather Description: ${response.data[i].weather.description}`);
+        console.log(`Temperature: ${response.data[i].temp}`);
+        console.log(`UV Index: ${response.data[i].uv}`);
+        console.log(`Precipitation: ${response.data[i].precip}`);
+        console.log(`Wind Speed: ${response.data[i].wind_spd}`);
+        console.log(`Icon: ${response.data[i].weather.icon}`);
+        console.log(`------------------------------`);
+    }
 }
 
 function callWeatherApi() {
