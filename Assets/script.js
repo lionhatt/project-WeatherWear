@@ -55,8 +55,8 @@ function getLocation(cityInput, countryInput) {
         // if city is empty but country is NOT empty
     } else if (cityInput === "" && countryInput != "") {
         // location becomes the country
-        location += countryInput;
-        // if city is NOT empty and country is empty
+        console.log("city is empty")
+            // if city is NOT empty and country is empty
     } else if (cityInput != "" && countryInput === "") {
         // location becomes the city
         location += cityInput;
@@ -95,7 +95,7 @@ function makeUrlFriendly(location) {
 // placeholder function to retrieve the country input from the user
 function getCountryInput() {
     // placeholder variable -- here is where to retrieve the user input data for country from the UI
-    var country = "Australia";
+    var country = "australia";
     // makes the input url friendly
     var countryFriendlyUrl = makeUrlFriendly(country);
     // returns newly created country string
@@ -105,7 +105,7 @@ function getCountryInput() {
 // placeholder function to retrieve the city input from the user
 function getCityInput() {
     // placeholder value -- here is where to retrieve the user input data for city from the UI
-    var city = "Melbourne";
+    var city = "melbourne";
     // makes the input url friendly
     var cityFriendlyUrl = makeUrlFriendly(city);
     // return newly created city string
@@ -127,7 +127,7 @@ function callWeatherApi() {
                 // process retrieved weather data
         }).then(processWeatherData)
         // catch error if call is unsuccessful
-        .catch(function() {
+        .catch(function(error) {
             console.log("Catch error");
         });
 }
