@@ -44,7 +44,7 @@ function processWeatherData(response) {
 }
 
 // creates a url friendly location using the users inputs to be added to the query URL
-function getLocation(cityInput, countryInput) {
+function createLocation(cityInput, countryInput) {
     // declare variable to store new location for url
     var location = "";
 
@@ -73,7 +73,7 @@ function getLocation(cityInput, countryInput) {
 // location input will be provided by user
 function createWeatherUrl(cityInput, countryInput) {
     // creates a url friendly location using the users inputs to be added to the query URL
-    var location = getLocation(cityInput, countryInput);
+    var location = createLocation(cityInput, countryInput);
     // retrieves and stores the weather api key
     var apiKey = getWeatherApiKey();
     // the base url for the weather api
