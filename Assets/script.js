@@ -22,6 +22,7 @@ function processWeatherData(response) {
 
     for (var i = 0; i < response.data.length; i++) {
         console.log(`------------------------------`);
+        console.log(`Time: ${moment(response.data[i].timestamp_local).format("MMM Do, k:mm")}`);
         console.log(`Weather Description: ${response.data[i].weather.description}`);
         console.log(`Temperature: ${response.data[i].temp}`);
         console.log(`UV Index: ${response.data[i].uv}`);
