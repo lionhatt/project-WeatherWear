@@ -16,6 +16,20 @@ function getLongitude(response) {
     return longitude;
 }
 
+// retrieves and returns the start time from the user input
+function getStartTime() {
+    // placeholder value -- to store the start time provided by the user in the UI
+    var startTime = moment("2020-09-17 12:00");
+    return startTime;
+}
+
+// retrieves and returns the end time from the user input
+function getFinishTime() {
+    // placeholder value -- to store teh finish time provided by the user in the UI
+    var finishTime = moment("2020-09-17 18:00");
+    return finishTime;
+}
+
 // processes the weather data retrieved from the weather api
 function processWeatherData(response) {
     console.log(response);
@@ -29,17 +43,33 @@ function processWeatherData(response) {
     console.log(`Latitude: ${latitude}`);
     console.log(`Longitude: ${longitude}`);
 
+    // grab the start and finish times from the user input
+    var startTime = getStartTime();
+    var finishTime = getFinishTime();
+
     // go through every hour for the next 48 hours and display the data in the console
     for (var i = 0; i < response.data.length; i++) {
-        console.log(`------------------------------`);
-        console.log(`Time: ${moment(response.data[i].timestamp_local).format("MMM Do, k:mm")}`);
-        console.log(`Weather Description: ${response.data[i].weather.description}`);
-        console.log(`Temperature: ${response.data[i].temp}`);
-        console.log(`UV Index: ${response.data[i].uv}`);
-        console.log(`Precipitation: ${response.data[i].precip}`);
-        console.log(`Wind Speed: ${response.data[i].wind_spd}`);
-        console.log(`Icon: ${response.data[i].weather.icon}`);
-        console.log(`------------------------------`);
+
+        // retrieve and store 
+        var time = moment(response.data[i].timestamp_local);
+
+        // if data index is after start time and before finish time then display data
+        if (moment(time).isSame(moment(startTime)) ||
+            moment(time).isAfter(moment(startTime)) && moment(time).isBefore(moment(finishTime)) ||
+            moment(time).isSame(moment(finishTime))) {
+            console.log(`------------------------------`);
+            console.log(`Time: ${moment(response.data[i].timestamp_local).format("MMM Do, k:mm")}`);
+            console.log(`Weather Description: ${response.data[i].weather.description}`);
+            console.log(`Temperature: ${response.data[i].temp}`);
+            console.log(`UV Index: ${response.data[i].uv}`);
+            console.log(`Precipitation: ${response.data[i].precip}`);
+            console.log(`Wind Speed: ${response.data[i].wind_spd}`);
+            console.log(`Icon: ${response.data[i].weather.icon}`);
+            console.log(`------------------------------`);
+        }
+
+        // if data index is after start time then break from for loop
+
     }
 }
 
