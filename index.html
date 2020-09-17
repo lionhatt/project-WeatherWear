@@ -11,13 +11,95 @@
 
     <body>
 
-        <div class="header"></div>
 
-        <div class="content">
+        <div class = "header">
+            <button class="btn btn1 waves-effect">Wear</button>
+            <button class="btn btn1 waves-effect">Eat</button>
+        </div>
 
-            <div class="weatherDisplay"></div>
+        <div class = "container">
+            <form id="location-form">
+                <input class="form-control" id="location" type="text" placeholder="Location">
+            </form>
+            <form id="Country-form">
+                <input class="form-control" id="country" type="text" placeholder="Country">
+            </form>
+        </div>
 
-            <div class="recommendation"></div>
+        <div class="container">
+            <div class="gender" id="selectBox">
+                <select style="display: block;" name="gender" id="main_menu" class="custom-select">
+                    <option selected disabled>Gender</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                </select>
+            </div>
+            <div class="startTime" id="selectBox">
+                <select style="display: block;" name="goingOut" id="main_menu" class="custom-select">
+                    <option selected disabled>Going out at</option>
+                    <option value="12">12AM</option>
+                    <option value="1">1AM</option>
+                    <option value="2">2AM</option>
+                    <option value="3">3AM</option>
+                    <option value="4">4AM</option>
+                    <option value="5">5AM</option>
+                    <option value="6">6AM</option>
+                    <option value="7">7AM</option>
+                    <option value="8">8AM</option>
+                    <option value="9">9AM</option>
+                    <option value="10">10AM</option>
+                    <option value="11">11AM</option>
+                    <option value="12a">12PM</option>
+                    <option value="1a">1PM</option>
+                    <option value="2a">2PM</option>
+                    <option value="3a">3PM</option>
+                    <option value="4a">4PM</option>
+                    <option value="5a">5PM</option>
+                    <option value="6a">6PM</option>
+                    <option value="7"a>7PM</option>
+                    <option value="8a">8PM</option>
+                    <option value="9a">9PM</option>
+                    <option value="10a">1PAM</option>
+                    <option value="11a">11PM</option>
+                </select>
+            </div>
+            <div class="endTime" id="selectBox">
+                <select style="display: block;" name="goingOut" id="main_menu" class="custom-select">
+                    <option selected disabled>Coming home at</option>
+                    <option value="12">12AM</option>
+                    <option value="1">1AM</option>
+                    <option value="2">2AM</option>
+                    <option value="3">3AM</option>
+                    <option value="4">4AM</option>
+                    <option value="5">5AM</option>
+                    <option value="6">6AM</option>
+                    <option value="7">7AM</option>
+                    <option value="8">8AM</option>
+                    <option value="9">9AM</option>
+                    <option value="10">10AM</option>
+                    <option value="11">11AM</option>
+                    <option value="12a">12PM</option>
+                    <option value="1a">1PM</option>
+                    <option value="2a">2PM</option>
+                    <option value="3a">3PM</option>
+                    <option value="4a">4PM</option>
+                    <option value="5a">5PM</option>
+                    <option value="6a">6PM</option>
+                    <option value="7a">7PM</option>
+                    <option value="8a">8PM</option>
+                    <option value="9a">9PM</option>
+                    <option value="10a">1PAM</option>
+                    <option value="11a">11PM</option>
+                </select>
+            </div>
+            <div id="confirmBtn">
+                <button class ="btn confirmBtn" type="submit">Confirm</button>
+            </div>
+            <div class = "weatherDisplay">  
+            </div>
+            <div class = "restRecommend">
+            </div>
+        
 
         </div>
 
