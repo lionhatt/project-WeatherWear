@@ -166,9 +166,9 @@ function createLocation(cityInput, countryInput) {
         console.log("city and country are empty");
         // if city is empty but country is NOT empty
     } else if (cityInput === "" && countryInput != "") {
-        // location becomes the country
-        console.log("city is empty")
-            // if city is NOT empty and country is empty
+        // display error message
+        console.log("city is empty");
+        // if city is NOT empty and country is empty
     } else if (cityInput != "" && countryInput === "") {
         // location becomes the city
         location += cityInput;
