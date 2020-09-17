@@ -198,24 +198,18 @@ function processHourlyWeatherData(response) {
             console.log(`------------------------------`);
             console.log(`Time: ${moment(dataObject.timestamp_local).format("MMM Do, k:mm")}`);
             console.log(`Weather Description: ${dataObject.weather.description}`);
-
             // depending on temperature select range of clothes for warmth or to stay cool
             hourlyTempCheck(dataObject);
-
+            // adds the temp for the hour into an array of temperatures
             temps.push(dataObject.temp);
-            console.log(temps);
-
             // if uv index is above 2 then display you will need sun protection ie sunscreen or hat
             hourlyUvCheck(dataObject);
-
             // if precipitation is above certain level then you will need rain protection ie waterproof or umbrella
             hourlyRainCheck(dataObject);
-
             // if wind is above certain value then you will need wind protection ie windproof fleece or jacket
             hourlyWindCheck(dataObject);
-
+            // creates the weather icon url for the hour of the day
             hourlyDisplayIcon(dataObject);
-
             console.log(`------------------------------`);
         }
     });
