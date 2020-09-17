@@ -20,11 +20,16 @@ function getLongitude(response) {
 function getStartTime() {
     // to store the start time provided by the user in the UI - PLACEHOLDER value
 
+    // DAN!! - use this function to grab the going out time of the user
+    // Suggestion: place the Jquery for the going out time input here, grab the going out time input value and put it into the startTime variable below
+    // Need to turn the going out input value into a valid moment.js value
+    // Will need to include the date as well as the time
+
     // NEED TO MAKE SURE USER ONLY PUTS IN FUTURE TIME
 
     // START TIME HAS TO BE BEFORE FINISH TIME
 
-    var startTime = moment("2020-09-17 12:00");
+    var startTime = moment("2020-09-18 09:00");
     return startTime;
 }
 
@@ -32,9 +37,14 @@ function getStartTime() {
 function getFinishTime() {
     // to store the finish time provided by the user in the UI - PLACEHOLDER value
 
+    // DAN!! - use this function to grab the coming home time of the user
+    // Suggestion: place the Jquery for the coming home time input here, grab the coming home time input value and put it into the finishTime variable below
+    // Need to turn the coming home input value into a valid moment.js value
+    // Will need to include the date as well as the time
+
     // NEED TO PLACE LIMIT ON USER INPUT TO LESS THAN 48 HOURS!!
 
-    var finishTime = moment("2020-09-17 18:00");
+    var finishTime = moment("2020-09-18 14:00");
     return finishTime;
 }
 
@@ -57,7 +67,7 @@ function hourlyUvCheck(response) {
         console.log("You will need sunprotection today, wear a hat or apply sunscreen regularly");
     } else {
         // else because we don't want to give false info, this is a disclaimer
-        console.log("UV is low but it is still advised to prtoect yourself from UV");
+        console.log("UV is low but it is still advised to protect yourself from UV");
     }
 }
 
@@ -69,7 +79,7 @@ function hourlyRainCheck(response) {
     var precipThreshold = 5;
     // if the precipitation level is above the threshold
     if (precip > precipThreshold) {
-        // display to the user what to wear - this is where functions can go to diaplsy info to the user - PLACEHOLDER
+        // display to the user what to wear - this is where functions can go to display info to the user - PLACEHOLDER
         console.log(`Precipitation: ${precip}mm`);
         console.log("You will need a waterproof or an umbrella");
     }
@@ -98,6 +108,58 @@ function hourlyDisplayIcon(response) {
     console.log(`Icon: ${iconUrl}`);
 }
 
+// finds the minimum temperature in an array of temps provided by the api
+function findMinTemp(temps) {
+    // sets the minimum temperature to the first element of the temperature arry
+    var minTemp = temps[0];
+    // for each element of the temperature arry
+    temps.forEach(function(temp) {
+        // if the element of the temperature array is less than the current stored minimum temperature
+        if (minTemp > temp) {
+            // the minimum temperature is assigned the current temprature in the arry
+            minTemp = temp;
+        }
+    });
+    console.log(`Min Temp: ${minTemp}`);
+    // return the found minimum temperature
+    return minTemp;
+}
+
+// finds the maximum temperature in an array of temps provided by the api
+function findMaxTemp(temps) {
+    // sets the maximum temperature to the first element of the temperature arry
+    var maxTemp = temps[0];
+    // for each element in the temperature array
+    temps.forEach(function(temp) {
+        // if the max temp is less than the temperature element
+        if (maxTemp < temp) {
+            // assign the temp to the maximum temperature
+            maxTemp = temp;
+        }
+    });
+    console.log(`Max Temp: ${maxTemp}`);
+    // return the found maximum temperature
+    return maxTemp;
+}
+
+// finds the average temperature in an array of temperatures provided by the weather api
+function findAverageTemp(temps) {
+    // set the average temperature to 0
+    var avgTemp = 0;
+    // variable to calculate the sum of the array
+    var sum = 0;
+    // for each temperature in the arry
+    temps.forEach(function(temp) {
+        // add the temperature value to sum
+        sum += temp;
+    });
+    // calculate the average with the sum and the length of the array
+    avgTemp = sum / temps.length;
+    console.log(`Avg Temp: ${avgTemp.toFixed(2)}`);
+    // return the newly found average temp
+    return avgTemp;
+}
+
 // processes the weather data retrieved from the weather api
 function processHourlyWeatherData(response) {
     console.log(response);
@@ -121,11 +183,12 @@ function processHourlyWeatherData(response) {
     var startTime = getStartTime();
     var finishTime = getFinishTime();
 
-    // go through every hour for the next 48 hours and display the data in the console
-    for (var i = 0; i < response.data.length; i++) {
+    var temps = [];
 
+    // go through every hour for the next 48 hours and display the data in the console
+    response.data.forEach(function(dataObject) {
         // retrieve and store 
-        var time = moment(response.data[i].timestamp_local);
+        var time = moment(dataObject.timestamp_local);
 
         // if data index is after start time and before finish time then display data
         if (moment(time).isSame(moment(startTime)) ||
@@ -133,26 +196,30 @@ function processHourlyWeatherData(response) {
             moment(time).isSame(moment(finishTime))) {
 
             console.log(`------------------------------`);
-            console.log(`Time: ${moment(response.data[i].timestamp_local).format("MMM Do, k:mm")}`);
-            console.log(`Weather Description: ${response.data[i].weather.description}`);
-
+            console.log(`Time: ${moment(dataObject.timestamp_local).format("MMM Do, k:mm")}`);
+            console.log(`Weather Description: ${dataObject.weather.description}`);
             // depending on temperature select range of clothes for warmth or to stay cool
-            hourlyTempCheck(response.data[i]);
-
+            hourlyTempCheck(dataObject);
+            // adds the temp for the hour into an array of temperatures
+            temps.push(dataObject.temp);
             // if uv index is above 2 then display you will need sun protection ie sunscreen or hat
-            hourlyUvCheck(response.data[i]);
-
+            hourlyUvCheck(dataObject);
             // if precipitation is above certain level then you will need rain protection ie waterproof or umbrella
-            hourlyRainCheck(response.data[i]);
-
+            hourlyRainCheck(dataObject);
             // if wind is above certain value then you will need wind protection ie windproof fleece or jacket
-            hourlyWindCheck(response.data[i]);
-
-            hourlyDisplayIcon(response.data[i]);
-
+            hourlyWindCheck(dataObject);
+            // creates the weather icon url for the hour of the day
+            hourlyDisplayIcon(dataObject);
             console.log(`------------------------------`);
         }
-    }
+    });
+
+    // find the minimum temp
+    findMinTemp(temps);
+    // find the maximum temp
+    findMaxTemp(temps);
+    // find the average temp
+    findAverageTemp(temps);
 }
 
 // creates a url friendly location using the users inputs to be added to the query URL
@@ -205,6 +272,10 @@ function makeUrlFriendly(location) {
 
 // placeholder function to retrieve the country input from the user - PLACEHOLDER
 function getCountryInput() {
+
+    // DAN!! - Here's a function to take the country from the user
+    // Suggestion: place the Jquery for the country input here and grab the country input value and put it into the country variable below
+
     // placeholder variable -- here is where to retrieve the user input data for country from the UI - PLACEHOLDER
     var country = "australia";
     // makes the input url friendly
@@ -215,6 +286,10 @@ function getCountryInput() {
 
 // placeholder function to retrieve the city input from the user - PLACEHOLDER
 function getCityInput() {
+
+    // DAN!! - Here's the function to take the city from the user input
+    // Suggestion: place the Jquery for the location input here and grab the city input value and put it into the city variable below
+
     // placeholder value -- here is where to retrieve the user input data for city from the UI - PLACEHOLDER
     var city = "melbourne";
     // makes the input url friendly
@@ -223,8 +298,8 @@ function getCityInput() {
     return cityFriendlyUrl;
 }
 
-// calls the weather api
-function callHourlyWeatherApi() {
+// calls the weather api for the hourly weather
+function callWeatherApi() {
     // retrieves and stores the city input from the user UI
     var cityInput = getCityInput();
     // retrieves and stores the country input from the user UI
@@ -243,5 +318,5 @@ function callHourlyWeatherApi() {
         });
 }
 
-// activates the call to the hourly weather data from the api
-callHourlyWeatherApi();
+// activates the call to the weather api
+callWeatherApi();
