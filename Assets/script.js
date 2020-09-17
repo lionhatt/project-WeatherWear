@@ -24,7 +24,7 @@ function getStartTime() {
 
     // START TIME HAS TO BE BEFORE FINISH TIME
 
-    var startTime = moment("2020-09-17 12:00");
+    var startTime = moment("2020-09-18 09:00");
     return startTime;
 }
 
@@ -34,7 +34,7 @@ function getFinishTime() {
 
     // NEED TO PLACE LIMIT ON USER INPUT TO LESS THAN 48 HOURS!!
 
-    var finishTime = moment("2020-09-17 18:00");
+    var finishTime = moment("2020-09-18 14:00");
     return finishTime;
 }
 
@@ -122,10 +122,9 @@ function processHourlyWeatherData(response) {
     var finishTime = getFinishTime();
 
     // go through every hour for the next 48 hours and display the data in the console
-    for (var i = 0; i < response.data.length; i++) {
-
+    response.data.forEach(function(dataObject) {
         // retrieve and store 
-        var time = moment(response.data[i].timestamp_local);
+        var time = moment(dataObject.timestamp_local);
 
         // if data index is after start time and before finish time then display data
         if (moment(time).isSame(moment(startTime)) ||
@@ -133,26 +132,26 @@ function processHourlyWeatherData(response) {
             moment(time).isSame(moment(finishTime))) {
 
             console.log(`------------------------------`);
-            console.log(`Time: ${moment(response.data[i].timestamp_local).format("MMM Do, k:mm")}`);
-            console.log(`Weather Description: ${response.data[i].weather.description}`);
+            console.log(`Time: ${moment(dataObject.timestamp_local).format("MMM Do, k:mm")}`);
+            console.log(`Weather Description: ${dataObject.weather.description}`);
 
             // depending on temperature select range of clothes for warmth or to stay cool
-            hourlyTempCheck(response.data[i]);
+            hourlyTempCheck(dataObject);
 
             // if uv index is above 2 then display you will need sun protection ie sunscreen or hat
-            hourlyUvCheck(response.data[i]);
+            hourlyUvCheck(dataObject);
 
             // if precipitation is above certain level then you will need rain protection ie waterproof or umbrella
-            hourlyRainCheck(response.data[i]);
+            hourlyRainCheck(dataObject);
 
             // if wind is above certain value then you will need wind protection ie windproof fleece or jacket
-            hourlyWindCheck(response.data[i]);
+            hourlyWindCheck(dataObject);
 
-            hourlyDisplayIcon(response.data[i]);
+            hourlyDisplayIcon(dataObject);
 
             console.log(`------------------------------`);
         }
-    }
+    });
 }
 
 // creates a url friendly location using the users inputs to be added to the query URL
