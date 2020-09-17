@@ -94,12 +94,12 @@ function displayIcon(response) {
 function processWeatherData(response) {
     console.log(response);
 
-    // retrieve and display the location and country
-    console.log(`Location: ${response.city_name}`);
-    console.log(`Country: ${response.country_code}`);
+    // store, retrieve and display the location and country
+    var cityName = response.city_name;
+    var countryCode = response.country_code
 
-    // store the location and country values
-
+    console.log(`Location: ${cityName}`);
+    console.log(`Country: ${countryCode}`);
 
     // retrieve and store the latitude and longitude of the responded weather data
     // to be used for zomato api
