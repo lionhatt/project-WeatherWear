@@ -18,25 +18,91 @@ function getLongitude(response) {
 
 // retrieves and returns the start time from the user input
 function getStartTime() {
-    // placeholder value -- to store the start time provided by the user in the UI
+    // to store the start time provided by the user in the UI - PLACEHOLDER value
     var startTime = moment("2020-09-17 12:00");
     return startTime;
 }
 
 // retrieves and returns the end time from the user input
 function getFinishTime() {
-    // placeholder value -- to store teh finish time provided by the user in the UI
+    // to store teh finish time provided by the user in the UI - PLACEHOLDER value
     var finishTime = moment("2020-09-17 18:00");
     return finishTime;
+}
+
+// retrieves the temperature for the time of the day
+function tempCheck(response) {
+    var temperature = response.temp;
+    console.log(`Temperature: ${temperature}`);
+}
+
+// checks the uv for the time of the day
+function uvCheck(response) {
+    // get the uv for the for the time of day
+    var uvIndex = response.uv;
+    // set the uv threshold
+    var uvThreshold = 2;
+    // if index is greater than uv threshold
+    if (uvIndex >= uvThreshold) {
+        // display uv message - this is where functions can got to display to the user what to wear - PLACEHOLDER
+        console.log(`UV Index: ${uvIndex}`);
+        console.log("You will need sunprotection today, wear a hat or apply sunscreen regularly");
+    } else {
+        // else because we don't want to give false info, this is a disclaimer
+        console.log("UV is low but it is still advised to prtoect yourself from UV");
+    }
+}
+
+// checks the precipitation for the time of the day
+function rainCheck(response) {
+    // retrieves and stores the precipitation level
+    var precip = response.precip;
+    // this is the precipitation threshold
+    var precipThreshold = 5;
+    // if the precipitation level is above the threshold
+    if (precip > precipThreshold) {
+        // display to the user what to wear - this is where functions can go to diaplsy info to the user - PLACEHOLDER
+        console.log(`Precipitation: ${precip}mm`);
+        console.log("You will need a waterproof or an umbrella");
+    }
+}
+
+// checks the wind speed for the given time of day
+function windCheck(response) {
+    // retrieves and stores the wind speed for the time of day 
+    var windSpeed = response.wind_spd;
+    // wind speed threshold
+    var windSpeedThreshold = 10;
+    // if the wind speed is greater than the threshold
+    if (windSpeed > windSpeedThreshold) {
+        // display to the user what to wear - this is where functions can go to update the display - PLACEHOLDER
+        console.log(`Wind Speed: ${windSpeed}km/h`);
+        console.log("You will need wind protection");
+    }
+}
+
+// retrieves and stores the url for the weather icon for the time of the day
+function displayIcon(response) {
+    // store and retrieve the icon code
+    var iconCode = response.weather.icon;
+    // use the icon code to createa a new url for the code from the api - the url can be used to update the UI, functions to do that will go here - PLACEHOLDER
+    var iconUrl = `https://www.weatherbit.io/static/img/icons/${iconCode}.png`
+    console.log(`Icon: ${iconUrl}`);
 }
 
 // processes the weather data retrieved from the weather api
 function processWeatherData(response) {
     console.log(response);
+
+    // retrieve and display the location and country
     console.log(`Location: ${response.city_name}`);
     console.log(`Country: ${response.country_code}`);
 
-    // retrieve and store the latitude and longitude of the responded weatehr data
+    // store the location and country values
+
+
+    // retrieve and store the latitude and longitude of the responded weather data
+    // to be used for zomato api
     var latitude = getLatitude(response);
     var longitude = getLongitude(response);
 
@@ -57,19 +123,27 @@ function processWeatherData(response) {
         if (moment(time).isSame(moment(startTime)) ||
             moment(time).isAfter(moment(startTime)) && moment(time).isBefore(moment(finishTime)) ||
             moment(time).isSame(moment(finishTime))) {
+
             console.log(`------------------------------`);
             console.log(`Time: ${moment(response.data[i].timestamp_local).format("MMM Do, k:mm")}`);
             console.log(`Weather Description: ${response.data[i].weather.description}`);
-            console.log(`Temperature: ${response.data[i].temp}`);
-            console.log(`UV Index: ${response.data[i].uv}`);
-            console.log(`Precipitation: ${response.data[i].precip}`);
-            console.log(`Wind Speed: ${response.data[i].wind_spd}`);
-            console.log(`Icon: ${response.data[i].weather.icon}`);
+
+            // depending on temperature select range of clothes for warmth or to stay cool
+            tempCheck(response.data[i]);
+
+            // if uv index is above 2 then display you will need sun protection ie sunscreen or hat
+            uvCheck(response.data[i]);
+
+            // if precipitation is above certain level then you will need rain protection ie waterproof or umbrella
+            rainCheck(response.data[i]);
+
+            // if wind is above certain value then you will need wind protection ie windproof fleece or jacket
+            windCheck(response.data[i]);
+
+            displayIcon(response.data[i]);
+
             console.log(`------------------------------`);
         }
-
-        // if data index is after start time then break from for loop
-
     }
 }
 
@@ -122,9 +196,9 @@ function makeUrlFriendly(location) {
     return location.toLowerCase().replace(/\s/g, "%20");
 }
 
-// placeholder function to retrieve the country input from the user
+// placeholder function to retrieve the country input from the user - PLACEHOLDER
 function getCountryInput() {
-    // placeholder variable -- here is where to retrieve the user input data for country from the UI
+    // placeholder variable -- here is where to retrieve the user input data for country from the UI - PLACEHOLDER
     var country = "australia";
     // makes the input url friendly
     var countryFriendlyUrl = makeUrlFriendly(country);
@@ -132,9 +206,9 @@ function getCountryInput() {
     return countryFriendlyUrl;
 }
 
-// placeholder function to retrieve the city input from the user
+// placeholder function to retrieve the city input from the user - PLACEHOLDER
 function getCityInput() {
-    // placeholder value -- here is where to retrieve the user input data for city from the UI
+    // placeholder value -- here is where to retrieve the user input data for city from the UI - PLACEHOLDER
     var city = "melbourne";
     // makes the input url friendly
     var cityFriendlyUrl = makeUrlFriendly(city);
