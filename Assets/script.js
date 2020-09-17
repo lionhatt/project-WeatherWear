@@ -20,6 +20,11 @@ function getLongitude(response) {
 function getStartTime() {
     // to store the start time provided by the user in the UI - PLACEHOLDER value
 
+    // DAN!! - use this function to grab the going out time of the user
+    // Suggestion: place the Jquery for the going out time input here, grab the going out time input value and put it into the startTime variable below
+    // Need to turn the going out input value into a valid moment.js value
+    // Will need to include the date as well as the time
+
     // NEED TO MAKE SURE USER ONLY PUTS IN FUTURE TIME
 
     // START TIME HAS TO BE BEFORE FINISH TIME
@@ -31,6 +36,11 @@ function getStartTime() {
 // retrieves and returns the end time from the user input
 function getFinishTime() {
     // to store the finish time provided by the user in the UI - PLACEHOLDER value
+
+    // DAN!! - use this function to grab the coming home time of the user
+    // Suggestion: place the Jquery for the coming home time input here, grab the coming home time input value and put it into the finishTime variable below
+    // Need to turn the coming home input value into a valid moment.js value
+    // Will need to include the date as well as the time
 
     // NEED TO PLACE LIMIT ON USER INPUT TO LESS THAN 48 HOURS!!
 
@@ -69,7 +79,7 @@ function hourlyRainCheck(response) {
     var precipThreshold = 5;
     // if the precipitation level is above the threshold
     if (precip > precipThreshold) {
-        // display to the user what to wear - this is where functions can go to diaplsy info to the user - PLACEHOLDER
+        // display to the user what to wear - this is where functions can go to display info to the user - PLACEHOLDER
         console.log(`Precipitation: ${precip}mm`);
         console.log("You will need a waterproof or an umbrella");
     }
@@ -268,6 +278,10 @@ function makeUrlFriendly(location) {
 
 // placeholder function to retrieve the country input from the user - PLACEHOLDER
 function getCountryInput() {
+
+    // DAN!! - Here's a function to take the country from the user
+    // Suggestion: place the Jquery for the country input here and grab the country input value and put it into the country variable below
+
     // placeholder variable -- here is where to retrieve the user input data for country from the UI - PLACEHOLDER
     var country = "australia";
     // makes the input url friendly
@@ -278,6 +292,10 @@ function getCountryInput() {
 
 // placeholder function to retrieve the city input from the user - PLACEHOLDER
 function getCityInput() {
+
+    // DAN!! - Here's the function to take the city from the user input
+    // Suggestion: place the Jquery for the location input here and grab the city input value and put it into the city variable below
+
     // placeholder value -- here is where to retrieve the user input data for city from the UI - PLACEHOLDER
     var city = "melbourne";
     // makes the input url friendly
