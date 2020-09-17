@@ -67,7 +67,7 @@ function hourlyUvCheck(response) {
         console.log("You will need sunprotection today, wear a hat or apply sunscreen regularly");
     } else {
         // else because we don't want to give false info, this is a disclaimer
-        console.log("UV is low but it is still advised to prtoect yourself from UV");
+        console.log("UV is low but it is still advised to protect yourself from UV");
     }
 }
 
