@@ -1,3 +1,72 @@
-* {
-    background: blue;
+.btn1 {
+    display: block;
+    width: 50%;
+    float: left;
+}
+
+body {
+    background: rgb(99, 131, 117);
+}
+
+.eat {
+    float: right;
+}
+
+.location {
+    padding-left: 30px;
+    border: black;
+}
+
+#location-form {
+    padding-top: 20px;
+}
+
+.container {
+    align-items: center;
+    justify-content: center;
+    padding-top: 50px;
+}
+
+.startTime {
+    align-items: center;
+}
+
+#main_menu {
+    background: rgb(58, 153, 143);
+    color: white;
+}
+
+#selectBox {
+    width: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(191, 214, 156);
+}
+
+#selectBtn {
+    padding: 15px;
+    border-radius: 4px;
+    background-color: white;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: medium;
+    cursor: pointer;
+    
+}
+
+#confirmBtn {
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    padding-top: 50px;
+}
+
+.btn {
+    display: block;
+    justify-content: center;
+    text-align: center;
 }
