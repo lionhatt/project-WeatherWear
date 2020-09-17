@@ -98,34 +98,56 @@ function hourlyDisplayIcon(response) {
     console.log(`Icon: ${iconUrl}`);
 }
 
+// finds the minimum temperature in an array of temps provided by the api
 function findMinTemp(temps) {
+    // sets the minimum temperature to the first element of the temperature arry
     var minTemp = temps[0];
+    // for each element of the temperature arry
     temps.forEach(function(temp) {
+        // if the element of the temperature array is less than the current stored minimum temperature
         if (minTemp > temp) {
+            // the minimum temperature is assigned the current temprature in the arry
             minTemp = temp;
         }
     });
     console.log(`Min Temp: ${minTemp}`);
+    // return the found minimum temperature
+    return minTemp;
 }
 
+// finds the maximum temperature in an array of temps provided by the api
 function findMaxTemp(temps) {
+    // sets the maximum temperature to the first element of the temperature arry
     var maxTemp = temps[0];
+    // for each element in the temperature array
     temps.forEach(function(temp) {
+        // if the max temp is less than the temperature element
         if (maxTemp < temp) {
+            // assign the temp to the maximum temperature
             maxTemp = temp;
         }
     });
     console.log(`Max Temp: ${maxTemp}`);
+    // return the found maximum temperature
+    return maxTemp;
 }
 
+// finds the average temperature in an array of temperatures provided by the weather api
 function findAverageTemp(temps) {
+    // set the average temperature to 0
     var avgTemp = 0;
+    // variable to calculate the sum of the array
     var sum = 0;
+    // for each temperature in the arry
     temps.forEach(function(temp) {
+        // add the temperature value to sum
         sum += temp;
     });
+    // calculate the average with the sum and the length of the array
     avgTemp = sum / temps.length;
     console.log(`Avg Temp: ${avgTemp.toFixed(2)}`);
+    // return the newly found average temp
+    return avgTemp;
 }
 
 // processes the weather data retrieved from the weather api
@@ -188,8 +210,11 @@ function processHourlyWeatherData(response) {
         }
     });
 
+    // find the minimum temp
     findMinTemp(temps);
+    // find the maximum temp
     findMaxTemp(temps);
+    // find the average temp
     findAverageTemp(temps);
 }
 
