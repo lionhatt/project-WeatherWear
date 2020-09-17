@@ -98,6 +98,36 @@ function hourlyDisplayIcon(response) {
     console.log(`Icon: ${iconUrl}`);
 }
 
+function findMinTemp(temps) {
+    var minTemp = temps[0];
+    temps.forEach(function(temp) {
+        if (minTemp > temp) {
+            minTemp = temp;
+        }
+    });
+    console.log(`Min Temp: ${minTemp}`);
+}
+
+function findMaxTemp(temps) {
+    var maxTemp = temps[0];
+    temps.forEach(function(temp) {
+        if (maxTemp < temp) {
+            maxTemp = temp;
+        }
+    });
+    console.log(`Max Temp: ${maxTemp}`);
+}
+
+function findAverageTemp(temps) {
+    var avgTemp = 0;
+    var sum = 0;
+    temps.forEach(function(temp) {
+        sum += temp;
+    });
+    avgTemp = sum / temps.length;
+    console.log(`Avg Temp: ${avgTemp.toFixed(2)}`);
+}
+
 // processes the weather data retrieved from the weather api
 function processHourlyWeatherData(response) {
     console.log(response);
@@ -121,6 +151,8 @@ function processHourlyWeatherData(response) {
     var startTime = getStartTime();
     var finishTime = getFinishTime();
 
+    var temps = [];
+
     // go through every hour for the next 48 hours and display the data in the console
     response.data.forEach(function(dataObject) {
         // retrieve and store 
@@ -138,6 +170,9 @@ function processHourlyWeatherData(response) {
             // depending on temperature select range of clothes for warmth or to stay cool
             hourlyTempCheck(dataObject);
 
+            temps.push(dataObject.temp);
+            console.log(temps);
+
             // if uv index is above 2 then display you will need sun protection ie sunscreen or hat
             hourlyUvCheck(dataObject);
 
@@ -152,6 +187,10 @@ function processHourlyWeatherData(response) {
             console.log(`------------------------------`);
         }
     });
+
+    findMinTemp(temps);
+    findMaxTemp(temps);
+    findAverageTemp(temps);
 }
 
 // creates a url friendly location using the users inputs to be added to the query URL
