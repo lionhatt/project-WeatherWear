@@ -286,8 +286,8 @@ function getCityInput() {
     return cityFriendlyUrl;
 }
 
-// calls the weather api
-function callHourlyWeatherApi() {
+// calls the weather api for the hourly weather
+function callWeatherApi() {
     // retrieves and stores the city input from the user UI
     var cityInput = getCityInput();
     // retrieves and stores the country input from the user UI
@@ -306,5 +306,5 @@ function callHourlyWeatherApi() {
         });
 }
 
-// activates the call to the hourly weather data from the api
-callHourlyWeatherApi();
+// activates the call to the weather api
+callWeatherApi();
