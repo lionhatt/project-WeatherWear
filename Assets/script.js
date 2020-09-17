@@ -19,25 +19,33 @@ function getLongitude(response) {
 // retrieves and returns the start time from the user input
 function getStartTime() {
     // to store the start time provided by the user in the UI - PLACEHOLDER value
+
+    // NEED TO MAKE SURE USER ONLY PUTS IN FUTURE TIME
+
+    // START TIME HAS TO BE BEFORE FINISH TIME
+
     var startTime = moment("2020-09-17 12:00");
     return startTime;
 }
 
 // retrieves and returns the end time from the user input
 function getFinishTime() {
-    // to store teh finish time provided by the user in the UI - PLACEHOLDER value
+    // to store the finish time provided by the user in the UI - PLACEHOLDER value
+
+    // NEED TO PLACE LIMIT ON USER INPUT TO LESS THAN 48 HOURS!!
+
     var finishTime = moment("2020-09-17 18:00");
     return finishTime;
 }
 
 // retrieves the temperature for the time of the day
-function tempCheck(response) {
+function hourlyTempCheck(response) {
     var temperature = response.temp;
     console.log(`Temperature: ${temperature}`);
 }
 
 // checks the uv for the time of the day
-function uvCheck(response) {
+function hourlyUvCheck(response) {
     // get the uv for the for the time of day
     var uvIndex = response.uv;
     // set the uv threshold
@@ -54,7 +62,7 @@ function uvCheck(response) {
 }
 
 // checks the precipitation for the time of the day
-function rainCheck(response) {
+function hourlyRainCheck(response) {
     // retrieves and stores the precipitation level
     var precip = response.precip;
     // this is the precipitation threshold
@@ -68,7 +76,7 @@ function rainCheck(response) {
 }
 
 // checks the wind speed for the given time of day
-function windCheck(response) {
+function hourlyWindCheck(response) {
     // retrieves and stores the wind speed for the time of day 
     var windSpeed = response.wind_spd;
     // wind speed threshold
@@ -82,7 +90,7 @@ function windCheck(response) {
 }
 
 // retrieves and stores the url for the weather icon for the time of the day
-function displayIcon(response) {
+function hourlyDisplayIcon(response) {
     // store and retrieve the icon code
     var iconCode = response.weather.icon;
     // use the icon code to createa a new url for the code from the api - the url can be used to update the UI, functions to do that will go here - PLACEHOLDER
@@ -91,7 +99,7 @@ function displayIcon(response) {
 }
 
 // processes the weather data retrieved from the weather api
-function processWeatherData(response) {
+function processHourlyWeatherData(response) {
     console.log(response);
 
     // store, retrieve and display the location and country
@@ -129,18 +137,18 @@ function processWeatherData(response) {
             console.log(`Weather Description: ${response.data[i].weather.description}`);
 
             // depending on temperature select range of clothes for warmth or to stay cool
-            tempCheck(response.data[i]);
+            hourlyTempCheck(response.data[i]);
 
             // if uv index is above 2 then display you will need sun protection ie sunscreen or hat
-            uvCheck(response.data[i]);
+            hourlyUvCheck(response.data[i]);
 
             // if precipitation is above certain level then you will need rain protection ie waterproof or umbrella
-            rainCheck(response.data[i]);
+            hourlyRainCheck(response.data[i]);
 
             // if wind is above certain value then you will need wind protection ie windproof fleece or jacket
-            windCheck(response.data[i]);
+            hourlyWindCheck(response.data[i]);
 
-            displayIcon(response.data[i]);
+            hourlyDisplayIcon(response.data[i]);
 
             console.log(`------------------------------`);
         }
@@ -175,7 +183,7 @@ function createLocation(cityInput, countryInput) {
 
 // creates the url to retrieve weather data from the weather api
 // location input will be provided by user
-function createWeatherUrl(cityInput, countryInput) {
+function createHourlyWeatherUrl(cityInput, countryInput) {
     // creates a url friendly location using the users inputs to be added to the query URL
     var location = createLocation(cityInput, countryInput);
     // retrieves and stores the weather api key
@@ -187,7 +195,6 @@ function createWeatherUrl(cityInput, countryInput) {
         "?key=" + apiKey +
         "&city=" + location;
     // return the newly created query url
-    console.log(queryUrl);
     return queryUrl;
 }
 
@@ -217,24 +224,24 @@ function getCityInput() {
 }
 
 // calls the weather api
-function callWeatherApi() {
+function callHourlyWeatherApi() {
     // retrieves and stores the city input from the user UI
     var cityInput = getCityInput();
     // retrieves and stores the country input from the user UI
     var countryInput = getCountryInput();
     // create and store the query url with the location given by the user
-    var queryUrl = createWeatherUrl(cityInput, countryInput);
+    var queryUrl = createHourlyWeatherUrl(cityInput, countryInput);
     // ajax call
     $.ajax({
             url: queryUrl,
             method: "GET"
                 // process retrieved weather data
-        }).then(processWeatherData)
+        }).then(processHourlyWeatherData)
         // catch error if call is unsuccessful
         .catch(function(error) {
             console.log("Catch error");
         });
 }
 
-// activates the call to the weather api
-callWeatherApi();
+// activates the call to the hourly weather data from the api
+callHourlyWeatherApi();
