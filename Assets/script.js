@@ -98,6 +98,61 @@ function hourlyDisplayIcon(response) {
     console.log(`Icon: ${iconUrl}`);
 }
 
+<<<<<<< Updated upstream
+=======
+// finds the minimum temperature in an array of temps provided by the api
+function findMinTemp(temps) {
+    // sets the minimum temperature to the first element of the temperature arry
+    var minTemp = temps[0];
+    // for each element of the temperature arry
+    temps.forEach(function (temp) {
+        // if the element of the temperature array is less than the current stored minimum temperature
+        if (minTemp > temp) {
+            // the minimum temperature is assigned the current temprature in the arry
+            minTemp = temp;
+        }
+    });
+    console.log(`Min Temp: ${minTemp}`);
+    // return the found minimum temperature
+    return minTemp;
+}
+
+// finds the maximum temperature in an array of temps provided by the api
+function findMaxTemp(temps) {
+    // sets the maximum temperature to the first element of the temperature arry
+    var maxTemp = temps[0];
+    // for each element in the temperature array
+    temps.forEach(function (temp) {
+        // if the max temp is less than the temperature element
+        if (maxTemp < temp) {
+            // assign the temp to the maximum temperature
+            maxTemp = temp;
+        }
+    });
+    console.log(`Max Temp: ${maxTemp}`);
+    // return the found maximum temperature
+    return maxTemp;
+}
+
+// finds the average temperature in an array of temperatures provided by the weather api
+function findAverageTemp(temps) {
+    // set the average temperature to 0
+    var avgTemp = 0;
+    // variable to calculate the sum of the array
+    var sum = 0;
+    // for each temperature in the arry
+    temps.forEach(function (temp) {
+        // add the temperature value to sum
+        sum += temp;
+    });
+    // calculate the average with the sum and the length of the array
+    avgTemp = sum / temps.length;
+    console.log(`Avg Temp: ${avgTemp.toFixed(2)}`);
+    // return the newly found average temp
+    return avgTemp;
+}
+
+>>>>>>> Stashed changes
 // processes the weather data retrieved from the weather api
 function processHourlyWeatherData(response) {
     console.log(response);
@@ -122,8 +177,12 @@ function processHourlyWeatherData(response) {
     var finishTime = getFinishTime();
 
     // go through every hour for the next 48 hours and display the data in the console
+<<<<<<< Updated upstream
     for (var i = 0; i < response.data.length; i++) {
 
+=======
+    response.data.forEach(function (dataObject) {
+>>>>>>> Stashed changes
         // retrieve and store 
         var time = moment(response.data[i].timestamp_local);
 
@@ -233,15 +292,103 @@ function callHourlyWeatherApi() {
     var queryUrl = createHourlyWeatherUrl(cityInput, countryInput);
     // ajax call
     $.ajax({
-            url: queryUrl,
-            method: "GET"
-                // process retrieved weather data
-        }).then(processHourlyWeatherData)
+        url: queryUrl,
+        method: "GET"
+        // process retrieved weather data
+    }).then(processHourlyWeatherData)
         // catch error if call is unsuccessful
-        .catch(function(error) {
+        .catch(function (error) {
             console.log("Catch error");
         });
 }
 
+<<<<<<< Updated upstream
 // activates the call to the hourly weather data from the api
 callHourlyWeatherApi();
+=======
+// activates the call to the weather api
+callWeatherApi();
+
+
+//the oject for clothing suggestions
+var wears = {
+    //the base layer will add [1,2,3,4,5] °C to the body heat  
+    baseLayer: ["t-shirt", "long-sleeve t-shirt", "flannel shirt", "sweatshirt", "sweater"],
+    //the outer later will add [9,10,11] °C to the body heat 
+    outerLayer: ["short-jacket", "coat", "down-jacket"]
+}
+
+// array of suggested clothing based on temprature
+var chosenWears = [];
+
+// thi is the optimal temprature trying to achive at 26°C
+var i = 26
+
+// var minTemp;
+// var maxTemp;
+
+// function to append suggested clothing into chosenWears array
+function renderChosenWears() {
+
+    //if the min temp is higher than the optimal temprature, it will suggest basic clothing
+    if (minTemp >= i) {
+        chosenWears.push(wears.baseLayer[0]);
+      //if the min temp is lower then 5°C, it will give the maximum clothing suggestion  
+    } else if (minTemp <= 5) {
+        chosenWears.push(wears.outerLayer[2]);
+        chosenWears.push(wears.baseLayer[1], wears.baseLayer[2], wears.baseLayer[4]);     
+      //if the min temp is in between 5-26°C:  
+    } else {
+ 
+        //if the maxtemp is higher then the optimal temprature, it will set maxtemp as the optimal at 26°C
+        if (maxTemp >= i) {
+            maxTemp = i;
+        }
+
+        //if the difference between max and min temp is greater than 11°C, it will append down-jacket to suggestion
+        if ((maxTemp - minTemp) >= 11) {
+            chosenWears.push(wears.outerLayer[2]);         
+          //if the difference between max and min temp is equal to  10°C, it will append coat to suggestion  
+        } else if ((maxTemp - minTemp) === 10) {
+            chosenWears.push(wears.outerLayer[1]);         
+          //if the difference between max and min temp is equal to  9°C, it will append short-jacket to suggestion 
+        } else if ((maxTemp - minTemp) === 9) {
+            chosenWears.push(wears.outerLayer[0]);         
+          //if the difference between max and min temp is less than 9°C, it will discard the difference, at calculate based on min temp only   
+        } else if ((maxTemp - minTemp) < 9) {
+            maxTemp = minTemp;
+        }
+
+        //if the temprature is greater then 16°C, it will itterate through the base layer to append suggestions
+        if (maxTemp >= 16) {
+            i = i - maxTemp;
+            for (let k = wears.baseLayer.length - 1; k >= 0; k--) {
+                if (i >= (k + 1)) {
+                    i = i - (k + 1);
+                    chosenWears.push(wears.baseLayer[k]);
+                }
+            }
+          //if the temparture is less then 16°C  , it will itterate through the outer layer for 1 itme ,and then through base layer to append suggestions
+        } else if (maxTemp < 16) {
+            i = i - maxTemp;
+            for (let u = wears.outerLayer.length - 1; u >= 0; u--) {
+                if (i >= (u + 9)) {
+                    i = i - (u + 9);
+                    chosenWears.push(wears.outerLayer[u]);
+                    break;
+                }
+            }
+
+            for (let k = wears.baseLayer.length - 1; k >= 0; k--) {
+                if (i >= (k + 1)) {
+                    i = i - (k + 1);
+                    chosenWears.push(wears.baseLayer[k]);
+                }
+            }
+        }
+    }
+    console.log(chosenWears);
+}
+
+renderChosenWears();
+>>>>>>> Stashed changes
