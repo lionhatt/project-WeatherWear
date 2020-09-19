@@ -165,10 +165,12 @@ function findAverageTemp(temps) {
 
 // processes the weather data retrieved from the weather api
 function processHourlyWeatherData(response) {
+
+    // stores response object in currentWeather object
     console.log(response);
     currentWeather.response = response;
 
-    // store, retrieve and display the location and country
+    // store, retrieve in currentWeather object and console log the location and country
     currentWeather.cityName = response.city_name;
     currentWeather.countryCode = response.country_code
 
@@ -190,6 +192,7 @@ function processHourlyWeatherData(response) {
     console.log(`Start Time: ${currentWeather.startTime}`);
     console.log(`Finish Time: ${currentWeather.finishTime}`);
 
+    // array to store the temps for every hour
     currentWeather.temps = [];
 
     // go through every hour for the next 48 hours and display the data in the console
@@ -343,6 +346,7 @@ var i = 26
 // function to append suggested clothing into chosenWears array
 function renderChosenWears() {
 
+    // find and store the min and max temps of the currentWeather object
     var minTemp = findMinTemp(currentWeather.temps);
     var maxTemp = findMaxTemp(currentWeather.temps);
 
