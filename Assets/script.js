@@ -1,3 +1,6 @@
+// object to store response, min, max and average temps
+var currentWeather = {}
+
 // stores and returns the api key for the weather api
 function getWeatherApiKey() {
     var weatherApiKey = "20ce152fba104603b4cb45bef144122a";
@@ -29,7 +32,7 @@ function getStartTime() {
 
     // START TIME HAS TO BE BEFORE FINISH TIME
 
-    var startTime = moment("2020-09-18 09:00");
+    var startTime = moment("2020-09-20 14:00");
     return startTime;
 }
 
@@ -44,7 +47,7 @@ function getFinishTime() {
 
     // NEED TO PLACE LIMIT ON USER INPUT TO LESS THAN 48 HOURS!!
 
-    var finishTime = moment("2020-09-18 14:00");
+    var finishTime = moment("2020-09-20 20:00");
     return finishTime;
 }
 
@@ -162,28 +165,35 @@ function findAverageTemp(temps) {
 
 // processes the weather data retrieved from the weather api
 function processHourlyWeatherData(response) {
+
+    // stores response object in currentWeather object
     console.log(response);
+    currentWeather.response = response;
 
-    // store, retrieve and display the location and country
-    var cityName = response.city_name;
-    var countryCode = response.country_code
+    // store, retrieve in currentWeather object and console log the location and country
+    currentWeather.cityName = response.city_name;
+    currentWeather.countryCode = response.country_code
 
-    console.log(`Location: ${cityName}`);
-    console.log(`Country: ${countryCode}`);
+    console.log(`Location: ${currentWeather.cityName}`);
+    console.log(`Country: ${currentWeather.countryCode}`);
 
     // retrieve and store the latitude and longitude of the responded weather data
     // to be used for zomato api
-    var latitude = getLatitude(response);
-    var longitude = getLongitude(response);
+    currentWeather.latitude = getLatitude(response);
+    currentWeather.longitude = getLongitude(response);
 
-    console.log(`Latitude: ${latitude}`);
-    console.log(`Longitude: ${longitude}`);
+    console.log(`Latitude: ${currentWeather.latitude}`);
+    console.log(`Longitude: ${currentWeather.longitude}`);
 
     // grab the start and finish times from the user input
-    var startTime = getStartTime();
-    var finishTime = getFinishTime();
+    currentWeather.startTime = getStartTime();
+    currentWeather.finishTime = getFinishTime();
 
-    var temps = [];
+    console.log(`Start Time: ${currentWeather.startTime}`);
+    console.log(`Finish Time: ${currentWeather.finishTime}`);
+
+    // array to store the temps for every hour
+    currentWeather.temps = [];
 
     // go through every hour for the next 48 hours and display the data in the console
     response.data.forEach(function(dataObject) {
@@ -192,9 +202,9 @@ function processHourlyWeatherData(response) {
         var time = moment(dataObject.timestamp_local);
 
         // if data index is after start time and before finish time then display data
-        if (moment(time).isSame(moment(startTime)) ||
-            moment(time).isAfter(moment(startTime)) && moment(time).isBefore(moment(finishTime)) ||
-            moment(time).isSame(moment(finishTime))) {
+        if (moment(time).isSame(moment(currentWeather.startTime)) ||
+            moment(time).isAfter(moment(currentWeather.startTime)) && moment(time).isBefore(moment(currentWeather.finishTime)) ||
+            moment(time).isSame(moment(currentWeather.finishTime))) {
 
             console.log(`------------------------------`);
             console.log(`Time: ${moment(dataObject.timestamp_local).format("MMM Do, k:mm")}`);
@@ -202,7 +212,7 @@ function processHourlyWeatherData(response) {
             // depending on temperature select range of clothes for warmth or to stay cool
             hourlyTempCheck(dataObject);
             // adds the temp for the hour into an array of temperatures
-            temps.push(dataObject.temp);
+            currentWeather.temps.push(dataObject.temp);
             // if uv index is above 2 then display you will need sun protection ie sunscreen or hat
             hourlyUvCheck(dataObject);
             // if precipitation is above certain level then you will need rain protection ie waterproof or umbrella
@@ -215,12 +225,11 @@ function processHourlyWeatherData(response) {
         }
     });
 
-    // find the minimum temp
-    findMinTemp(temps);
-    // find the maximum temp
-    findMaxTemp(temps);
     // find the average temp
-    findAverageTemp(temps);
+    findAverageTemp(currentWeather.temps);
+
+    // render the chosen clothes list
+    renderChosenWears();
 }
 
 // creates a url friendly location using the users inputs to be added to the query URL
@@ -311,12 +320,13 @@ function callWeatherApi() {
     $.ajax({
         url: queryUrl,
         method: "GET"
-        // process retrieved weather data
-    }).then(processHourlyWeatherData)
+            // process retrieved weather data
+    }).
+    then(processHourlyWeatherData).
         // catch error if call is unsuccessful
-        .catch(function (error) {
-            console.log("Catch error");
-        });
+    catch(function(error) {
+        console.log("Catch error");
+    });
 }
 
 //the oject for clothing suggestions
@@ -333,22 +343,23 @@ var chosenWears = [];
 // thi is the optimal temprature trying to achive at 26°C
 var i = 26
 
-// var minTemp;
-// var maxTemp;
-
 // function to append suggested clothing into chosenWears array
 function renderChosenWears() {
+
+    // find and store the min and max temps of the currentWeather object
+    var minTemp = findMinTemp(currentWeather.temps);
+    var maxTemp = findMaxTemp(currentWeather.temps);
 
     //if the min temp is higher than the optimal temprature, it will suggest basic clothing
     if (minTemp >= i) {
         chosenWears.push(wears.baseLayer[0]);
-      //if the min temp is lower then 5°C, it will give the maximum clothing suggestion  
+        //if the min temp is lower then 5°C, it will give the maximum clothing suggestion  
     } else if (minTemp <= 5) {
         chosenWears.push(wears.outerLayer[2]);
-        chosenWears.push(wears.baseLayer[1], wears.baseLayer[2], wears.baseLayer[4]);     
-      //if the min temp is in between 5-26°C:  
+        chosenWears.push(wears.baseLayer[1], wears.baseLayer[2], wears.baseLayer[4]);
+        //if the min temp is in between 5-26°C:  
     } else {
- 
+
         //if the maxtemp is higher then the optimal temprature, it will set maxtemp as the optimal at 26°C
         if (maxTemp >= i) {
             maxTemp = i;
@@ -356,14 +367,14 @@ function renderChosenWears() {
 
         //if the difference between max and min temp is greater than 11°C, it will append down-jacket to suggestion
         if ((maxTemp - minTemp) >= 11) {
-            chosenWears.push(wears.outerLayer[2]);         
-          //if the difference between max and min temp is equal to  10°C, it will append coat to suggestion  
+            chosenWears.push(wears.outerLayer[2]);
+            //if the difference between max and min temp is equal to  10°C, it will append coat to suggestion  
         } else if ((maxTemp - minTemp) === 10) {
-            chosenWears.push(wears.outerLayer[1]);         
-          //if the difference between max and min temp is equal to  9°C, it will append short-jacket to suggestion 
+            chosenWears.push(wears.outerLayer[1]);
+            //if the difference between max and min temp is equal to  9°C, it will append short-jacket to suggestion 
         } else if ((maxTemp - minTemp) === 9) {
-            chosenWears.push(wears.outerLayer[0]);         
-          //if the difference between max and min temp is less than 9°C, it will discard the difference, at calculate based on min temp only   
+            chosenWears.push(wears.outerLayer[0]);
+            //if the difference between max and min temp is less than 9°C, it will discard the difference, at calculate based on min temp only   
         } else if ((maxTemp - minTemp) < 9) {
             maxTemp = minTemp;
         }
@@ -377,7 +388,7 @@ function renderChosenWears() {
                     chosenWears.push(wears.baseLayer[k]);
                 }
             }
-          //if the temparture is less then 16°C  , it will itterate through the outer layer for 1 itme ,and then through base layer to append suggestions
+            //if the temparture is less then 16°C  , it will itterate through the outer layer for 1 itme ,and then through base layer to append suggestions
         } else if (maxTemp < 16) {
             i = i - maxTemp;
             for (let u = wears.outerLayer.length - 1; u >= 0; u--) {
@@ -399,6 +410,6 @@ function renderChosenWears() {
     console.log(chosenWears);
 }
 
-renderChosenWears();
 // activates the call to the weather api
 callWeatherApi();
+// renderChosenWears();
