@@ -230,6 +230,7 @@ function processHourlyWeatherData(response) {
 
     // render the chosen clothes list
     renderChosenWears();
+    buildBasicUrl();    
 }
 
 // creates a url friendly location using the users inputs to be added to the query URL
@@ -413,3 +414,24 @@ function renderChosenWears() {
 // activates the call to the weather api
 callWeatherApi();
 // renderChosenWears();
+// Function to build URL Query for Zomato API
+  // Get Lat and Lon, City name
+  // Call API
+  // Cuisine choice, High reviewed or cost efficient, options ordered by, Location radius
+
+
+function buildBasicUrl(){
+  var lat = currentWeather.latitude
+  console.log(currentWeather.latitude)
+  var lon = currentWeather.longitude
+  var city = currentWeather.cityName
+  var baseURL = "https://developers.zomato.com/api/v2.1/search?"
+  var urlObj = {
+    q: city,
+    latitude: lat,
+    longitude: lon,
+  }
+  var buildURL = baseURL + $.param(urlObj)
+  console.log(buildURL)
+  return buildURL
+}
