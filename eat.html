@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>WeatherWear</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link rel="stylesheet" href="Assets/style.css">
+    </head>
+
+    <body>
+
+
+        <div class="header">
+            <a href="index.html" class="btn btn1 waves-effect">Wear</a>
+            <a href="eat.html" class="btn btn1 waves-effect">Eat</a>
+            
+        </div>
+
+        <div class="container">
+            <form id="eatForm">
+                <input class="form-control" id="location" type="text" placeholder="Location">
+                <button class="btn confirmBtn" type="submit">Search</button>
+            </form>
+        </div>
+
+        <div id="results" class="container">
+
+        </div>
+
+
+
+        <!-- moment.js -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.28.0/moment-with-locales.js" integrity="sha512-2Zf8MmDD4CaXNATmBqBXxW+D627jYF3yJNbZGBPmer+VYoEzqEkUHkz4xV9qcCjFdCxueRDd5/Gs8k6cGrWWXA==" crossorigin="anonymous"></script>
+
+        <!-- jQuery -->
+        <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+        <script src="Assets/eatScript.js"></script>
+    </body>
+
+</html>
