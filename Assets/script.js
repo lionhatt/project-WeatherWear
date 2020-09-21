@@ -422,7 +422,6 @@ callWeatherApi();
 
 function buildBasicUrl(){
   var lat = currentWeather.latitude
-  console.log(currentWeather.latitude)
   var lon = currentWeather.longitude
   var city = currentWeather.cityName
   var baseURL = "https://developers.zomato.com/api/v2.1/search?"
@@ -430,8 +429,24 @@ function buildBasicUrl(){
     q: city,
     latitude: lat,
     longitude: lon,
+    start: "0",
+    count: "5"
   }
+  // Click event on the submit form button should trigger this
+  buildAdvancedUrl(urlObj)
   var buildURL = baseURL + $.param(urlObj)
   console.log(buildURL)
   return buildURL
+}
+function buildAdvancedUrl(obj){
+  var paramarray = [{cuisines: "something" },{sort: "" },{radius: "" }]
+  for(var i = 0; i < paramarray.length; i++){
+    var x = Object.values(paramarray[i])
+    console.log(x)
+    if(x[0]=== ""){
+      paramarray.splice(i, 1)
+    }
+    Object.assign(obj, paramarray[i])
+    console.log(Object.assign(obj, paramarray[i]))
+  }
 }
