@@ -236,15 +236,19 @@ function processHourlyWeatherData(response) {
 function createLocation(cityInput, countryInput) {
     // declare variable to store new location for url
     var location = "";
+    var modal = $("#modal");
+    var modalMessage = $("#modal-message");
 
     // if city and country are empty
     if (cityInput === "" && countryInput === "") {
         // display error message
-        console.log("city and country are empty");
+        modalMessage.text("city and country are empty");
+        modal.show();
         // if city is empty but country is NOT empty
     } else if (cityInput === "" && countryInput != "") {
         // display error message
-        console.log("city is empty");
+        modalMessage.text("city is empty");
+        modal.show();
         // if city is NOT empty and country is empty
     } else if (cityInput != "" && countryInput === "") {
         // location becomes the city
@@ -287,7 +291,7 @@ function getCountryInput() {
     // Suggestion: place the Jquery for the country input here and grab the country input value and put it into the country variable below
 
     // placeholder variable -- here is where to retrieve the user input data for country from the UI - PLACEHOLDER
-    var country = "australia";
+    var country = $("#country").val();
     // makes the input url friendly
     var countryFriendlyUrl = makeUrlFriendly(country);
     // returns newly created country string
@@ -301,7 +305,7 @@ function getCityInput() {
     // Suggestion: place the Jquery for the location input here and grab the city input value and put it into the city variable below
 
     // placeholder value -- here is where to retrieve the user input data for city from the UI - PLACEHOLDER
-    var city = "melbourne";
+    var city = $("#location").val();
     // makes the input url friendly
     var cityFriendlyUrl = makeUrlFriendly(city);
     // return newly created city string
@@ -410,6 +414,11 @@ function renderChosenWears() {
     console.log(chosenWears);
 }
 
+function closeModal() {
+    $("#modal").hide();
+}
+
 // activates the call to the weather api
-callWeatherApi();
+$("#confirmBtn").on("click", callWeatherApi);
+$("#close-modal").on("click", closeModal);
 // renderChosenWears();
