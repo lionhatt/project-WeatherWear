@@ -433,7 +433,7 @@ function buildBasicUrl(){
     count: "5"
   }
   // Click event on the submit form button should trigger this
-  buildAdvancedUrl(urlObj)
+  // buildAdvancedUrl(urlObj)
   var buildURL = baseURL + $.param(urlObj)
   console.log(buildURL)
   return buildURL
@@ -446,8 +446,23 @@ function buildAdvancedUrl(obj){
     })
   })
 }
-function displayZomatoresponse(response){
+function displayZomatoresponse(obj){
   
+  var name = obj.restaurants[0].restaurant.name
+  var image = obj.restaurants[0].restaurant.thumb
+  var review = obj.restaurants[0].restaurant.user_rating
+  var address = obj.restaurants[0].restaurant.location.address
+  var pn = obj.restaurants[0].restaurant.phone_numbers
+ 
+  console.log("name",name,"image", image,"review", review,"address", address,"phone number", pn)
+  // $("selector").each(function(){
+  //   $("h4").text(response.restraunts.name)
+  //   $("img").attr("src", response.restaurants.thumb)
+  //   var rating = response.restaurants.user_rating
+  //   $("p").text("Review:" + " " + rating.aggregate_rating + rating_text)
+  //   $("p").text("Address:" + " " + response.restraunts.location.address)
+  //   $("p").text("Phone Number:" + response.restraunts.phone_numbers)
+  // })
 }
 function zomatoAPIcall(){
   $.ajax({
@@ -457,5 +472,11 @@ function zomatoAPIcall(){
       "user-key": "19132a3a025302edc9b08eb44608d7c0",
       "content-type": "application/json"
     },
-  }).then()
+  }).then(function (response){
+    console.log(response)
+    displayZomatoresponse(response)
+  })
 }
+
+$(".eat").on("click", zomatoAPIcall)
+console.log(zomatoAPIcall())
