@@ -439,14 +439,23 @@ function buildBasicUrl(){
   return buildURL
 }
 function buildAdvancedUrl(obj){
-  var paramarray = [{cuisines: "something" },{sort: "" },{radius: "" }]
-  for(var i = 0; i < paramarray.length; i++){
-    var x = Object.values(paramarray[i])
-    console.log(x)
-    if(x[0]=== ""){
-      paramarray.splice(i, 1)
-    }
-    Object.assign(obj, paramarray[i])
-    console.log(Object.assign(obj, paramarray[i]))
-  }
+  var paramarray = [{cuisines: "" },{sort: "" },{radius: "s" }]
+  paramarray.forEach(function(item){
+    Object.keys(item).forEach(function(key) {
+      if(item[key] !== "" ) {obj[key] = item[key]}
+    })
+  })
+}
+function displayZomatoresponse(response){
+  
+}
+function zomatoAPIcall(){
+  $.ajax({
+    url: buildBasicUrl(),
+    method: "GET",
+    headers: {
+      "user-key": "19132a3a025302edc9b08eb44608d7c0",
+      "content-type": "application/json"
+    },
+  }).then()
 }
