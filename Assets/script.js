@@ -230,6 +230,8 @@ function processHourlyWeatherData(response) {
 
     // render the chosen clothes list
     renderChosenWears();
+    buildingLocationURL();
+    gettingEntityid();
     buildBasicUrl();    
 }
 
@@ -418,9 +420,59 @@ callWeatherApi();
   // Get Lat and Lon, City name
   // Call API
   // Cuisine choice, High reviewed or cost efficient, options ordered by, Location radius
-
+function buildingLocationURL(){
+  var lat = currentWeather.latitude
+  var lon = currentWeather.longitude
+  var city = currentWeather.cityName
+  var baseURL = "https://developers.zomato.com/api/v2.1/locations?"
+  var urlObj = {
+    q: city,
+    latitude: lat,
+    longitude: lon,
+    count: "1",
+  }
+  // Click event on the submit form button should trigger this
+  // buildAdvancedUrl(urlObj)
+  var buildURL = baseURL + $.param(urlObj)
+  return buildURL
+}
+function gettingEntityid(){
+  var entityid = "";
+  $.ajax({
+    url: buildingLocationURL() ,
+    method: "GET",
+    headers: {
+      "user-key": "19132a3a025302edc9b08eb44608d7c0",
+      "content-type": "application/json"
+    },
+  }).then(function(response){
+    response.location_suggestions[0].entity_id = entityid
+  })
+  console.log(entityid)
+  return entityid
+}
 
 function buildBasicUrl(){
+  var lat = currentWeather.latitude
+  var lon = currentWeather.longitude
+  var city = currentWeather.cityName
+  var baseURL = "https://developers.zomato.com/api/v2.1/search?"
+  var urlObj = {
+    entity_id: gettingEntityid(), 
+    q: city,
+    latitude: lat,
+    longitude: lon,
+    start: "0",
+    count: "5",
+  }
+  // Click event on the submit form button should trigger this
+  // buildAdvancedUrl(urlObj)
+  var buildURL = baseURL + $.param(urlObj)
+  console.log(buildURL)
+  return buildURL
+}
+function buildAdvancedUrl(){
+  var paramarray = [{cuisines: "Indian" },{sort: "cost" },{radius: "10M" }]
   var lat = currentWeather.latitude
   var lon = currentWeather.longitude
   var city = currentWeather.cityName
@@ -432,19 +484,13 @@ function buildBasicUrl(){
     start: "0",
     count: "5"
   }
-  // Click event on the submit form button should trigger this
-  // buildAdvancedUrl(urlObj)
-  var buildURL = baseURL + $.param(urlObj)
-  console.log(buildURL)
-  return buildURL
-}
-function buildAdvancedUrl(obj){
-  var paramarray = [{cuisines: "" },{sort: "" },{radius: "s" }]
   paramarray.forEach(function(item){
     Object.keys(item).forEach(function(key) {
-      if(item[key] !== "" ) {obj[key] = item[key]}
+      if(item[key] !== "" ) {urlObj[key] = item[key]}
     })
   })
+  var buildURL = baseURL + $.param(urlObj)
+  return buildURL
 }
 function displayZomatoresponse(obj){
   
@@ -464,6 +510,18 @@ function displayZomatoresponse(obj){
   //   $("p").text("Phone Number:" + response.restraunts.phone_numbers)
   // })
 }
+function secondaryZomatoAPIcall(){
+  $.ajax({
+    url: buildAdvancedUrl(),
+    method: "GET",
+    headers: {
+      "user-key": "19132a3a025302edc9b08eb44608d7c0",
+      "content-type": "application/json"
+    },
+  }).then(function (res){
+    displayZomatoresponse(res)
+  })
+}
 function zomatoAPIcall(){
   $.ajax({
     url: buildBasicUrl(),
@@ -475,8 +533,9 @@ function zomatoAPIcall(){
   }).then(function (response){
     console.log(response)
     displayZomatoresponse(response)
+    $("#eatform").on("click", secondaryZomatoAPIcall())
   })
 }
 
 $(".eat").on("click", zomatoAPIcall)
-console.log(zomatoAPIcall())
+
