@@ -41,8 +41,9 @@ function getFinishTime() {
 
             var date = moment().format('YYYY-MM-DD');
         var finishTime = moment(date + " " + comingHomeselect);
-    return finishTime;}) 
-
+    return finishTime;
+});
+}
 // retrieves the temperature for the time of the day
 function hourlyTempCheck(response) {
     var temperature = response.temp;
@@ -402,5 +403,4 @@ function renderChosenWears() {
     console.log(chosenWears);
 }
     
-// activates the call to the weather api
-callWeatherApi();}}
+$("#confirmBtn").on("click", callWeatherApi)}
