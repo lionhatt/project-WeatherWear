@@ -34,7 +34,6 @@ function createInputTimes() {
 // retrieves and returns the start time from the user input
 function getStartTime() {
     var goingOutselect = $("#goingOutTime").val();
-    // var date = moment().format('YYYY-MM-DD');
     var startTime = moment(goingOutselect).subtract(1, 'hours');
     return startTime;
 }
@@ -42,7 +41,6 @@ function getStartTime() {
 // retrieves and returns the end time from the user input
 function getFinishTime() {
     var comingHomeselect = $("#comingHomeTime").val();
-    // var date = moment().format('YYYY-MM-DD');
     var finishTime = moment(comingHomeselect);
     return finishTime;
 }
@@ -228,11 +226,6 @@ function makeUrlFriendly(location) {
 
 // placeholder function to retrieve the country input from the user - PLACEHOLDER
 function getCountryInput() {
-
-    // DAN!! - Here's a function to take the country from the user
-    // Suggestion: place the Jquery for the country input here and grab the country input value and put it into the country variable below
-
-    // placeholder variable -- here is where to retrieve the user input data for country from the UI - PLACEHOLDER
     var country = $("#country").val();
     var countryFriendlyUrl = makeUrlFriendly(country);
     return countryFriendlyUrl;
@@ -240,11 +233,6 @@ function getCountryInput() {
 
 // placeholder function to retrieve the city input from the user - PLACEHOLDER
 function getCityInput() {
-
-    // DAN!! - Here's the function to take the city from the user input
-    // Suggestion: place the Jquery for the location input here and grab the city input value and put it into the city variable below
-
-    // placeholder value -- here is where to retrieve the user input data for city from the UI - PLACEHOLDER
     var city = $("#location").val();
     var cityFriendlyUrl = makeUrlFriendly(city);
     return cityFriendlyUrl;
@@ -253,9 +241,31 @@ function getCityInput() {
 // calls the weather api for the hourly weather
 function callWeatherApi() {
     var cityInput = getCityInput();
+    var startTime = getStartTime();
+    var finishTime = getFinishTime();
+    var timesValid = false;
+    var cityValid = false;
+
+    // check if start time is before the finish time and alter timesValid 
+    // to true if they are else false if not and display error message in modal
+    if (startTime.isBefore(finishTime) || startTime.isSame(finishTime)) {
+        timesValid = true;
+    } else {
+        $("#modal-message").text("Please make sure the going out time is before the coming home time");
+        $("#modal").show();
+    }
 
     // if the city input is empty then don't make the weather api call
     if (cityInput != "") {
+        cityValid = true;
+    } else {
+        // display error message if city is not inputted
+        $("#modal-message").text("Please enter a location name");
+        $("#modal").show();
+    }
+
+    // if the inputs are valid then call the weather api
+    if (timesValid && cityValid) {
         var countryInput = getCountryInput();
         var queryUrl = createHourlyWeatherUrl(cityInput, countryInput);
         $.ajax({
@@ -266,20 +276,15 @@ function callWeatherApi() {
         catch(function(error) {
             console.log("Catch error: " + error.message);
         });
-    } else {
-        // display error message if city is not inputted
-        $("#modal-message").text("city is empty");
-        $("#modal").show();
     }
-
 }
 
 //the oject for clothing suggestions
 var wears = {
-  //the base layer will add [1,2,3,4,5] °C to the body heat  
-  baseLayer: ["t-shirt", "long-sleeve-shirt", "flannel-shirt", "sweatshirt", "sweater"],
-  //the outer later will add [9,10,11] °C to the body heat 
-  outerLayer: ["short-jacket", "coat", "down-jacket"]
+    //the base layer will add [1,2,3,4,5] °C to the body heat
+    baseLayer: ["t-shirt", "long-sleeve-shirt", "flannel-shirt", "sweatshirt", "sweater"],
+    //the outer later will add [9,10,11] °C to the body heat
+    outerLayer: ["short-jacket", "coat", "down-jacket"]
 }
 
 // array of suggested clothing based on temprature
@@ -291,40 +296,40 @@ var i = 26
 // function to append suggested clothing into chosenWears array
 function renderChosenWears() {
 
-  // find and store the min and max temps of the currentWeather object
-  var minTemp = findMinTemp(currentWeather.temps);
-  // console.log(findMinTemp(currentWeather.temps));
-  var maxTemp = findMaxTemp(currentWeather.temps);
-  // console.log(findMaxTemp(currentWeather.temps));
+    // find and store the min and max temps of the currentWeather object
+    var minTemp = findMinTemp(currentWeather.temps);
+    // console.log(findMinTemp(currentWeather.temps));
+    var maxTemp = findMaxTemp(currentWeather.temps);
+    // console.log(findMaxTemp(currentWeather.temps));
 
-  //if the min temp is higher than the optimal temprature, it will suggest basic clothing
-  if (minTemp >= i) {
-    chosenWears.push(wears.baseLayer[0]);
-    //if the min temp is lower then 5°C, it will give the maximum clothing suggestion  
-  } else if (minTemp <= 5) {
-    chosenWears.push(wears.outerLayer[2]);
-    chosenWears.push(wears.baseLayer[1], wears.baseLayer[2], wears.baseLayer[4]);
-    //if the min temp is in between 5-26°C:  
-  } else {
+    //if the min temp is higher than the optimal temprature, it will suggest basic clothing
+    if (minTemp >= i) {
+        chosenWears.push(wears.baseLayer[0]);
+        //if the min temp is lower then 5°C, it will give the maximum clothing suggestion
+    } else if (minTemp <= 5) {
+        chosenWears.push(wears.outerLayer[2]);
+        chosenWears.push(wears.baseLayer[1], wears.baseLayer[2], wears.baseLayer[4]);
+        //if the min temp is in between 5-26°C:  
+    } else {
 
-    //if the maxtemp is higher then the optimal temprature, it will set maxtemp as the optimal at 26°C
-    if (maxTemp >= i) {
-      maxTemp = i;
-    }
+        //if the maxtemp is higher then the optimal temprature, it will set maxtemp as the optimal at 26°C
+        if (maxTemp >= i) {
+            maxTemp = i;
+        }
 
-    //if the difference between max and min temp is greater than 11°C, it will append down-jacket to suggestion
-    if ((maxTemp - minTemp) >= 11) {
-      chosenWears.push(wears.outerLayer[2]);
-      //if the difference between max and min temp is equal to  10°C, it will append coat to suggestion  
-    } else if ((maxTemp - minTemp) === 10) {
-      chosenWears.push(wears.outerLayer[1]);
-      //if the difference between max and min temp is equal to  9°C, it will append short-jacket to suggestion 
-    } else if ((maxTemp - minTemp) === 9) {
-      chosenWears.push(wears.outerLayer[0]);
-      //if the difference between max and min temp is less than 9°C, it will discard the difference, at calculate based on min temp only   
-    } else if ((maxTemp - minTemp) < 9) {
-      maxTemp = minTemp;
-    }
+        //if the difference between max and min temp is greater than 11°C, it will append down-jacket to suggestion
+        if ((maxTemp - minTemp) >= 11) {
+            chosenWears.push(wears.outerLayer[2]);
+            //if the difference between max and min temp is equal to  10°C, it will append coat to suggestion  
+        } else if ((maxTemp - minTemp) === 10) {
+            chosenWears.push(wears.outerLayer[1]);
+            //if the difference between max and min temp is equal to  9°C, it will append short-jacket to suggestion 
+        } else if ((maxTemp - minTemp) === 9) {
+            chosenWears.push(wears.outerLayer[0]);
+            //if the difference between max and min temp is less than 9°C, it will discard the difference, at calculate based on min temp only   
+        } else if ((maxTemp - minTemp) < 9) {
+            maxTemp = minTemp;
+        }
 
 
         //if the temprature is greater then 16°C, it will itterate through the base layer to append suggestions
@@ -351,13 +356,13 @@ function renderChosenWears() {
                 if (i >= (k + 1)) {
                     i = i - (k + 1);
                     chosenWears.push(wears.baseLayer[k]);
+
                 }
             }
         }
     }
-  }
-  console.log("Chosen wears: "+ chosenWears);
-  renderClothRec();
+    console.log("Chosen wears: " + chosenWears);
+    renderClothRec();
 }
 
 function closeModal() {
@@ -515,32 +520,32 @@ $(".eat").on("click", function gettingEntityId() {
     })
 })
 $("#eatform").on("click", function gettingEntityId() {
-  $.ajax({
-    url: buildLocationIDUrl(),
-    method: "GET",
-    headers: {
-      "user-key": "19132a3a025302edc9b08eb44608d7c0",
-      "content-type": "application/json"
-    },
-  }).then(function (response) {
-    var entityid = response.location_suggestions[0].entity_id
-    // zomatoAPIcall(entityid)
-    buildAdvancedResponse(entityid)
-  })
+    $.ajax({
+        url: buildLocationIDUrl(),
+        method: "GET",
+        headers: {
+            "user-key": "19132a3a025302edc9b08eb44608d7c0",
+            "content-type": "application/json"
+        },
+    }).then(function(response) {
+        var entityid = response.location_suggestions[0].entity_id
+            // zomatoAPIcall(entityid)
+        buildAdvancedResponse(entityid)
+    })
 })
 
 //function to append recommended itmes on the html
-function renderClothRec(){
-  $(chosenWears).each(function(index, value){
-    var wearDiv = $('<div class= "wearDiv>');
-    var wearImage = $("<img>");
-    var wearP = $("<p>");
-    wearP.text(value);
-    var wearURL = "/Assets/img/"+ value + ".jpg";
-    $(wearImage).attr({src: wearURL, alt: value});
-    wearDiv.append(wearImage, wearP);
-    //Dan can you please add the div your want to append the pics to
-    $("").append(wearDiv);
+function renderClothRec() {
+    $(chosenWears).each(function(index, value) {
+        var wearDiv = $('<div class= "wearDiv>');
+        var wearImage = $("<img>");
+        var wearP = $("<p>");
+        wearP.text(value);
+        var wearURL = "/Assets/img/" + value + ".jpg";
+        $(wearImage).attr({ src: wearURL, alt: value });
+        wearDiv.append(wearImage, wearP);
+        //Dan can you please add the div your want to append the pics to
+        $("").append(wearDiv);
 
-  })
+    })
 }
