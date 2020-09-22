@@ -370,7 +370,7 @@ function closeModal() {
 }
 
 // activates the call to the weather api
-$("#confirmBtn").on("click", callWeatherApi);
+$("#confirmButton").on("click", callWeatherApi);
 $("#close-modal").on("click", closeModal);
 
 createInputTimes();
