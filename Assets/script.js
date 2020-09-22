@@ -33,18 +33,16 @@ function createInputTimes() {
 
 // retrieves and returns the start time from the user input
 function getStartTime() {
-  var goingOutselect = $("#goingOutTime").val();
-  // var date = moment().format('YYYY-MM-DD');
-  var startTime = moment(goingOutselect).subtract(1, 'hours');
-  return startTime;
+    var goingOutselect = $("#goingOutTime").val();
+    var startTime = moment(goingOutselect).subtract(1, 'hours');
+    return startTime;
 }
 
 // retrieves and returns the end time from the user input
 function getFinishTime() {
-  var comingHomeselect = $("#comingHomeTime").val();
-  // var date = moment().format('YYYY-MM-DD');
-  var finishTime = moment(comingHomeselect);
-  return finishTime;
+    var comingHomeselect = $("#comingHomeTime").val();
+    var finishTime = moment(comingHomeselect);
+    return finishTime;
 }
 // retrieves the temperature for the time of the day
 function hourlyTempCheck(response) {
@@ -231,58 +229,65 @@ function makeUrlFriendly(location) {
 
 // placeholder function to retrieve the country input from the user - PLACEHOLDER
 function getCountryInput() {
-
-  // DAN!! - Here's a function to take the country from the user
-  // Suggestion: place the Jquery for the country input here and grab the country input value and put it into the country variable below
-
-  // placeholder variable -- here is where to retrieve the user input data for country from the UI - PLACEHOLDER
-  var country = $("#country").val();
-  var countryFriendlyUrl = makeUrlFriendly(country);
-  return countryFriendlyUrl;
+    var country = $("#country").val();
+    var countryFriendlyUrl = makeUrlFriendly(country);
+    return countryFriendlyUrl;
 }
 
 // placeholder function to retrieve the city input from the user - PLACEHOLDER
 function getCityInput() {
-
-  // DAN!! - Here's the function to take the city from the user input
-  // Suggestion: place the Jquery for the location input here and grab the city input value and put it into the city variable below
-
-  // placeholder value -- here is where to retrieve the user input data for city from the UI - PLACEHOLDER
-  var city = $("#location").val();
-  var cityFriendlyUrl = makeUrlFriendly(city);
-  return cityFriendlyUrl;
+    var city = $("#location").val();
+    var cityFriendlyUrl = makeUrlFriendly(city);
+    return cityFriendlyUrl;
 }
 
 // calls the weather api for the hourly weather
 function callWeatherApi() {
-  var cityInput = getCityInput();
+    var cityInput = getCityInput();
+    var startTime = getStartTime();
+    var finishTime = getFinishTime();
+    var timesValid = false;
+    var cityValid = false;
 
-  // if the city input is empty then don't make the weather api call
-  if (cityInput != "") {
-    var countryInput = getCountryInput();
-    var queryUrl = createHourlyWeatherUrl(cityInput, countryInput);
-    $.ajax({
-      url: queryUrl,
-      method: "GET"
-    }).
-      then(processHourlyWeatherData).
-      catch(function (error) {
-        console.log("Catch error: " + error.message);
-      });
-  } else {
-    // display error message if city is not inputted
-    $("#modal-message").text("city is empty");
-    $("#modal").show();
-  }
+    // check if start time is before the finish time and alter timesValid 
+    // to true if they are else false if not and display error message in modal
+    if (startTime.isBefore(finishTime) || startTime.isSame(finishTime)) {
+        timesValid = true;
+    } else {
+        $("#modal-message").text("Please make sure the going out time is before the coming home time");
+        $("#modal").show();
+    }
 
+    // if the city input is empty then don't make the weather api call
+    if (cityInput != "") {
+        cityValid = true;
+    } else {
+        // display error message if city is not inputted
+        $("#modal-message").text("Please enter a location name");
+        $("#modal").show();
+    }
+
+    // if the inputs are valid then call the weather api
+    if (timesValid && cityValid) {
+        var countryInput = getCountryInput();
+        var queryUrl = createHourlyWeatherUrl(cityInput, countryInput);
+        $.ajax({
+            url: queryUrl,
+            method: "GET"
+        }).
+        then(processHourlyWeatherData).
+        catch(function(error) {
+            console.log("Catch error: " + error.message);
+        });
+    }
 }
 
 //the oject for clothing suggestions
 var wears = {
-  //the base layer will add [1,2,3,4,5] °C to the body heat  
-  baseLayer: ["t-shirt", "long-sleeve-shirt", "flannel-shirt", "sweatshirt", "sweater"],
-  //the outer later will add [9,10,11] °C to the body heat 
-  outerLayer: ["short-jacket", "coat", "down-jacket"]
+    //the base layer will add [1,2,3,4,5] °C to the body heat
+    baseLayer: ["t-shirt", "long-sleeve-shirt", "flannel-shirt", "sweatshirt", "sweater"],
+    //the outer later will add [9,10,11] °C to the body heat
+    outerLayer: ["short-jacket", "coat", "down-jacket"]
 }
 
 // array of suggested clothing based on temprature
@@ -360,7 +365,7 @@ function closeModal() {
 }
 
 // activates the call to the weather api
-$("#confirmBtn").on("click", callWeatherApi);
+$("#confirmButton").on("click", callWeatherApi);
 $("#close-modal").on("click", closeModal);
 
 createInputTimes();
@@ -510,18 +515,18 @@ $(".eat").on("click", function gettingEntityId() {
   })
 })
 $("#eatform").on("click", function gettingEntityId() {
-  $.ajax({
-    url: buildLocationIDUrl(),
-    method: "GET",
-    headers: {
-      "user-key": "19132a3a025302edc9b08eb44608d7c0",
-      "content-type": "application/json"
-    },
-  }).then(function (response) {
-    var entityid = response.location_suggestions[0].entity_id
-    // zomatoAPIcall(entityid)
-    buildAdvancedResponse(entityid)
-  })
+    $.ajax({
+        url: buildLocationIDUrl(),
+        method: "GET",
+        headers: {
+            "user-key": "19132a3a025302edc9b08eb44608d7c0",
+            "content-type": "application/json"
+        },
+    }).then(function(response) {
+        var entityid = response.location_suggestions[0].entity_id
+            // zomatoAPIcall(entityid)
+        buildAdvancedResponse(entityid)
+    })
 })
 
 //function to append recommended itmes on the html
