@@ -264,10 +264,10 @@ function callWeatherApi() {
 
 //the oject for clothing suggestions
 var wears = {
-    //the base layer will add [1,2,3,4,5] °C to the body heat  
-    baseLayer: ["t-shirt", "long-sleeve t-shirt", "flannel shirt", "sweatshirt", "sweater"],
-    //the outer later will add [9,10,11] °C to the body heat 
-    outerLayer: ["short-jacket", "coat", "down-jacket"]
+  //the base layer will add [1,2,3,4,5] °C to the body heat  
+  baseLayer: ["t-shirt", "long-sleeve-shirt", "flannel-shirt", "sweatshirt", "sweater"],
+  //the outer later will add [9,10,11] °C to the body heat 
+  outerLayer: ["short-jacket", "coat", "down-jacket"]
 }
 
 // array of suggested clothing based on temprature
@@ -279,38 +279,41 @@ var i = 26
 // function to append suggested clothing into chosenWears array
 function renderChosenWears() {
 
-    // find and store the min and max temps of the currentWeather object
-    var minTemp = findMinTemp(currentWeather.temps);
-    var maxTemp = findMaxTemp(currentWeather.temps);
+  // find and store the min and max temps of the currentWeather object
+  var minTemp = findMinTemp(currentWeather.temps);
+  // console.log(findMinTemp(currentWeather.temps));
+  var maxTemp = findMaxTemp(currentWeather.temps);
+  // console.log(findMaxTemp(currentWeather.temps));
 
-    //if the min temp is higher than the optimal temprature, it will suggest basic clothing
-    if (minTemp >= i) {
-        chosenWears.push(wears.baseLayer[0]);
-        //if the min temp is lower then 5°C, it will give the maximum clothing suggestion  
-    } else if (minTemp <= 5) {
-        chosenWears.push(wears.outerLayer[2]);
-        chosenWears.push(wears.baseLayer[1], wears.baseLayer[2], wears.baseLayer[4]);
-        //if the min temp is in between 5-26°C:  
-    } else {
+  //if the min temp is higher than the optimal temprature, it will suggest basic clothing
+  if (minTemp >= i) {
+    chosenWears.push(wears.baseLayer[0]);
+    //if the min temp is lower then 5°C, it will give the maximum clothing suggestion  
+  } else if (minTemp <= 5) {
+    chosenWears.push(wears.outerLayer[2]);
+    chosenWears.push(wears.baseLayer[1], wears.baseLayer[2], wears.baseLayer[4]);
+    //if the min temp is in between 5-26°C:  
+  } else {
 
-        //if the maxtemp is higher then the optimal temprature, it will set maxtemp as the optimal at 26°C
-        if (maxTemp >= i) {
-            maxTemp = i;
-        }
+    //if the maxtemp is higher then the optimal temprature, it will set maxtemp as the optimal at 26°C
+    if (maxTemp >= i) {
+      maxTemp = i;
+    }
 
-        //if the difference between max and min temp is greater than 11°C, it will append down-jacket to suggestion
-        if ((maxTemp - minTemp) >= 11) {
-            chosenWears.push(wears.outerLayer[2]);
-            //if the difference between max and min temp is equal to  10°C, it will append coat to suggestion  
-        } else if ((maxTemp - minTemp) === 10) {
-            chosenWears.push(wears.outerLayer[1]);
-            //if the difference between max and min temp is equal to  9°C, it will append short-jacket to suggestion 
-        } else if ((maxTemp - minTemp) === 9) {
-            chosenWears.push(wears.outerLayer[0]);
-            //if the difference between max and min temp is less than 9°C, it will discard the difference, at calculate based on min temp only   
-        } else if ((maxTemp - minTemp) < 9) {
-            maxTemp = minTemp;
-        }
+    //if the difference between max and min temp is greater than 11°C, it will append down-jacket to suggestion
+    if ((maxTemp - minTemp) >= 11) {
+      chosenWears.push(wears.outerLayer[2]);
+      //if the difference between max and min temp is equal to  10°C, it will append coat to suggestion  
+    } else if ((maxTemp - minTemp) === 10) {
+      chosenWears.push(wears.outerLayer[1]);
+      //if the difference between max and min temp is equal to  9°C, it will append short-jacket to suggestion 
+    } else if ((maxTemp - minTemp) === 9) {
+      chosenWears.push(wears.outerLayer[0]);
+      //if the difference between max and min temp is less than 9°C, it will discard the difference, at calculate based on min temp only   
+    } else if ((maxTemp - minTemp) < 9) {
+      maxTemp = minTemp;
+    }
+
 
         //if the temprature is greater then 16°C, it will itterate through the base layer to append suggestions
         if (maxTemp >= 16) {
@@ -340,7 +343,9 @@ function renderChosenWears() {
             }
         }
     }
-    console.log(chosenWears);
+  }
+  console.log("Chosen wears: "+ chosenWears);
+  renderClothRec();
 }
 
 function closeModal() {
@@ -496,16 +501,32 @@ $(".eat").on("click", function gettingEntityId() {
     })
 })
 $("#eatform").on("click", function gettingEntityId() {
-    $.ajax({
-        url: buildLocationIDUrl(),
-        method: "GET",
-        headers: {
-            "user-key": "19132a3a025302edc9b08eb44608d7c0",
-            "content-type": "application/json"
-        },
-    }).then(function(response) {
-        var entityid = response.location_suggestions[0].entity_id
-            // zomatoAPIcall(entityid)
-        buildAdvancedResponse(entityid)
-    })
+  $.ajax({
+    url: buildLocationIDUrl(),
+    method: "GET",
+    headers: {
+      "user-key": "19132a3a025302edc9b08eb44608d7c0",
+      "content-type": "application/json"
+    },
+  }).then(function (response) {
+    var entityid = response.location_suggestions[0].entity_id
+    // zomatoAPIcall(entityid)
+    buildAdvancedResponse(entityid)
+  })
 })
+
+//function to append recommended itmes on the html
+function renderClothRec(){
+  $(chosenWears).each(function(index, value){
+    var wearDiv = $('<div class= "wearDiv>');
+    var wearImage = $("<img>");
+    var wearP = $("<p>");
+    wearP.text(value);
+    var wearURL = "/Assets/img/"+ value + ".jpg";
+    $(wearImage).attr({src: wearURL, alt: value});
+    wearDiv.append(wearImage, wearP);
+    //Dan can you please add the div your want to append the pics to
+    $("").append(wearDiv);
+
+  })
+}
