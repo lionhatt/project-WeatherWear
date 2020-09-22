@@ -448,7 +448,8 @@ function buildURL(entityid) {
     return buildURL
 }
 function DisplayResponse(obj) {
-    var name = obj.restaurants[0].restaurant.name
+    var restaurants = obj.restaurants[0]
+    var name = restaurants.restaurant.name
     console.log(name)
     var image = obj.restaurants[0].restaurant.thumb
     console.log(image)
@@ -462,14 +463,15 @@ function DisplayResponse(obj) {
 function gettingCuisineid(response) {
     var cuisines = response.cuisines
     var id = ""
-    cuisines.forEach(function (index, item) {
+    cuisines.forEach()
+    cuisines.forEach(function (item) {
         if ("Indian" == item.cuisine.cuisine_name) {
             id = item.cuisine.cuisine_id
         }
     })
     return id
 }
-function buildAdvancedUrl(b) {
+function buildAdvancedResponse(b) {
     $.ajax({
         url: "https://developers.zomato.com/api/v2.1/cuisines?city_id=" + b,
         method: "GET",
@@ -498,8 +500,16 @@ function buildAdvancedUrl(b) {
             })
         })
         var buildURL = baseURL + $.param(urlObj)
-        console.log(buildURL)
-        return buildURL
+        $.ajax({
+            url: buildURL,
+            method: "GET",
+            headers: {
+                "user-key": "19132a3a025302edc9b08eb44608d7c0",
+                "content-type": "application/json"
+            },
+        }).then(function (response) {
+            DisplayResponse(response)
+        })
     })
 }
 function buildLocationIDUrl() {
@@ -516,7 +526,6 @@ function buildLocationIDUrl() {
     // Click event on the submit form button should trigger this
     // buildAdvancedUrl(urlObj)
     var buildlocalURL = baseURL + $.param(urlObj)
-    console.log(buildlocalURL)
     return buildlocalURL
 }
 
@@ -529,8 +538,7 @@ $(".eat").on("click", function gettingEntityId() {
             "content-type": "application/json"
         },
     }).then(function (response) {
-        console.log(response)
-        entityid = response.location_suggestions[0].entity_id
+        var entityid = response.location_suggestions[0].entity_id
         // zomatoAPIcall(entityid)
         $.ajax({
             url: buildURL(entityid),
@@ -540,7 +548,6 @@ $(".eat").on("click", function gettingEntityId() {
                 "content-type": "application/json"
             },
         }).then(function (response) {
-            console.log(response)
             DisplayResponse(response)
         })
     })
@@ -554,19 +561,8 @@ $("#eatform").on("click", function gettingEntityId() {
             "content-type": "application/json"
         },
     }).then(function (response) {
-        console.log(response)
-        entityid = response.location_suggestions[0].entity_id
+        var entityid = response.location_suggestions[0].entity_id
         // zomatoAPIcall(entityid)
-        $.ajax({
-            url: buildAdvancedUrl(entityid),
-            method: "GET",
-            headers: {
-                "user-key": "19132a3a025302edc9b08eb44608d7c0",
-                "content-type": "application/json"
-            },
-        }).then(function (response) {
-            console.log(response)
-            DisplayResponse(response)
-        })
+        buildAdvancedResponse(entityid)
     })
 })
