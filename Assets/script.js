@@ -406,7 +406,6 @@ function buildURL(entityid) {
   console.log(buildURL)
   return buildURL
 }
-
 function DisplayResponse(obj) {
   var restaurants = obj.restaurants[0]
   var name = restaurants.restaurant.name
@@ -420,58 +419,90 @@ function DisplayResponse(obj) {
   var pn = obj.restaurants[0].restaurant.phone_numbers
   console.log(pn)
 }
-
-function gettingCuisineid(response) {
-  var cuisines = response.cuisines
-  var id = ""
-  cuisines.forEach(function (item) {
-    if ("Indian" == item.cuisine.cuisine_name) {
-      id = item.cuisine.cuisine_id
-    }
-  })
-  return id
-}
-
+// function gettingCuisineid(response) {
+//   var cuisines = response.cuisines
+//   var id = ""
+//   cuisines.forEach(function (item) {
+//     if ("Indian" == item.cuisine.cuisine_name) {
+//       id = item.cuisine.cuisine_id
+//     }
+//   })
+//   return id
+// }
 function buildAdvancedResponse(b) {
+  // Get the value of whatever option is selected from the drop down and store it in variable
+  var cuisineidval = ""
+  var sortval = ""
+  var radiusval = ""
+  var paramarray = [{ cuisines: cuisineidval }, { sort: sortval }, { radius: radiusval }]
+  var lat = currentWeather.latitude
+  var lon = currentWeather.longitude
+  var city = currentWeather.cityName
+  var baseURL = "https://developers.zomato.com/api/v2.1/search?"
+  var urlObj = {
+    entity_id: b,
+    q: city,
+    lat: lat,
+    lon: lon,
+    start: "0",
+    count: "5"
+  }
+  paramarray.forEach(function (item) {
+    Object.keys(item).forEach(function (key) {
+      if (item[key] !== "") { urlObj[key] = item[key] }
+    })
+  })
+  var buildURL = baseURL + $.param(urlObj)
   $.ajax({
-    url: "https://developers.zomato.com/api/v2.1/cuisines?city_id=" + b,
+    url: buildURL,
     method: "GET",
     headers: {
       "user-key": "19132a3a025302edc9b08eb44608d7c0",
       "content-type": "application/json"
     },
   }).then(function (response) {
-    var cuisineid = gettingCuisineid(response)
-    var paramarray = [{ cuisines: cuisineid }, { sort: "cost" }, { radius: "10M" }]
-    var lat = currentWeather.latitude
-    var lon = currentWeather.longitude
-    var city = currentWeather.cityName
-    var baseURL = "https://developers.zomato.com/api/v2.1/search?"
-    var urlObj = {
-      entity_id: b,
-      q: city,
-      lat: lat,
-      lon: lon,
-      start: "0",
-      count: "5"
-    }
-    paramarray.forEach(function (item) {
-      Object.keys(item).forEach(function (key) {
-        if (item[key] !== "") { urlObj[key] = item[key] }
-      })
-    })
-    var buildURL = baseURL + $.param(urlObj)
-    $.ajax({
-      url: buildURL,
-      method: "GET",
-      headers: {
-        "user-key": "19132a3a025302edc9b08eb44608d7c0",
-        "content-type": "application/json"
-      },
-    }).then(function (response) {
-      DisplayResponse(response)
-    })
+    DisplayResponse(response)
   })
+  // $.ajax({
+  //   url: "https://developers.zomato.com/api/v2.1/cuisines?city_id=" + b,
+  //   method: "GET",
+  //   headers: {
+  //     "user-key": "19132a3a025302edc9b08eb44608d7c0",
+  //     "content-type": "application/json"
+  //   },
+  // }).then(function (response) {
+  //   var cuisineid = gettingCuisineid(response)
+  //   var paramarray = [{ cuisines: cuisineid }, { sort: "cost" }, { radius: "10M" }]
+  //   var lat = currentWeather.latitude
+  //   var lon = currentWeather.longitude
+  //   var city = currentWeather.cityName
+  //   var baseURL = "https://developers.zomato.com/api/v2.1/search?"
+  //   var urlObj = {
+  //     entity_id: b,
+  //     q: city,
+  //     lat: lat,
+  //     lon: lon,
+  //     start: "0",
+  //     count: "5"
+  //   }
+  //   paramarray.forEach(function (item) {
+  //     Object.keys(item).forEach(function (key) {
+  //       if (item[key] !== "") { urlObj[key] = item[key] }
+  //     })
+  //   })
+  //   var buildURL = baseURL + $.param(urlObj)
+  //   $.ajax({
+  //     url: buildURL,
+  //     method: "GET",
+  //     headers: {
+  //       "user-key": "19132a3a025302edc9b08eb44608d7c0",
+  //       "content-type": "application/json"
+  //     },
+  //   }).then(function (response) {
+  //     DisplayResponse(response)
+  //   })
+  // })
+
 }
 
 function buildLocationIDUrl() {
@@ -490,7 +521,23 @@ function buildLocationIDUrl() {
   var buildlocalURL = baseURL + $.param(urlObj)
   return buildlocalURL
 }
-
+function renderEatform(entityid) {
+  $("selector").removeClass("hide")
+  $.ajax({
+    url: "https://developers.zomato.com/api/v2.1/cuisines?city_id=" + entityid,
+    method: "GET",
+    headers: {
+      "user-key": "19132a3a025302edc9b08eb44608d7c0",
+      "content-type": "application/json"
+    },
+  }).then(function (response) {
+    var cuisines = response.cuisines
+    cuisines.forEach(function (item) {
+      var option = $("<option>").text(item.cuisine.cuisine_name).attr("data-id", item.cuisine.cuisine_id )
+      $("#cuisine").append(option)
+    })
+  })
+}
 $(".eat").on("click", function gettingEntityId() {
   $.ajax({
     url: buildLocationIDUrl(),
@@ -503,14 +550,26 @@ $(".eat").on("click", function gettingEntityId() {
     var entityid = response.location_suggestions[0].entity_id
     // zomatoAPIcall(entityid)
     $.ajax({
-      url: buildURL(entityid),
-      method: "GET",
-      headers: {
-        "user-key": "19132a3a025302edc9b08eb44608d7c0",
-        "content-type": "application/json"
-      },
-    }).then(function (response) {
-      DisplayResponse(response)
+        url: buildLocationIDUrl(),
+        method: "GET",
+        headers: {
+            "user-key": "19132a3a025302edc9b08eb44608d7c0",
+            "content-type": "application/json"
+        },
+    }).then(function(response) {
+        var entityid = response.location_suggestions[0].entity_id
+            // zomatoAPIcall(entityid)
+        $.ajax({
+            url: buildURL(entityid),
+            method: "GET",
+            headers: {
+                "user-key": "19132a3a025302edc9b08eb44608d7c0",
+                "content-type": "application/json"
+            },
+        }).then(function(response) {
+            renderEatform(entityid)
+            DisplayResponse(response)
+        })
     })
   })
 })
