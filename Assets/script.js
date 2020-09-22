@@ -60,220 +60,171 @@ function hourlyTempCheck(response) {
 
 // checks the uv for the time of the day
 function hourlyUvCheck(response) {
-  // get the uv for the for the time of day
-  var uvIndex = response.uv;
-  // set the uv threshold
-  var uvThreshold = 2;
-  // if index is greater than uv threshold
-  if (uvIndex >= uvThreshold) {
-    // display uv message - this is where functions can got to display to the user what to wear - PLACEHOLDER
-    console.log(`UV Index: ${uvIndex}`);
-    console.log("You will need sunprotection today, wear a hat or apply sunscreen regularly");
-  } else {
-    // else because we don't want to give false info, this is a disclaimer
-    console.log("UV is low but it is still advised to protect yourself from UV");
-  }
+    var uvIndex = response.uv;
+    var uvThreshold = 2;
+
+    if (uvIndex >= uvThreshold) {
+        // display uv message - this is where functions can got to display to the user what to wear - PLACEHOLDER
+        console.log(`UV Index: ${uvIndex}`);
+        console.log("You will need sunprotection today, wear a hat or apply sunscreen regularly");
+    } else {
+        // else because we don't want to give false info, this is a disclaimer
+        console.log("UV is low but it is still advised to protect yourself from UV");
+    }
 }
 
 // checks the precipitation for the time of the day
 function hourlyRainCheck(response) {
-  // retrieves and stores the precipitation level
-  var precip = response.precip;
-  // this is the precipitation threshold
-  var precipThreshold = 5;
-  // if the precipitation level is above the threshold
-  if (precip > precipThreshold) {
-    // display to the user what to wear - this is where functions can go to display info to the user - PLACEHOLDER
-    console.log(`Precipitation: ${precip}mm`);
-    console.log("You will need a waterproof or an umbrella");
-  }
+    var precip = response.precip;
+    var precipThreshold = 5;
+
+    if (precip > precipThreshold) {
+        // display to the user what to wear - this is where functions can go to display info to the user - PLACEHOLDER
+        console.log(`Precipitation: ${precip}mm`);
+        console.log("You will need a waterproof or an umbrella");
+    }
 }
 
 // checks the wind speed for the given time of day
 function hourlyWindCheck(response) {
-  // retrieves and stores the wind speed for the time of day 
-  var windSpeed = response.wind_spd;
-  // wind speed threshold
-  var windSpeedThreshold = 10;
-  // if the wind speed is greater than the threshold
-  if (windSpeed > windSpeedThreshold) {
-    // display to the user what to wear - this is where functions can go to update the display - PLACEHOLDER
-    console.log(`Wind Speed: ${windSpeed}km/h`);
-    console.log("You will need wind protection");
-  }
+    var windSpeed = response.wind_spd;
+    var windSpeedThreshold = 10;
+
+    if (windSpeed > windSpeedThreshold) {
+        // display to the user what to wear - this is where functions can go to update the display - PLACEHOLDER
+        console.log(`Wind Speed: ${windSpeed}km/h`);
+        console.log("You will need wind protection");
+    }
 }
 
 // retrieves and stores the url for the weather icon for the time of the day
 function hourlyDisplayIcon(response) {
-  // store and retrieve the icon code
-  var iconCode = response.weather.icon;
-  // use the icon code to createa a new url for the code from the api - the url can be used to update the UI, functions to do that will go here - PLACEHOLDER
-  var iconUrl = `https://www.weatherbit.io/static/img/icons/${iconCode}.png`
-  console.log(`Icon: ${iconUrl}`);
+    var iconCode = response.weather.icon;
+    var iconUrl = `https://www.weatherbit.io/static/img/icons/${iconCode}.png`
+    console.log(`Icon: ${iconUrl}`);
 }
 
 // finds the minimum temperature in an array of temps provided by the api
 function findMinTemp(temps) {
-  // sets the minimum temperature to the first element of the temperature arry
-  var minTemp = temps[0];
-  // for each element of the temperature arry
-  temps.forEach(function(temp) {
-    // if the element of the temperature array is less than the current stored minimum temperature
-    if (minTemp > temp) {
-      // the minimum temperature is assigned the current temprature in the arry
-      minTemp = temp;
-    }
-  });
-  console.log(`Min Temp: ${minTemp}`);
-  // return the found minimum temperature
-  return minTemp;
+
+    var minTemp = temps[0];
+    temps.forEach(function(temp) {
+
+        if (minTemp > temp) {
+            minTemp = temp;
+        }
+    });
+    console.log(`Min Temp: ${minTemp}`);
+    return minTemp;
 }
 
 // finds the maximum temperature in an array of temps provided by the api
 function findMaxTemp(temps) {
-  // sets the maximum temperature to the first element of the temperature arry
-  var maxTemp = temps[0];
-  // for each element in the temperature array
-  temps.forEach(function (temp) {
-    // if the max temp is less than the temperature element
-    if (maxTemp < temp) {
-      // assign the temp to the maximum temperature
-      maxTemp = temp;
-    }
-  });
-  console.log(`Max Temp: ${maxTemp}`);
-  // return the found maximum temperature
-  return maxTemp;
+    var maxTemp = temps[0];
+    temps.forEach(function(temp) {
+
+        if (maxTemp < temp) {
+            maxTemp = temp;
+        }
+    });
+    console.log(`Max Temp: ${maxTemp}`);
+    return maxTemp;
 }
 
 // finds the average temperature in an array of temperatures provided by the weather api
 function findAverageTemp(temps) {
-  // set the average temperature to 0
-  var avgTemp = 0;
-  // variable to calculate the sum of the array
-  var sum = 0;
-  // for each temperature in the arry
-  temps.forEach(function (temp) {
-    // add the temperature value to sum
-    sum += temp;
-  });
-  // calculate the average with the sum and the length of the array
-  avgTemp = sum / temps.length;
-  console.log(`Avg Temp: ${avgTemp.toFixed(2)}`);
-  // return the newly found average temp
-  return avgTemp;
+    var avgTemp = 0;
+    var sum = 0;
+    temps.forEach(function(temp) {
+        sum += temp;
+    });
+    avgTemp = sum / temps.length;
+    console.log(`Avg Temp: ${avgTemp.toFixed(2)}`);
+    return avgTemp;
 }
 
 // processes the weather data retrieved from the weather api
 function processHourlyWeatherData(response) {
 
-  // stores response object in currentWeather object
-  console.log(response);
-  currentWeather.response = response;
+    // stores response object in currentWeather object
+    console.log(response);
+    currentWeather.response = response;
 
-  // store, retrieve in currentWeather object and console log the location and country
-  currentWeather.cityName = response.city_name;
-  currentWeather.countryCode = response.country_code
+    // store, retrieve in currentWeather object and console log the location and country
+    currentWeather.cityName = response.city_name;
+    currentWeather.countryCode = response.country_code
 
-  console.log(`Location: ${currentWeather.cityName}`);
-  console.log(`Country: ${currentWeather.countryCode}`);
+    console.log(`Location: ${currentWeather.cityName}`);
+    console.log(`Country: ${currentWeather.countryCode}`);
 
-  // retrieve and store the latitude and longitude of the responded weather data
-  // to be used for zomato api
-  currentWeather.latitude = getLatitude(response);
-  currentWeather.longitude = getLongitude(response);
+    // retrieve and store the latitude and longitude of the responded weather data
+    // to be used for zomato api
+    currentWeather.latitude = getLatitude(response);
+    currentWeather.longitude = getLongitude(response);
 
-  console.log(`Latitude: ${currentWeather.latitude}`);
-  console.log(`Longitude: ${currentWeather.longitude}`);
+    console.log(`Latitude: ${currentWeather.latitude}`);
+    console.log(`Longitude: ${currentWeather.longitude}`);
 
-  // grab the start and finish times from the user input
-  currentWeather.startTime = getStartTime();
-  currentWeather.finishTime = getFinishTime();
+    // grab the start and finish times from the user input
+    currentWeather.startTime = getStartTime();
+    currentWeather.finishTime = getFinishTime();
 
-  console.log(`Start Time: ${currentWeather.startTime}`);
-  console.log(`Finish Time: ${currentWeather.finishTime}`);
+    console.log(`Start Time: ${currentWeather.startTime}`);
+    console.log(`Finish Time: ${currentWeather.finishTime}`);
 
-  // array to store the temps for every hour
-  currentWeather.temps = [];
+    // array to store the temps for every hour
+    currentWeather.temps = [];
 
-  // go through every hour for the next 48 hours and display the data in the console
-  response.data.forEach(function (dataObject) {
+    // go through every hour for the next 48 hours and display the data in the console
+    response.data.forEach(function(dataObject) {
 
-    // retrieve and store 
-    var time = moment(dataObject.timestamp_local);
+        // retrieve and store 
+        var time = moment(dataObject.timestamp_local);
 
-    // if data index is after start time and before finish time then display data
-    if (moment(time).isSame(moment(currentWeather.startTime)) ||
-      moment(time).isAfter(moment(currentWeather.startTime)) && moment(time).isBefore(moment(currentWeather.finishTime)) ||
-      moment(time).isSame(moment(currentWeather.finishTime))) {
+        // if data index is after start time and before finish time then display data
+        if (moment(time).isSame(moment(currentWeather.startTime)) ||
+            moment(time).isAfter(moment(currentWeather.startTime)) && moment(time).isBefore(moment(currentWeather.finishTime)) ||
+            moment(time).isSame(moment(currentWeather.finishTime))) {
 
-      console.log(`------------------------------`);
-      console.log(`Time: ${moment(dataObject.timestamp_local).format("MMM Do, k:mm")}`);
-      console.log(`Weather Description: ${dataObject.weather.description}`);
-      // depending on temperature select range of clothes for warmth or to stay cool
-      hourlyTempCheck(dataObject);
-      // adds the temp for the hour into an array of temperatures
-      currentWeather.temps.push(dataObject.temp);
-      // if uv index is above 2 then display you will need sun protection ie sunscreen or hat
-      hourlyUvCheck(dataObject);
-      // if precipitation is above certain level then you will need rain protection ie waterproof or umbrella
-      hourlyRainCheck(dataObject);
-      // if wind is above certain value then you will need wind protection ie windproof fleece or jacket
-      hourlyWindCheck(dataObject);
-      // creates the weather icon url for the hour of the day
-      hourlyDisplayIcon(dataObject);
-      console.log(`------------------------------`);
-    }
-  });
+            console.log(`------------------------------`);
+            console.log(`Time: ${moment(dataObject.timestamp_local).format("MMM Do, k:mm")}`);
+            console.log(`Weather Description: ${dataObject.weather.description}`);
+            hourlyTempCheck(dataObject);
+            currentWeather.temps.push(dataObject.temp);
+            hourlyUvCheck(dataObject);
+            hourlyRainCheck(dataObject);
+            hourlyWindCheck(dataObject);
+            hourlyDisplayIcon(dataObject);
+            console.log(`------------------------------`);
+        }
+    });
 
-  // find the average temp
-  findAverageTemp(currentWeather.temps);
-
-  // render the chosen clothes list
-  renderChosenWears();
+    findAverageTemp(currentWeather.temps);
+    renderChosenWears();
 }
 
 // creates a url friendly location using the users inputs to be added to the query URL
 function createLocation(cityInput, countryInput) {
-  // declare variable to store new location for url
-  var location = "";
+    var location = "";
 
-  // if city and country are empty
-  if (cityInput === "" && countryInput === "") {
-    // display error message
-    console.log("city and country are empty");
-    // if city is empty but country is NOT empty
-  } else if (cityInput === "" && countryInput != "") {
-    // display error message
-    console.log("city is empty");
-    // if city is NOT empty and country is empty
-  } else if (cityInput != "" && countryInput === "") {
-    // location becomes the city
-    location += cityInput;
-    // if city and country are NOT empty
-  } else if (cityInput != "" && countryInput != "") {
-    // location becomes a concatenation of city and country separated by a comma
-    location = `${cityInput},${countryInput}`;
-  }
-  // return newly created location
-  return location;
+    if (cityInput != "" && countryInput === "") {
+        location += cityInput;
+    } else if (cityInput != "" && countryInput != "") {
+        location = `${cityInput},${countryInput}`;
+    }
+    return location;
 }
 
 // creates the url to retrieve weather data from the weather api
 // location input will be provided by user
 function createHourlyWeatherUrl(cityInput, countryInput) {
-  // creates a url friendly location using the users inputs to be added to the query URL
-  var location = createLocation(cityInput, countryInput);
-  // retrieves and stores the weather api key
-  var apiKey = getWeatherApiKey();
-  // the base url for the weather api
-  var baseUrl = "https://api.weatherbit.io/v2.0/forecast/hourly";
-  // create query url with the base url, location and api key
-  var queryUrl = baseUrl +
-    "?key=" + apiKey +
-    "&city=" + location;
-  // return the newly created query url
-  return queryUrl;
+    var location = createLocation(cityInput, countryInput);
+    var apiKey = getWeatherApiKey();
+    var baseUrl = "https://api.weatherbit.io/v2.0/forecast/hourly";
+    var queryUrl = baseUrl +
+        "?key=" + apiKey +
+        "&city=" + location;
+    return queryUrl;
 }
 
 // returns location with lower case letters and replaces all whitespaces with url friendly %20
@@ -287,12 +238,10 @@ function getCountryInput() {
   // DAN!! - Here's a function to take the country from the user
   // Suggestion: place the Jquery for the country input here and grab the country input value and put it into the country variable below
 
-  // placeholder variable -- here is where to retrieve the user input data for country from the UI - PLACEHOLDER
-  var country = "australia";
-  // makes the input url friendly
-  var countryFriendlyUrl = makeUrlFriendly(country);
-  // returns newly created country string
-  return countryFriendlyUrl;
+    // placeholder variable -- here is where to retrieve the user input data for country from the UI - PLACEHOLDER
+    var country = $("#country").val();
+    var countryFriendlyUrl = makeUrlFriendly(country);
+    return countryFriendlyUrl;
 }
 
 // placeholder function to retrieve the city input from the user - PLACEHOLDER
@@ -301,33 +250,34 @@ function getCityInput() {
   // DAN!! - Here's the function to take the city from the user input
   // Suggestion: place the Jquery for the location input here and grab the city input value and put it into the city variable below
 
-  // placeholder value -- here is where to retrieve the user input data for city from the UI - PLACEHOLDER
-  var city = "melbourne";
-  // makes the input url friendly
-  var cityFriendlyUrl = makeUrlFriendly(city);
-  // return newly created city string
-  return cityFriendlyUrl;
+    // placeholder value -- here is where to retrieve the user input data for city from the UI - PLACEHOLDER
+    var city = $("#location").val();
+    var cityFriendlyUrl = makeUrlFriendly(city);
+    return cityFriendlyUrl;
 }
 
 // calls the weather api for the hourly weather
 function callWeatherApi() {
-  // retrieves and stores the city input from the user UI
-  var cityInput = getCityInput();
-  // retrieves and stores the country input from the user UI
-  var countryInput = getCountryInput();
-  // create and store the query url with the location given by the user
-  var queryUrl = createHourlyWeatherUrl(cityInput, countryInput);
-  // ajax call
-  $.ajax({
-    url: queryUrl,
-    method: "GET"
-    // process retrieved weather data
-  }).
-    then(processHourlyWeatherData).
-    // catch error if call is unsuccessful
-    catch(function (error) {
-      console.log("Catch error");
-    });
+    var cityInput = getCityInput();
+
+    // if the city input is empty then don't make the weather api call
+    if (cityInput != "") {
+        var countryInput = getCountryInput();
+        var queryUrl = createHourlyWeatherUrl(cityInput, countryInput);
+        $.ajax({
+            url: queryUrl,
+            method: "GET"
+        }).
+        then(processHourlyWeatherData).
+        catch(function(error) {
+            console.log("Catch error: " + error.message);
+        });
+    } else {
+        // display error message if city is not inputted
+        $("#modal-message").text("city is empty");
+        $("#modal").show();
+    }
+
 }
 
 //the oject for clothing suggestions
@@ -411,8 +361,13 @@ function renderChosenWears() {
   console.log(chosenWears);
 }
 
+function closeModal() {
+    $("#modal").hide();
+}
+
 // activates the call to the weather api
-callWeatherApi();
+$("#confirmBtn").on("click", callWeatherApi);
+$("#close-modal").on("click", closeModal);
 
 // when I click the eat button
 // Then I get an API response with 6 recommended restraunts
