@@ -436,8 +436,8 @@ function buildURL(entityid) {
     var urlObj = {
         entity_id: entityid,
         q: city,
-        latitude: lat,
-        longitude: lon,
+        lat: lat,
+        lon: lon,
         start: "0",
         count: "5",
     }
@@ -459,8 +459,15 @@ function DisplayResponse(obj) {
     var pn = obj.restaurants[0].restaurant.phone_numbers
     console.log(pn)
 }
-function gettingCuisineid(){
-    
+function gettingCuisineid(response) {
+    var cuisines = response.cuisines
+    var id = ""
+    cuisines.forEach(function (index, item) {
+        if ("Indian" == item.cuisine.cuisine_name) {
+            id = item.cuisine.cuisine_id
+        }
+    })
+    return id
 }
 function buildAdvancedUrl(b) {
     $.ajax({
@@ -470,9 +477,9 @@ function buildAdvancedUrl(b) {
             "user-key": "19132a3a025302edc9b08eb44608d7c0",
             "content-type": "application/json"
         },
-    }).then(function(response){
-        var cuisineid = response
-        var paramarray = [{ cuisines: "Indian" }, { sort: "cost" }, { radius: "10M" }]
+    }).then(function (response) {
+        var cuisineid = gettingCuisineid(response)
+        var paramarray = [{ cuisines: cuisineid }, { sort: "cost" }, { radius: "10M" }]
         var lat = currentWeather.latitude
         var lon = currentWeather.longitude
         var city = currentWeather.cityName
@@ -480,8 +487,8 @@ function buildAdvancedUrl(b) {
         var urlObj = {
             entity_id: b,
             q: city,
-            latitude: lat,
-            longitude: lon,
+            lat: lat,
+            lon: lon,
             start: "0",
             count: "5"
         }
@@ -502,8 +509,8 @@ function buildLocationIDUrl() {
     var baseURL = "https://developers.zomato.com/api/v2.1/locations?"
     var urlObj = {
         q: city,
-        latitude: lat,
-        longitude: lon,
+        lat: lat,
+        lon: lon,
         count: "1",
     }
     // Click event on the submit form button should trigger this
