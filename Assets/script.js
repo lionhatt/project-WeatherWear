@@ -3,20 +3,17 @@ var currentWeather = {}
 
 // stores and returns the api key for the weather api
 function getWeatherApiKey() {
-    var weatherApiKey = "20ce152fba104603b4cb45bef144122a";
-    return weatherApiKey;
+    return "20ce152fba104603b4cb45bef144122a";
 }
 
 // retrieves and stores the latitude value for the responded weather data
 function getLatitude(response) {
-    var latitude = response.lat;
-    return latitude;
+    return response.lat;
 }
 
 // retrieves and stores the longitude value for the responded weather data
 function getLongitude(response) {
-    var longitude = response.lon;
-    return longitude;
+    return response.lon;
 }
 
 // retrieves and returns the start time from the user input
@@ -51,6 +48,7 @@ function getFinishTime() {
     return finishTime;
 }
 
+// TODO - whys this here if its not doing anything
 // retrieves the temperature for the time of the day
 function hourlyTempCheck(response) {
     var temperature = response.temp;
@@ -116,7 +114,7 @@ function findMinTemp(temps) {
     // sets the minimum temperature to the first element of the temperature arry
     var minTemp = temps[0];
     // for each element of the temperature arry
-    temps.forEach(function(temp) {
+    temps.forEach(function (temp) {
         // if the element of the temperature array is less than the current stored minimum temperature
         if (minTemp > temp) {
             // the minimum temperature is assigned the current temprature in the arry
@@ -133,7 +131,7 @@ function findMaxTemp(temps) {
     // sets the maximum temperature to the first element of the temperature arry
     var maxTemp = temps[0];
     // for each element in the temperature array
-    temps.forEach(function(temp) {
+    temps.forEach(function (temp) {
         // if the max temp is less than the temperature element
         if (maxTemp < temp) {
             // assign the temp to the maximum temperature
@@ -152,7 +150,7 @@ function findAverageTemp(temps) {
     // variable to calculate the sum of the array
     var sum = 0;
     // for each temperature in the arry
-    temps.forEach(function(temp) {
+    temps.forEach(function (temp) {
         // add the temperature value to sum
         sum += temp;
     });
@@ -196,7 +194,7 @@ function processHourlyWeatherData(response) {
     currentWeather.temps = [];
 
     // go through every hour for the next 48 hours and display the data in the console
-    response.data.forEach(function(dataObject) {
+    response.data.forEach(function (dataObject) {
 
         // retrieve and store 
         var time = moment(dataObject.timestamp_local);
@@ -230,9 +228,6 @@ function processHourlyWeatherData(response) {
 
     // render the chosen clothes list
     renderChosenWears();
-    buildingLocationURL();
-    gettingEntityid();
-    buildBasicUrl();    
 }
 
 // creates a url friendly location using the users inputs to be added to the query URL
@@ -323,13 +318,13 @@ function callWeatherApi() {
     $.ajax({
         url: queryUrl,
         method: "GET"
-            // process retrieved weather data
+        // process retrieved weather data
     }).
-    then(processHourlyWeatherData).
+        then(processHourlyWeatherData).
         // catch error if call is unsuccessful
-    catch(function(error) {
-        console.log("Catch error");
-    });
+        catch(function (error) {
+            console.log("Catch error");
+        });
 }
 
 //the oject for clothing suggestions
@@ -415,127 +410,160 @@ function renderChosenWears() {
 
 // activates the call to the weather api
 callWeatherApi();
-// renderChosenWears();
-// Function to build URL Query for Zomato API
-  // Get Lat and Lon, City name
-  // Call API
-  // Cuisine choice, High reviewed or cost efficient, options ordered by, Location radius
-function buildingLocationURL(){
-  var lat = currentWeather.latitude
-  var lon = currentWeather.longitude
-  var city = currentWeather.cityName
-  var baseURL = "https://developers.zomato.com/api/v2.1/locations?"
-  var urlObj = {
-    q: city,
-    latitude: lat,
-    longitude: lon,
-    count: "1",
-  }
-  // Click event on the submit form button should trigger this
-  // buildAdvancedUrl(urlObj)
-  var buildURL = baseURL + $.param(urlObj)
-  return buildURL
-}
-function gettingEntityid(){
-  var entityid = "";
-  $.ajax({
-    url: buildingLocationURL() ,
-    method: "GET",
-    headers: {
-      "user-key": "19132a3a025302edc9b08eb44608d7c0",
-      "content-type": "application/json"
-    },
-  }).then(function(response){
-    response.location_suggestions[0].entity_id = entityid
-  })
-  console.log(entityid)
-  return entityid
-}
 
-function buildBasicUrl(){
-  var lat = currentWeather.latitude
-  var lon = currentWeather.longitude
-  var city = currentWeather.cityName
-  var baseURL = "https://developers.zomato.com/api/v2.1/search?"
-  var urlObj = {
-    entity_id: gettingEntityid(), 
-    q: city,
-    latitude: lat,
-    longitude: lon,
-    start: "0",
-    count: "5",
-  }
-  // Click event on the submit form button should trigger this
-  // buildAdvancedUrl(urlObj)
-  var buildURL = baseURL + $.param(urlObj)
-  console.log(buildURL)
-  return buildURL
+// when I click the eat button
+// Then I get an API response with 6 recommended restraunts
+// I also have a scondary form at the top of the page acting as filters for the response
+
+// When I click the button I need to get the URL (basic)
+// it needs to have city name, lat, lon and entity ID
+// Need a function to call the API with the basic URL
+// Need a function for the Display aspect
+// When I put input into the secondary eat form (filters)
+// it takes in the new input and adds it to the URL
+// Function to call the API
+// Function to display new response
+
+// when I click the eat button
+// Then I get an API response with 6 recommended restraunts
+
+// building URL
+function buildURL(entityid) {
+    var lat = currentWeather.latitude
+    var lon = currentWeather.longitude
+    var city = currentWeather.cityName
+    var baseURL = "https://developers.zomato.com/api/v2.1/search?"
+    var urlObj = {
+        entity_id: entityid,
+        q: city,
+        lat: lat,
+        lon: lon,
+        start: "0",
+        count: "5",
+    }
+    // Click event on the submit form button should trigger this
+    // buildAdvancedUrl(urlObj)
+    var buildURL = baseURL + $.param(urlObj)
+    console.log(buildURL)
+    return buildURL
 }
-function buildAdvancedUrl(){
-  var paramarray = [{cuisines: "Indian" },{sort: "cost" },{radius: "10M" }]
-  var lat = currentWeather.latitude
-  var lon = currentWeather.longitude
-  var city = currentWeather.cityName
-  var baseURL = "https://developers.zomato.com/api/v2.1/search?"
-  var urlObj = {
-    q: city,
-    latitude: lat,
-    longitude: lon,
-    start: "0",
-    count: "5"
-  }
-  paramarray.forEach(function(item){
-    Object.keys(item).forEach(function(key) {
-      if(item[key] !== "" ) {urlObj[key] = item[key]}
+function DisplayResponse(obj) {
+    var restaurants = obj.restaurants[0]
+    var name = restaurants.restaurant.name
+    console.log(name)
+    var image = obj.restaurants[0].restaurant.thumb
+    console.log(image)
+    var review = obj.restaurants[0].restaurant.user_rating
+    console.log(review)
+    var address = obj.restaurants[0].restaurant.location.address
+    console.log(address)
+    var pn = obj.restaurants[0].restaurant.phone_numbers
+    console.log(pn)
+}
+function gettingCuisineid(response) {
+    var cuisines = response.cuisines
+    var id = ""
+    cuisines.forEach(function (item) {
+        if ("Indian" == item.cuisine.cuisine_name) {
+            id = item.cuisine.cuisine_id
+        }
     })
-  })
-  var buildURL = baseURL + $.param(urlObj)
-  return buildURL
+    return id
 }
-function displayZomatoresponse(obj){
-  
-  var name = obj.restaurants[0].restaurant.name
-  var image = obj.restaurants[0].restaurant.thumb
-  var review = obj.restaurants[0].restaurant.user_rating
-  var address = obj.restaurants[0].restaurant.location.address
-  var pn = obj.restaurants[0].restaurant.phone_numbers
- 
-  console.log("name",name,"image", image,"review", review,"address", address,"phone number", pn)
-  // $("selector").each(function(){
-  //   $("h4").text(response.restraunts.name)
-  //   $("img").attr("src", response.restaurants.thumb)
-  //   var rating = response.restaurants.user_rating
-  //   $("p").text("Review:" + " " + rating.aggregate_rating + rating_text)
-  //   $("p").text("Address:" + " " + response.restraunts.location.address)
-  //   $("p").text("Phone Number:" + response.restraunts.phone_numbers)
-  // })
+function buildAdvancedResponse(b) {
+    $.ajax({
+        url: "https://developers.zomato.com/api/v2.1/cuisines?city_id=" + b,
+        method: "GET",
+        headers: {
+            "user-key": "19132a3a025302edc9b08eb44608d7c0",
+            "content-type": "application/json"
+        },
+    }).then(function (response) {
+        var cuisineid = gettingCuisineid(response)
+        var paramarray = [{ cuisines: cuisineid }, { sort: "cost" }, { radius: "10M" }]
+        var lat = currentWeather.latitude
+        var lon = currentWeather.longitude
+        var city = currentWeather.cityName
+        var baseURL = "https://developers.zomato.com/api/v2.1/search?"
+        var urlObj = {
+            entity_id: b,
+            q: city,
+            lat: lat,
+            lon: lon,
+            start: "0",
+            count: "5"
+        }
+        paramarray.forEach(function (item) {
+            Object.keys(item).forEach(function (key) {
+                if (item[key] !== "") { urlObj[key] = item[key] }
+            })
+        })
+        var buildURL = baseURL + $.param(urlObj)
+        $.ajax({
+            url: buildURL,
+            method: "GET",
+            headers: {
+                "user-key": "19132a3a025302edc9b08eb44608d7c0",
+                "content-type": "application/json"
+            },
+        }).then(function (response) {
+            DisplayResponse(response)
+        })
+    })
 }
-function secondaryZomatoAPIcall(){
-  $.ajax({
-    url: buildAdvancedUrl(),
-    method: "GET",
-    headers: {
-      "user-key": "19132a3a025302edc9b08eb44608d7c0",
-      "content-type": "application/json"
-    },
-  }).then(function (res){
-    displayZomatoresponse(res)
-  })
-}
-function zomatoAPIcall(){
-  $.ajax({
-    url: buildBasicUrl(),
-    method: "GET",
-    headers: {
-      "user-key": "19132a3a025302edc9b08eb44608d7c0",
-      "content-type": "application/json"
-    },
-  }).then(function (response){
-    console.log(response)
-    displayZomatoresponse(response)
-    $("#eatform").on("click", secondaryZomatoAPIcall())
-  })
+function buildLocationIDUrl() {
+    var lat = currentWeather.latitude
+    var lon = currentWeather.longitude
+    var city = currentWeather.cityName
+    var baseURL = "https://developers.zomato.com/api/v2.1/locations?"
+    var urlObj = {
+        q: city,
+        lat: lat,
+        lon: lon,
+        count: "1",
+    }
+    // Click event on the submit form button should trigger this
+    // buildAdvancedUrl(urlObj)
+    var buildlocalURL = baseURL + $.param(urlObj)
+    return buildlocalURL
 }
 
-$(".eat").on("click", zomatoAPIcall)
+$(".eat").on("click", function gettingEntityId() {
+    $.ajax({
+        url: buildLocationIDUrl(),
+        method: "GET",
+        headers: {
+            "user-key": "19132a3a025302edc9b08eb44608d7c0",
+            "content-type": "application/json"
+        },
+    }).then(function (response) {
+        var entityid = response.location_suggestions[0].entity_id
+        // zomatoAPIcall(entityid)
+        $.ajax({
+            url: buildURL(entityid),
+            method: "GET",
+            headers: {
+                "user-key": "19132a3a025302edc9b08eb44608d7c0",
+                "content-type": "application/json"
+            },
+        }).then(function (response) {
+            DisplayResponse(response)
+        })
+    })
+})
+$("#eatform").on("click", function gettingEntityId() {
+    $.ajax({
+        url: buildLocationIDUrl(),
+        method: "GET",
+        headers: {
+            "user-key": "19132a3a025302edc9b08eb44608d7c0",
+            "content-type": "application/json"
+        },
+    }).then(function (response) {
+        var entityid = response.location_suggestions[0].entity_id
+        // zomatoAPIcall(entityid)
+        buildAdvancedResponse(entityid)
+    })
+})
+
 
