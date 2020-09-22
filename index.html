@@ -9,116 +9,113 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <link rel="stylesheet" href="Assets/style.css">
 
-<body>
+    <body>
 
 
-    <div class="header">
-        <button class="btn btn1 waves-effect">Wear</button>
-        <button class="btn btn1 waves-effect eat">Eat</button>
-    </div>
+        <div class="header">
+            <button class="btn btn1 waves-effect">Wear</button>
+            <button class="btn btn1 waves-effect eat">Eat</button>
+        </div>
 
-    <div class="container">
-        <form id="location-form">
-            <input class="form-control" id="location" type="text" placeholder="Location">
-        </form>
-        <form id="Country-form">
-            <input class="form-control" id="country" type="text" placeholder="Country">
-        </form>
-    </div>
+        <div class="container">
+            <form id="location-form">
+                <input class="form-control" id="location" type="text" placeholder="Location">
+            </form>
+            <form id="Country-form">
+                <input class="form-control" id="country" type="text" placeholder="Country">
+            </form>
+        </div>
 
-    <div class="container">
-        <div class="gender" id="selectBox">
-            <select style="display: block;" name="gender" id="main_menu" class="custom-select">
+        <div class="container">
+            <div class="gender" id="selectBox">
+                <select style="display: block;" name="gender" class="main_menu" id="custom-select">
                 <option selected disabled>Gender</option>
                 <option value="male">Male</option>
                 <option value="female">Female</option>
             </select>
-        </div>
-      
-        <div class="startTime" id="selectBox">
-            <select style="display: block;" name="goingOut" id="main_menu" class="goingOutTime">
-                <option selected disabled>Going out at</option>
-                <option value="12">00:00</option>
-                <option value="1">01:00</option>
-                <option value="2">02:00</option>
-                <option value="3">03:00</option>
-                <option value="4">04:00</option>
-                <option value="5">05:00</option>
-                <option value="6">06:00</option>
-                <option value="7">07:00</option>
-                <option value="8">08:00</option>
-                <option value="9">09:00</option>
-                <option value="10">10:00</option>
-                <option value="11">11:00</option>
-                <option value="12a">12:00</option>
-                <option value="1a">13:00</option>
-                <option value="2a">14:00</option>
-                <option value="3a">15:00</option>
-                <option value="4a">16:00</option>
-                <option value="5a">17:00</option>
-                <option value="6a">18:00</option>
-                <option value="7a">19:00</option>
-                <option value="8a">20:00</option>
-                <option value="9a">21:00</option>
-                <option value="10a">22:00</option>
-                <option value="11a">23:00</option>
-            </select>
-        </div>
-        <div class="endTime" id="selectBox">
-            <select style="display: block;" name="goingOut" id="main_menu" class="comingHomeTime">
-                <option selected disabled>Coming home at</option>
-                <option value="12">00:00</option>
-                <option value="1">01:00</option>
-                <option value="2">02:00</option>
-                <option value="3">03:00</option>
-                <option value="4">04:00</option>
-                <option value="5">05:00</option>
-                <option value="6">06:00</option>
-                <option value="7">07:00</option>
-                <option value="8">08:00</option>
-                <option value="9">09:00</option>
-                <option value="10">10:00</option>
-                <option value="11">11:00</option>
-                <option value="12a">12:00</option>
-                <option value="1a">13:00</option>
-                <option value="2a">14:00</option>
-                <option value="3a">15:00</option>
-                <option value="4a">16:00</option>
-                <option value="5a">17:00</option>
-                <option value="6a">18:00</option>
-                <option value="7a">19:00</option>
-                <option value="8a">20:00</option>
-                <option value="9a">21:00</option>
-                <option value="10a">22:00</option>
-                <option value="11a">23:00</option>
-            </select>
-        </div>
-        <div id="confirmBtn">
-            <button class="btn confirmBtn" type="submit">Confirm</button>
-        </div>
-        <div class="weatherDisplay">
-        </div>
-        <div class="restRecommend">
-        </div>
-
-        <div class="modal" id="modal">
-            <div class="modal-content" id="modal-content">
-                <span class="close" id="close-modal">&times;</span>
-                <p id="modal-message"></p>
             </div>
+
+            <div class="startTime" id="selectBox">
+                <select style="display: block;" name="going-out" class="main_menu" id="goingOutTime">
+                    <option selected disabled>Going out at</option>
+                    <option value="00">00:00</option>
+                    <option value="01">01:00</option>
+                    <option value="02">02:00</option>
+                    <option value="03">03:00</option>
+                    <option value="04">04:00</option>
+                    <option value="05">05:00</option>
+                    <option value="06">06:00</option>
+                    <option value="07">07:00</option>
+                    <option value="08">08:00</option>
+                    <option value="09">09:00</option>
+                    <option value="10">10:00</option>
+                    <option value="11">11:00</option>
+                    <option value="12">12:00</option>
+                    <option value="13">13:00</option>
+                    <option value="14">14:00</option>
+                    <option value="15">15:00</option>
+                    <option value="16">16:00</option>
+                    <option value="17">17:00</option>
+                    <option value="18">18:00</option>
+                    <option value="19">19:00</option>
+                    <option value="20">20:00</option>
+                    <option value="21">21:00</option>
+                    <option value="22">22:00</option>
+                    <option value="23">23:00</option>
+                </select>
+            </div>
+            <div class="endTime" id="selectBox">
+                <select style="display: block;" name="coming-home" class="main_menu" id="comingHomeTime">
+                    <option selected disabled>Coming home at</option>
+                    <option value="00">00:00</option>
+                    <option value="01">01:00</option>
+                    <option value="02">02:00</option>
+                    <option value="03">03:00</option>
+                    <option value="04">04:00</option>
+                    <option value="05">05:00</option>
+                    <option value="06">06:00</option>
+                    <option value="07">07:00</option>
+                    <option value="08">08:00</option>
+                    <option value="09">09:00</option>
+                    <option value="10">10:00</option>
+                    <option value="11">11:00</option>
+                    <option value="12">12:00</option>
+                    <option value="13">13:00</option>
+                    <option value="14">14:00</option>
+                    <option value="15">15:00</option>
+                    <option value="16">16:00</option>
+                    <option value="17">17:00</option>
+                    <option value="18">18:00</option>
+                    <option value="19">19:00</option>
+                    <option value="20">20:00</option>
+                    <option value="21">21:00</option>
+                    <option value="22">22:00</option>
+                    <option value="23">23:00</option>
+                </select>
+            </div>
+            <div id="confirmBtn">
+                <button class="btn confirmBtn" type="submit">Confirm</button>
+            </div>
+            <div class="weatherDisplay">
+            </div>
+            <div class="restRecommend">
+            </div>
+
+            <div class="modal" id="modal">
+                <div class="modal-content" id="modal-content">
+                    <span class="close" id="close-modal">&times;</span>
+                    <p id="modal-message"></p>
+                </div>
+            </div>
+
         </div>
 
-    </div>
+        <!-- moment.js -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.28.0/moment-with-locales.js" integrity="sha512-2Zf8MmDD4CaXNATmBqBXxW+D627jYF3yJNbZGBPmer+VYoEzqEkUHkz4xV9qcCjFdCxueRDd5/Gs8k6cGrWWXA==" crossorigin="anonymous"></script>
 
-    <!-- moment.js -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.28.0/moment-with-locales.js"
-        integrity="sha512-2Zf8MmDD4CaXNATmBqBXxW+D627jYF3yJNbZGBPmer+VYoEzqEkUHkz4xV9qcCjFdCxueRDd5/Gs8k6cGrWWXA=="
-        crossorigin="anonymous"></script>
-
-    <!-- jQuery -->
-    <script src="https://code.jquery.com/jquery-3.5.1.js"
-        integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
-    <script src="Assets/script.js"></script>
-</body>
+        <!-- jQuery -->
+        <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+        <script src="Assets/script.js"></script>
+    </body>
 
 </html>
