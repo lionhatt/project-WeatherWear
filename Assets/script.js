@@ -21,13 +21,8 @@ function getLongitude(response) {
 
 // retrieves and returns the start time from the user input
 function getStartTime() {
-  // to store the start time provided by the user in the UI - PLACEHOLDER value
-
-  // DAN!! - use this function to grab the going out time of the user
-  // Suggestion: place the Jquery for the going out time input here, grab the going out time input value and put it into the startTime variable below
-  // Need to turn the going out input value into a valid moment.js value
-  // Will need to include the date as well as the time
-
+    // to store the start time provided by the user in the UI - PLACEHOLDER value
+      
   // NEED TO MAKE SURE USER ONLY PUTS IN FUTURE TIME
 
   // START TIME HAS TO BE BEFORE FINISH TIME
@@ -40,18 +35,11 @@ function getStartTime() {
 function getFinishTime() {
   // to store the finish time provided by the user in the UI - PLACEHOLDER value
 
-  // DAN!! - use this function to grab the coming home time of the user
-  // Suggestion: place the Jquery for the coming home time input here, grab the coming home time input value and put it into the finishTime variable below
-  // Need to turn the coming home input value into a valid moment.js value
-  // Will need to include the date as well as the time
-
   // NEED TO PLACE LIMIT ON USER INPUT TO LESS THAN 48 HOURS!!
 
   var finishTime = moment("2020-09-22 22:00");
   return finishTime;
 }
-
-
 // retrieves the temperature for the time of the day
 function hourlyTempCheck(response) {
   var temperature = response.temp;
