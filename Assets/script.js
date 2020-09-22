@@ -21,29 +21,18 @@ function getLongitude(response) {
 
 // retrieves and returns the start time from the user input
 function getStartTime() {
-    // to store the start time provided by the user in the UI - PLACEHOLDER value
-    $("select.goingOutTime").change(function() {
-        var goingOutselect = $(this).children("option:selected").val();
-        console.log(goingOutselect);
-
-        var date = moment().format('YYYY-MM-DD');
-
-        var startTime = moment(date + " " + goingOutselect);
-        return startTime;
-    });
+    var goingOutselect = $("#goingOutTime").val();
+    var date = moment().format('YYYY-MM-DD');
+    var startTime = moment(date + " " + goingOutselect);
+    return startTime;
 }
 
 // retrieves and returns the end time from the user input
 function getFinishTime() {
-    // to store the finish time provided by the user in the UI - PLACEHOLDER value
-    $("select.comingHomeTime").change(function() {
-        var comingHomeselect = $(this).children("option:selected").val();
-        console.log(comingHomeselect);
-
-        var date = moment().format('YYYY-MM-DD');
-        var finishTime = moment(date + " " + comingHomeselect);
-        return finishTime;
-    });
+    var comingHomeselect = $("#comingHomeTime").val();
+    var date = moment().format('YYYY-MM-DD');
+    var finishTime = moment(date + " " + comingHomeselect);
+    return finishTime;
 }
 // retrieves the temperature for the time of the day
 function hourlyTempCheck(response) {
