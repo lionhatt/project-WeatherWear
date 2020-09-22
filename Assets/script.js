@@ -3,32 +3,32 @@ var currentWeather = {}
 
 // stores and returns the api key for the weather api
 function getWeatherApiKey() {
-    var weatherApiKey = "20ce152fba104603b4cb45bef144122a"
-    return weatherApiKey;
+  var weatherApiKey = "20ce152fba104603b4cb45bef144122a"
+  return weatherApiKey;
 }
 
 // retrieves and stores the latitude value for the responded weather data
 function getLatitude(response) {
-    var latitude = response.lat;
-    return latitude;
+  var latitude = response.lat;
+  return latitude;
 }
 
 // retrieves and stores the longitude value for the responded weather data
 function getLongitude(response) {
-    var longitude = response.lon;
-    return longitude;
+  var longitude = response.lon;
+  return longitude;
 }
 
 // creates the user input choice list of times based on the current time and date
 function createInputTimes() {
-    var goingOutSelect = $("#goingOutTime");
-    var comingHomeSelect = $("#comingHomeTime");
-    var dateNow = moment();
-    for (var i = 0; i < 48; i++) {
-        var newDate = moment(dateNow).add(i, 'hours');
-        goingOutSelect.append(`<option value="${newDate}">${newDate.format("Do MMM")} ${newDate.hours()}:00</option>`);
-        comingHomeSelect.append(`<option value="${newDate}">${newDate.format("Do MMM")} ${newDate.hours()}:00</option>`);
-    }
+  var goingOutSelect = $("#goingOutTime");
+  var comingHomeSelect = $("#comingHomeTime");
+  var dateNow = moment();
+  for (var i = 0; i < 48; i++) {
+    var newDate = moment(dateNow).add(i, 'hours');
+    goingOutSelect.append(`<option value="${newDate}">${newDate.format("Do MMM")} ${newDate.hours()}:00</option>`);
+    comingHomeSelect.append(`<option value="${newDate}">${newDate.format("Do MMM")} ${newDate.hours()}:00</option>`);
+  }
 }
 
 // retrieves and returns the start time from the user input
@@ -46,8 +46,8 @@ function getFinishTime() {
 }
 // retrieves the temperature for the time of the day
 function hourlyTempCheck(response) {
-    var temperature = response.temp;
-    console.log(`Temperature: ${temperature}`);
+  var temperature = response.temp;
+  console.log(`Temperature: ${temperature}`);
 }
 
 // checks the uv for the time of the day
@@ -59,6 +59,7 @@ function hourlyUvCheck(response) {
     // display uv message - this is where functions can got to display to the user what to wear - PLACEHOLDER
     console.log(`UV Index: ${uvIndex}`);
     console.log("You will need sunprotection today, wear a hat or apply sunscreen regularly");
+    chosenWears.push("sunglasses");
   } else {
     // else because we don't want to give false info, this is a disclaimer
     console.log("UV is low but it is still advised to protect yourself from UV");
@@ -74,6 +75,7 @@ function hourlyRainCheck(response) {
     // display to the user what to wear - this is where functions can go to display info to the user - PLACEHOLDER
     console.log(`Precipitation: ${precip}mm`);
     console.log("You will need a waterproof or an umbrella");
+    chosenWears.push("umbrella");
   }
 }
 
@@ -86,6 +88,7 @@ function hourlyWindCheck(response) {
     // display to the user what to wear - this is where functions can go to update the display - PLACEHOLDER
     console.log(`Wind Speed: ${windSpeed}km/h`);
     console.log("You will need wind protection");
+    chosenWears.push("scarve");
   }
 }
 
@@ -221,7 +224,7 @@ function createHourlyWeatherUrl(cityInput, countryInput) {
 
 // returns location with lower case letters and replaces all whitespaces with url friendly %20
 function makeUrlFriendly(location) {
-    return location.toLowerCase().replace(/\s/g, "%20");
+  return location.toLowerCase().replace(/\s/g, "%20");
 }
 
 // placeholder function to retrieve the country input from the user - PLACEHOLDER
@@ -296,73 +299,65 @@ var i = 26
 // function to append suggested clothing into chosenWears array
 function renderChosenWears() {
 
-    // find and store the min and max temps of the currentWeather object
-    var minTemp = findMinTemp(currentWeather.temps);
-    // console.log(findMinTemp(currentWeather.temps));
-    var maxTemp = findMaxTemp(currentWeather.temps);
-    // console.log(findMaxTemp(currentWeather.temps));
+  // find and store the min and max temps of the currentWeather object
+  var minTemp = findMinTemp(currentWeather.temps);
+  var maxTemp = findMaxTemp(currentWeather.temps);
 
-    //if the min temp is higher than the optimal temprature, it will suggest basic clothing
-    if (minTemp >= i) {
-        chosenWears.push(wears.baseLayer[0]);
-        //if the min temp is lower then 5°C, it will give the maximum clothing suggestion
-    } else if (minTemp <= 5) {
-        chosenWears.push(wears.outerLayer[2]);
-        chosenWears.push(wears.baseLayer[1], wears.baseLayer[2], wears.baseLayer[4]);
-        //if the min temp is in between 5-26°C:  
-    } else {
-
-        //if the maxtemp is higher then the optimal temprature, it will set maxtemp as the optimal at 26°C
-        if (maxTemp >= i) {
-            maxTemp = i;
-        }
-
-        //if the difference between max and min temp is greater than 11°C, it will append down-jacket to suggestion
-        if ((maxTemp - minTemp) >= 11) {
-            chosenWears.push(wears.outerLayer[2]);
-            //if the difference between max and min temp is equal to  10°C, it will append coat to suggestion  
-        } else if ((maxTemp - minTemp) === 10) {
-            chosenWears.push(wears.outerLayer[1]);
-            //if the difference between max and min temp is equal to  9°C, it will append short-jacket to suggestion 
-        } else if ((maxTemp - minTemp) === 9) {
-            chosenWears.push(wears.outerLayer[0]);
-            //if the difference between max and min temp is less than 9°C, it will discard the difference, at calculate based on min temp only   
-        } else if ((maxTemp - minTemp) < 9) {
-            maxTemp = minTemp;
-        }
-
-
-        //if the temprature is greater then 16°C, it will itterate through the base layer to append suggestions
-        if (maxTemp >= 16) {
-            i = i - maxTemp;
-            for (let k = wears.baseLayer.length - 1; k >= 0; k--) {
-                if (i >= (k + 1)) {
-                    i = i - (k + 1);
-                    chosenWears.push(wears.baseLayer[k]);
-                }
-            }
-            //if the temparture is less then 16°C  , it will itterate through the outer layer for 1 itme ,and then through base layer to append suggestions
-        } else if (maxTemp < 16) {
-            i = i - maxTemp;
-            for (let u = wears.outerLayer.length - 1; u >= 0; u--) {
-                if (i >= (u + 9)) {
-                    i = i - (u + 9);
-                    chosenWears.push(wears.outerLayer[u]);
-                    break;
-                }
-            }
-
-            for (let k = wears.baseLayer.length - 1; k >= 0; k--) {
-                if (i >= (k + 1)) {
-                    i = i - (k + 1);
-                    chosenWears.push(wears.baseLayer[k]);
-
-                }
-            }
-        }
+  //if the min temp is higher than the optimal temprature, it will suggest basic clothing
+  if (minTemp >= i) {
+    chosenWears.push(wears.baseLayer[0]);
+    //if the min temp is lower then 5°C, it will give the maximum clothing suggestion  
+  } else if (minTemp <= 5) {
+    chosenWears.push(wears.outerLayer[2]);
+    chosenWears.push(wears.baseLayer[1], wears.baseLayer[2], wears.baseLayer[4]);
+    //if the min temp is in between 5-26°C:  
+  } else {
+    //if the maxtemp is higher then the optimal temprature, it will set maxtemp as the optimal at 26°C
+    if (maxTemp >= i) {
+      maxTemp = i;
     }
-    console.log("Chosen wears: " + chosenWears);
-    renderClothRec();
+    //if the difference between max and min temp is greater than 11°C, it will append down-jacket to suggestion
+    if ((maxTemp - minTemp) >= 11) {
+      chosenWears.push(wears.outerLayer[2]);
+      //if the difference between max and min temp is equal to  10°C, it will append coat to suggestion  
+    } else if ((maxTemp - minTemp) === 10) {
+      chosenWears.push(wears.outerLayer[1]);
+      //if the difference between max and min temp is equal to  9°C, it will append short-jacket to suggestion 
+    } else if ((maxTemp - minTemp) === 9) {
+      chosenWears.push(wears.outerLayer[0]);
+      //if the difference between max and min temp is less than 9°C, it will discard the difference, at calculate based on min temp only   
+    } else if ((maxTemp - minTemp) < 9) {
+      maxTemp = minTemp;
+    }
+    //if the temprature is greater then 16°C, it will itterate through the base layer to append suggestions
+    if (maxTemp >= 16) {
+      i = i - maxTemp;
+      for (let k = wears.baseLayer.length - 1; k >= 0; k--) {
+        if (i >= (k + 1)) {
+          i = i - (k + 1);
+          chosenWears.push(wears.baseLayer[k]);
+        }
+      }
+      //if the temparture is less then 16°C  , it will itterate through the outer layer for 1 itme ,and then through base layer to append suggestions
+    } else if (maxTemp < 16) {
+      i = i - maxTemp;
+      for (let u = wears.outerLayer.length - 1; u >= 0; u--) {
+        if (i >= (u + 9)) {
+          i = i - (u + 9);
+          chosenWears.push(wears.outerLayer[u]);
+          break;
+        }
+      }
+      for (let k = wears.baseLayer.length - 1; k >= 0; k--) {
+        if (i >= (k + 1)) {
+          i = i - (k + 1);
+          chosenWears.push(wears.baseLayer[k]);
+        }
+      }
+    }
+  }
+  console.log("Chosen wears: " + chosenWears);
+  renderClothRec();
 }
 
 function closeModal() {
@@ -511,20 +506,20 @@ function buildAdvancedResponse(b) {
 }
 
 function buildLocationIDUrl() {
-    var lat = currentWeather.latitude
-    var lon = currentWeather.longitude
-    var city = currentWeather.cityName
-    var baseURL = "https://developers.zomato.com/api/v2.1/locations?"
-    var urlObj = {
-            q: city,
-            lat: lat,
-            lon: lon,
-            count: "1",
-        }
-        // Click event on the submit form button should trigger this
-        // buildAdvancedUrl(urlObj)
-    var buildlocalURL = baseURL + $.param(urlObj)
-    return buildlocalURL
+  var lat = currentWeather.latitude
+  var lon = currentWeather.longitude
+  var city = currentWeather.cityName
+  var baseURL = "https://developers.zomato.com/api/v2.1/locations?"
+  var urlObj = {
+    q: city,
+    lat: lat,
+    lon: lon,
+    count: "1",
+  }
+  // Click event on the submit form button should trigger this
+  // buildAdvancedUrl(urlObj)
+  var buildlocalURL = baseURL + $.param(urlObj)
+  return buildlocalURL
 }
 function renderEatform(entityid) {
   $("selector").removeClass("hide")
@@ -544,6 +539,16 @@ function renderEatform(entityid) {
   })
 }
 $(".eat").on("click", function gettingEntityId() {
+  $.ajax({
+    url: buildLocationIDUrl(),
+    method: "GET",
+    headers: {
+      "user-key": "19132a3a025302edc9b08eb44608d7c0",
+      "content-type": "application/json"
+    },
+  }).then(function (response) {
+    var entityid = response.location_suggestions[0].entity_id
+    // zomatoAPIcall(entityid)
     $.ajax({
         url: buildLocationIDUrl(),
         method: "GET",
@@ -566,6 +571,7 @@ $(".eat").on("click", function gettingEntityId() {
             DisplayResponse(response)
         })
     })
+  })
 })
 $("#eatform").on("click", function gettingEntityId() {
     $.ajax({
@@ -584,16 +590,15 @@ $("#eatform").on("click", function gettingEntityId() {
 
 //function to append recommended itmes on the html
 function renderClothRec() {
-    $(chosenWears).each(function(index, value) {
-        var wearDiv = $('<div class= "wearDiv>');
-        var wearImage = $("<img>");
-        var wearP = $("<p>");
-        wearP.text(value);
-        var wearURL = "/Assets/img/" + value + ".jpg";
-        $(wearImage).attr({ src: wearURL, alt: value });
-        wearDiv.append(wearImage, wearP);
-        //Dan can you please add the div your want to append the pics to
-        $("").append(wearDiv);
-
-    })
+  $(chosenWears).each(function (index, value) {
+    var wearDiv = $('<div class= "wearDiv>');
+    var wearImage = $("<img>");
+    var wearP = $("<p>");
+    wearP.text(value);
+    var wearURL = "/Assets/img/" + value + ".jpg";
+    $(wearImage).attr({ src: wearURL, alt: value });
+    wearDiv.append(wearImage, wearP);
+    //Dan can you please add the div your want to append the pics to
+    $("").append(wearDiv);
+  })
 }
