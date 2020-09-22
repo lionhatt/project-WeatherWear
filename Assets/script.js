@@ -19,19 +19,31 @@ function getLongitude(response) {
     return longitude;
 }
 
+// creates the user input choice list of times based on the current time and date
+function createInputTimes() {
+    var goingOutSelect = $("#goingOutTime");
+    var comingHomeSelect = $("#comingHomeTime");
+    var dateNow = moment();
+    for (var i = 0; i < 48; i++) {
+        var newDate = moment(dateNow).add(i, 'hours');
+        goingOutSelect.append(`<option value="${newDate}">${newDate.format("Do MMM")} ${newDate.hours()}:00</option>`);
+        comingHomeSelect.append(`<option value="${newDate}">${newDate.format("Do MMM")} ${newDate.hours()}:00</option>`);
+    }
+}
+
 // retrieves and returns the start time from the user input
 function getStartTime() {
     var goingOutselect = $("#goingOutTime").val();
-    var date = moment().format('YYYY-MM-DD');
-    var startTime = moment(date + " " + goingOutselect);
+    // var date = moment().format('YYYY-MM-DD');
+    var startTime = moment(goingOutselect).subtract(1, 'hours');
     return startTime;
 }
 
 // retrieves and returns the end time from the user input
 function getFinishTime() {
     var comingHomeselect = $("#comingHomeTime").val();
-    var date = moment().format('YYYY-MM-DD');
-    var finishTime = moment(date + " " + comingHomeselect);
+    // var date = moment().format('YYYY-MM-DD');
+    var finishTime = moment(comingHomeselect);
     return finishTime;
 }
 // retrieves the temperature for the time of the day
@@ -355,6 +367,8 @@ function closeModal() {
 // activates the call to the weather api
 $("#confirmBtn").on("click", callWeatherApi);
 $("#close-modal").on("click", closeModal);
+
+createInputTimes();
 
 // when I click the eat button
 // Then I get an API response with 6 recommended restraunts
