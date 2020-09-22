@@ -32,7 +32,7 @@ function getStartTime() {
 
   // START TIME HAS TO BE BEFORE FINISH TIME
 
-  var startTime = moment("2020-09-20 14:00");
+  var startTime = moment("2020-09-22 20:00");
   return startTime;
 }
 
@@ -47,7 +47,7 @@ function getFinishTime() {
 
   // NEED TO PLACE LIMIT ON USER INPUT TO LESS THAN 48 HOURS!!
 
-  var finishTime = moment("2020-09-20 20:00");
+  var finishTime = moment("2020-09-22 22:00");
   return finishTime;
 }
 
@@ -283,7 +283,7 @@ function callWeatherApi() {
 //the oject for clothing suggestions
 var wears = {
   //the base layer will add [1,2,3,4,5] °C to the body heat  
-  baseLayer: ["t-shirt", "long-sleeve t-shirt", "flannel shirt", "sweatshirt", "sweater"],
+  baseLayer: ["t-shirt", "long-sleeve-shirt", "flannel-shirt", "sweatshirt", "sweater"],
   //the outer later will add [9,10,11] °C to the body heat 
   outerLayer: ["short-jacket", "coat", "down-jacket"]
 }
@@ -299,7 +299,9 @@ function renderChosenWears() {
 
   // find and store the min and max temps of the currentWeather object
   var minTemp = findMinTemp(currentWeather.temps);
+  // console.log(findMinTemp(currentWeather.temps));
   var maxTemp = findMaxTemp(currentWeather.temps);
+  // console.log(findMaxTemp(currentWeather.temps));
 
   //if the min temp is higher than the optimal temprature, it will suggest basic clothing
   if (minTemp >= i) {
@@ -358,7 +360,8 @@ function renderChosenWears() {
       }
     }
   }
-  console.log(chosenWears);
+  console.log("Chosen wears: "+ chosenWears);
+  renderClothRec();
 }
 
 function closeModal() {
@@ -524,4 +527,18 @@ $("#eatform").on("click", function gettingEntityId() {
   })
 })
 
+//function to append recommended itmes on the html
+function renderClothRec(){
+  $(chosenWears).each(function(index, value){
+    var wearDiv = $('<div class= "wearDiv>');
+    var wearImage = $("<img>");
+    var wearP = $("<p>");
+    wearP.text(value);
+    var wearURL = "/Assets/img/"+ value + ".jpg";
+    $(wearImage).attr({src: wearURL, alt: value});
+    wearDiv.append(wearImage, wearP);
+    //Dan can you please add the div your want to append the pics to
+    $("").append(wearDiv);
 
+  })
+}
