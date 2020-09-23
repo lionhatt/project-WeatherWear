@@ -431,9 +431,12 @@ function DisplayResponse(obj) {
 // }
 function buildAdvancedResponse(b) {
   // Get the value of whatever option is selected from the drop down and store it in variable
-  var cuisineidval = ""
-  var sortval = ""
-  var radiusval = ""
+  var cuisineElement = $("#cuisines")
+  var cuisineidval = cuisineElement.val()
+  var ratingElement = $("#eatFormRating")
+  var sortval = ratingElement.val()
+  var radiusElement= $("#eatFormradius")
+  var radiusval = radiusElement.val()
   var paramarray = [{ cuisines: cuisineidval }, { sort: sortval }, { radius: radiusval }]
   var lat = currentWeather.latitude
   var lon = currentWeather.longitude
@@ -531,7 +534,7 @@ function renderEatform(entityid) {
   }).then(function (response) {
     var cuisines = response.cuisines
     cuisines.forEach(function (item) {
-      var option = $("<option>").text(item.cuisine.cuisine_name).attr("data-id", item.cuisine.cuisine_id )
+      var option = $("<option>").text(item.cuisine.cuisine_name).attr("value", item.cuisine.cuisine_id )
       $("#cuisines").append(option)
     })
   })
