@@ -408,17 +408,37 @@ function buildURL(entityid) {
 }
 
 function DisplayResponse(obj) {
-    var restaurants = obj.restaurants[0]
-    var name = restaurants.restaurant.name
-    console.log(name)
-    var image = obj.restaurants[0].restaurant.thumb
-    console.log(image)
-    var review = obj.restaurants[0].restaurant.user_rating
-    console.log(review)
-    var address = obj.restaurants[0].restaurant.location.address
-    console.log(address)
-    var pn = obj.restaurants[0].restaurant.phone_numbers
-    console.log(pn)
+  var restaurants = obj.restaurants[0]
+
+  obj.restaurants.forEach(function (eatData) {
+    var restaurant = eatData.restaurant;
+
+    console.log("yo", restaurant.thumb)
+
+    var restaurantElem = $("<div>").attr("class", "restaurant");
+    var img = $("<img>").attr("class","restaurantImg").attr("src", restaurant.thumb);
+    var restaurantInfo = $("<div>").attr("class","restaurantInfo")
+    var restaurantName = $("<div>").attr("class","restaurantName").text(restaurant.name)
+    
+    restaurantInfo.append(restaurantName)
+    restaurantElem.append(img)
+    restaurantElem.append(restaurantInfo)
+    
+
+    $(".restaurantsContainer").append(restaurantElem)
+  });
+
+  var name = restaurants.restaurant.name
+  console.log(name)
+  var image = obj.restaurants[0].restaurant.thumb
+  console.log(image)
+  var review = obj.restaurants[0].restaurant.user_rating
+  console.log(review)
+  var address = obj.restaurants[0].restaurant.location.address
+  console.log(address)
+  var pn = obj.restaurants[0].restaurant.phone_numbers
+  console.log(pn)
+
 }
 // function gettingCuisineid(response) {
 //   var cuisines = response.cuisines
@@ -431,27 +451,29 @@ function DisplayResponse(obj) {
 //   return id
 // }
 function buildAdvancedResponse(b) {
-    // Get the value of whatever option is selected from the drop down and store it in variable
-    var cuisineidval = ""
-    var sortval = ""
-    var radiusval = ""
-    var paramarray = [{ cuisines: cuisineidval }, { sort: sortval }, { radius: radiusval }]
-    var lat = currentWeather.latitude
-    var lon = currentWeather.longitude
-    var city = currentWeather.cityName
-    var baseURL = "https://developers.zomato.com/api/v2.1/search?"
-    var urlObj = {
-        entity_id: b,
-        q: city,
-        lat: lat,
-        lon: lon,
-        start: "0",
-        count: "5"
-    }
-    paramarray.forEach(function(item) {
-        Object.keys(item).forEach(function(key) {
-            if (item[key] !== "") { urlObj[key] = item[key] }
-        })
+  // Get the value of whatever option is selected from the drop down and store it in variable
+  var cuisineElement = $("#cuisines")
+  var cuisineidval = cuisineElement.val()
+  var sortElement = $("#eatFormSort")
+  var sortval = sortElement.val()
+  
+  var paramarray = [{ cuisines: cuisineidval }, { sort: sortval }]
+  // Shouldn't use lon/lat for search, use city instead
+  var lat = currentWeather.latitude
+  var lon = currentWeather.longitude
+  var city = currentWeather.cityName
+  var baseURL = "https://developers.zomato.com/api/v2.1/search?"
+  var urlObj = {
+    entity_id: b,
+    q: city,
+    lat: lat,
+    lon: lon,
+    start: "0",
+    count: "5"
+  }
+  paramarray.forEach(function (item) {
+    Object.keys(item).forEach(function (key) {
+      if (item[key] !== "") { urlObj[key] = item[key] }
     })
     var buildURL = baseURL + $.param(urlObj)
     $.ajax({
@@ -507,37 +529,34 @@ function buildAdvancedResponse(b) {
 }
 
 function buildLocationIDUrl() {
-    var lat = currentWeather.latitude
-    var lon = currentWeather.longitude
-    var city = currentWeather.cityName
-    var baseURL = "https://developers.zomato.com/api/v2.1/locations?"
-    var urlObj = {
-            q: city,
-            lat: lat,
-            lon: lon,
-            count: "1",
-        }
-        // Click event on the submit form button should trigger this
-        // buildAdvancedUrl(urlObj)
-    var buildlocalURL = baseURL + $.param(urlObj)
-    return buildlocalURL
+  var lat = currentWeather.latitude
+  var lon = currentWeather.longitude
+  var city = currentWeather.cityName
+  var baseURL = "https://developers.zomato.com/api/v2.1/locations?"
+  var urlObj = {
+    query: getCityInput(),
+    count: 20,
+  }
+  // Click event on the submit form button should trigger this
+  // buildAdvancedUrl(urlObj)
+  var buildlocalURL = baseURL + $.param(urlObj)
+  return buildlocalURL
 }
 
 function renderEatform(entityid) {
-    $("selector").removeClass("hide")
-    $.ajax({
-        url: "https://developers.zomato.com/api/v2.1/cuisines?city_id=" + entityid,
-        method: "GET",
-        headers: {
-            "user-key": "19132a3a025302edc9b08eb44608d7c0",
-            "content-type": "application/json"
-        },
-    }).then(function(response) {
-        var cuisines = response.cuisines
-        cuisines.forEach(function(item) {
-            var option = $("<option>").text(item.cuisine.cuisine_name).attr("data-id", item.cuisine.cuisine_id)
-            $("#cuisine").append(option)
-        })
+  $("#eat-form").removeClass("hide")
+  $.ajax({
+    url: "https://developers.zomato.com/api/v2.1/cuisines?city_id=" + entityid,
+    method: "GET",
+    headers: {
+      "user-key": "19132a3a025302edc9b08eb44608d7c0",
+      "content-type": "application/json"
+    },
+  }).then(function (response) {
+    var cuisines = response.cuisines
+    cuisines.forEach(function (item) {
+      var option = $("<option>").text(item.cuisine.cuisine_name).attr("value", item.cuisine.cuisine_id )
+      $("#cuisines").append(option)
     })
 }
 $(".eat").on("click", function gettingEntityId() {

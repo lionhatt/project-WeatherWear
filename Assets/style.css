@@ -103,3 +103,54 @@ body {
     text-decoration: none;
     cursor: pointer;
 }
+
+
+.eatFormInputs {
+    display: flex;
+    flex-direction: horizontal;
+    justify-content: space-between; 
+}
+
+.spaceRight{
+    margin-right: 50px;
+}
+
+.restaurantsContainer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.restaurant {
+    flex-basis: 48%;
+    background: white;
+    display: flex;
+    margin-bottom: 20px;
+}
+
+@media screen and (max-width: 700px) {
+    .restaurant {
+        flex-basis: 100%;
+    }
+}
+
+.restaurantImg {
+
+}
+
+.restaurantInfo {
+    padding: 10px;
+}
+
+.restaurantName {
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.restaurantRating {
+
+}
+
+.restaurantPhone {
+
+}
