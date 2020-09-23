@@ -408,6 +408,25 @@ function buildURL(entityid) {
 }
 function DisplayResponse(obj) {
   var restaurants = obj.restaurants[0]
+
+  obj.restaurants.forEach(function (eatData) {
+    var restaurant = eatData.restaurant;
+
+    console.log("yo", restaurant.thumb)
+
+    var restaurantElem = $("<div>").attr("class", "restaurant");
+    var img = $("<img>").attr("class","restaurantImg").attr("src", restaurant.thumb);
+    var restaurantInfo = $("<div>").attr("class","restaurantInfo")
+    var restaurantName = $("<div>").attr("class","restaurantName").text(restaurant.name)
+    
+    restaurantInfo.append(restaurantName)
+    restaurantElem.append(img)
+    restaurantElem.append(restaurantInfo)
+    
+
+    $(".restaurantsContainer").append(restaurantElem)
+  });
+
   var name = restaurants.restaurant.name
   console.log(name)
   var image = obj.restaurants[0].restaurant.thumb
@@ -433,11 +452,11 @@ function buildAdvancedResponse(b) {
   // Get the value of whatever option is selected from the drop down and store it in variable
   var cuisineElement = $("#cuisines")
   var cuisineidval = cuisineElement.val()
-  var ratingElement = $("#eatFormRating")
-  var sortval = ratingElement.val()
-  var radiusElement= $("#eatFormradius")
-  var radiusval = radiusElement.val()
-  var paramarray = [{ cuisines: cuisineidval }, { sort: sortval }, { radius: radiusval }]
+  var sortElement = $("#eatFormSort")
+  var sortval = sortElement.val()
+  
+  var paramarray = [{ cuisines: cuisineidval }, { sort: sortval }]
+  // Shouldn't use lon/lat for search, use city instead
   var lat = currentWeather.latitude
   var lon = currentWeather.longitude
   var city = currentWeather.cityName
