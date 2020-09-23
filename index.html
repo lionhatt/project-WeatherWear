@@ -1,66 +1,111 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <title>WeatherWear</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-    <link rel="stylesheet" href="Assets/style.css">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
+    />
+    <link rel="stylesheet" href="Assets/style.css" />
+  </head>
+  <body>
+    <div class="header">
+      <button class="btn btn1 waves-effect">Wear</button>
+      <button class="btn btn1 waves-effect eat">Eat</button>
+    </div>
 
-    <body>
+    <div class="container">
+      <form id="location-form">
+        <input
+          class="form-control"
+          id="location"
+          type="text"
+          placeholder="Location"
+        />
+      </form>
+      <form id="Country-form">
+        <input
+          class="form-control"
+          id="country"
+          type="text"
+          placeholder="Country"
+        />
+      </form>
+    </div>
 
+    <div class="container">
+      <div class="startTime" id="selectBox">
+        <select
+          style="display: block"
+          name="going-out"
+          class="main_menu"
+          id="goingOutTime"
+        >
+          <option selected disabled>Going out at</option>
+        </select>
+      </div>
+      <div class="endTime" id="selectBox">
+        <select
+          style="display: block"
+          name="coming-home"
+          class="main_menu"
+          id="comingHomeTime"
+        >
+          <option selected disabled>Coming home at</option>
+        </select>
+      </div>
+      <div id="confirmBtn">
+        <button class="btn confirmBtn" id="confirmButton" type="submit">
+          Confirm
+        </button>
+      </div>
+      <div class="weatherDisplay"></div>
+      <div class="restRecommend"></div>
 
-        <div class="header">
-            <button class="btn btn1 waves-effect">Wear</button>
-            <button class="btn btn1 waves-effect eat">Eat</button>
+      <div class="modal" id="modal">
+        <div class="modal-content" id="modal-content">
+          <span class="close" id="close-modal">&times;</span>
+          <p id="modal-message"></p>
         </div>
+      </div>
+    </div>
 
-        <div class="container">
-            <form id="location-form">
-                <input class="form-control" id="location" type="text" placeholder="Location">
-            </form>
-            <form id="Country-form">
-                <input class="form-control" id="country" type="text" placeholder="Country">
-            </form>
+    <div id="eat-form" class="hide container" >
+      <form>
+        <div class="eatFormInputs">
+          <select id="cuisines" style="display: block" class="spaceRight">
+            <option selected disabled>Cuisines</option>
+            <option value="12">Select Cuisine</option>
+          </select>
+          <select id="eatFormCost" style="display: block" class="spaceRight">
+            <option selected disabled>Rating</option>
+            <option value="12">Select Rating</option>
+          </select>
+
+          <select id="eatFormRadius" style="display: block" class="">
+            <option selected disabled>Radius</option>
+            <option value="12">Select Radius?</option>
+          </select>
         </div>
+      </form>
+    </div>
 
-        <div class="container">
+    <!-- moment.js -->
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.28.0/moment-with-locales.js"
+      integrity="sha512-2Zf8MmDD4CaXNATmBqBXxW+D627jYF3yJNbZGBPmer+VYoEzqEkUHkz4xV9qcCjFdCxueRDd5/Gs8k6cGrWWXA=="
+      crossorigin="anonymous"
+    ></script>
 
-            <div class="startTime" id="selectBox">
-                <select style="display: block;" name="going-out" class="main_menu" id="goingOutTime">
-                    <option selected disabled>Going out at</option>
-                </select>
-            </div>
-            <div class="endTime" id="selectBox">
-                <select style="display: block;" name="coming-home" class="main_menu" id="comingHomeTime">
-                    <option selected disabled>Coming home at</option>
-                </select>
-            </div>
-            <div id="confirmBtn">
-                <button class="btn confirmBtn" id="confirmButton" type="submit">Confirm</button>
-            </div>
-            <div class="weatherDisplay">
-            </div>
-            <div class="restRecommend">
-            </div>
-
-            <div class="modal" id="modal">
-                <div class="modal-content" id="modal-content">
-                    <span class="close" id="close-modal">&times;</span>
-                    <p id="modal-message"></p>
-                </div>
-            </div>
-
-        </div>
-
-        <!-- moment.js -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.28.0/moment-with-locales.js" integrity="sha512-2Zf8MmDD4CaXNATmBqBXxW+D627jYF3yJNbZGBPmer+VYoEzqEkUHkz4xV9qcCjFdCxueRDd5/Gs8k6cGrWWXA==" crossorigin="anonymous"></script>
-
-        <!-- jQuery -->
-        <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
-        <script src="Assets/script.js"></script>
-    </body>
-
+    <!-- jQuery -->
+    <script
+      src="https://code.jquery.com/jquery-3.5.1.js"
+      integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+      crossorigin="anonymous"
+    ></script>
+    <script src="Assets/script.js"></script>
+  </body>
 </html>

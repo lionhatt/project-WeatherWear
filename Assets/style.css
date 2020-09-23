@@ -103,3 +103,14 @@ body {
     text-decoration: none;
     cursor: pointer;
 }
+
+
+.eatFormInputs {
+display: flex;
+    flex-direction: horizontal;
+ justify-content: space-between; 
+}
+
+.spaceRight{
+    margin-right: 50px;
+}

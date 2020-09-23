@@ -511,10 +511,8 @@ function buildLocationIDUrl() {
   var city = currentWeather.cityName
   var baseURL = "https://developers.zomato.com/api/v2.1/locations?"
   var urlObj = {
-    q: city,
-    lat: lat,
-    lon: lon,
-    count: "1",
+    query: getCityInput(),
+    count: 20,
   }
   // Click event on the submit form button should trigger this
   // buildAdvancedUrl(urlObj)
@@ -522,7 +520,7 @@ function buildLocationIDUrl() {
   return buildlocalURL
 }
 function renderEatform(entityid) {
-  $("selector").removeClass("hide")
+  $("#eat-form").removeClass("hide")
   $.ajax({
     url: "https://developers.zomato.com/api/v2.1/cuisines?city_id=" + entityid,
     method: "GET",
@@ -534,7 +532,7 @@ function renderEatform(entityid) {
     var cuisines = response.cuisines
     cuisines.forEach(function (item) {
       var option = $("<option>").text(item.cuisine.cuisine_name).attr("data-id", item.cuisine.cuisine_id )
-      $("#cuisine").append(option)
+      $("#cuisines").append(option)
     })
   })
 }
