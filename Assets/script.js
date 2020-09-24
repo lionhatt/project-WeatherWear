@@ -109,7 +109,7 @@ function hourlyDisplayIcon(response) {
 function findMinTemp(temps) {
 
     var minTemp = temps[0];
-    temps.forEach(function (temp) {
+    temps.forEach(function(temp) {
 
         if (minTemp > temp) {
             minTemp = temp;
@@ -122,7 +122,7 @@ function findMinTemp(temps) {
 // finds the maximum temperature in an array of temps provided by the api
 function findMaxTemp(temps) {
     var maxTemp = temps[0];
-    temps.forEach(function (temp) {
+    temps.forEach(function(temp) {
 
         if (maxTemp < temp) {
             maxTemp = temp;
@@ -136,7 +136,7 @@ function findMaxTemp(temps) {
 function findAverageTemp(temps) {
     var avgTemp = 0;
     var sum = 0;
-    temps.forEach(function (temp) {
+    temps.forEach(function(temp) {
         sum += temp;
     });
     avgTemp = sum / temps.length;
@@ -177,7 +177,7 @@ function processHourlyWeatherData(response) {
     currentWeather.temps = [];
 
     // go through every hour for the next 48 hours and display the data in the console
-    response.data.forEach(function (dataObject) {
+    response.data.forEach(function(dataObject) {
 
         // retrieve and store 
         var time = moment(dataObject.timestamp_local);
@@ -281,10 +281,10 @@ function callWeatherApi() {
             url: queryUrl,
             method: "GET"
         }).
-            then(processHourlyWeatherData).
-            catch(function (error) {
-                console.log("Catch error: " + error.message);
-            });
+        then(processHourlyWeatherData).
+        catch(function(error) {
+            console.log("Catch error: " + error.message);
+        });
     }
 }
 
@@ -299,11 +299,12 @@ var wears = {
 // array of suggested clothing based on temprature
 var chosenWears = [];
 
-// thi is the optimal temprature trying to achive at 26°C
-var optimalTemp = 26
-
 // function to append suggested clothing into chosenWears array
 function renderChosenWears() {
+
+    // thi is the optimal temprature trying to achive at 26°C
+    var optimalTemp = 26
+
     chosenWears = [];
 
     // find and store the min and max temps of the currentWeather object
@@ -371,8 +372,8 @@ function renderChosenWears() {
 
 //function to append recommended itmes on the html
 function renderClothRec() {
-    $.each(chosenWears, function (index, value) {
-        var wearDiv = $('<div class= "wearDiv>');
+    $.each(chosenWears, function(index, value) {
+        var wearDiv = $('<div class="wearDiv">');
         var wearImage = $("<img>");
         var wearP = $("<p>");
         wearP.text(value);
@@ -428,8 +429,8 @@ function buildURL(entityid, entityType) {
         count: "10",
     }
 
-    paramarray.forEach(function (item) {
-        Object.keys(item).forEach(function (key) {
+    paramarray.forEach(function(item) {
+        Object.keys(item).forEach(function(key) {
             if (item[key] !== "") { urlObj[key] = item[key] }
         })
     })
@@ -442,7 +443,7 @@ function buildURL(entityid, entityType) {
 function DisplayResponse(obj) {
     var restaurants = obj.restaurants[0]
 
-    obj.restaurants.forEach(function (eatData) {
+    obj.restaurants.forEach(function(eatData) {
         var restaurant = eatData.restaurant;
         function openPage() {
             window.open(restaurant.url, "_blank")
@@ -503,7 +504,7 @@ function buildAdvancedResponse(b) {
     var sortval = sortElement.val()
 
     var paramarray = [{ cuisines: cuisineidval }, { sort: sortval }]
-    // Shouldn't use lon/lat for search, use city instead
+        // Shouldn't use lon/lat for search, use city instead
     var lat = currentWeather.latitude
     var lon = currentWeather.longitude
     var city = currentWeather.cityName
@@ -516,61 +517,61 @@ function buildAdvancedResponse(b) {
         start: "0",
         count: "5"
     }
-    paramarray.forEach(function (item) {
-        Object.keys(item).forEach(function (key) {
-            if (item[key] !== "") { urlObj[key] = item[key] }
+    paramarray.forEach(function(item) {
+            Object.keys(item).forEach(function(key) {
+                if (item[key] !== "") { urlObj[key] = item[key] }
+            })
+            var buildURL = baseURL + $.param(urlObj)
+            $.ajax({
+                url: buildURL,
+                method: "GET",
+                headers: {
+                    "user-key": "19132a3a025302edc9b08eb44608d7c0",
+                    "content-type": "application/json"
+                },
+            }).then(function(response) {
+                DisplayResponse(response)
+            })
         })
-        var buildURL = baseURL + $.param(urlObj)
-        $.ajax({
-            url: buildURL,
-            method: "GET",
-            headers: {
-                "user-key": "19132a3a025302edc9b08eb44608d7c0",
-                "content-type": "application/json"
-            },
-        }).then(function (response) {
-            DisplayResponse(response)
-        })
-    })
-    // $.ajax({
-    //   url: "https://developers.zomato.com/api/v2.1/cuisines?city_id=" + b,
-    //   method: "GET",
-    //   headers: {
-    //     "user-key": "19132a3a025302edc9b08eb44608d7c0",
-    //     "content-type": "application/json"
-    //   },
-    // }).then(function (response) {
-    //   var cuisineid = gettingCuisineid(response)
-    //   var paramarray = [{ cuisines: cuisineid }, { sort: "cost" }, { radius: "10M" }]
-    //   var lat = currentWeather.latitude
-    //   var lon = currentWeather.longitude
-    //   var city = currentWeather.cityName
-    //   var baseURL = "https://developers.zomato.com/api/v2.1/search?"
-    //   var urlObj = {
-    //     entity_id: b,
-    //     q: city,
-    //     lat: lat,
-    //     lon: lon,
-    //     start: "0",
-    //     count: "5"
-    //   }
-    //   paramarray.forEach(function (item) {
-    //     Object.keys(item).forEach(function (key) {
-    //       if (item[key] !== "") { urlObj[key] = item[key] }
-    //     })
-    //   })
-    //   var buildURL = baseURL + $.param(urlObj)
-    //   $.ajax({
-    //     url: buildURL,
-    //     method: "GET",
-    //     headers: {
-    //       "user-key": "19132a3a025302edc9b08eb44608d7c0",
-    //       "content-type": "application/json"
-    //     },
-    //   }).then(function (response) {
-    //     DisplayResponse(response)
-    //   })
-    // })
+        // $.ajax({
+        //   url: "https://developers.zomato.com/api/v2.1/cuisines?city_id=" + b,
+        //   method: "GET",
+        //   headers: {
+        //     "user-key": "19132a3a025302edc9b08eb44608d7c0",
+        //     "content-type": "application/json"
+        //   },
+        // }).then(function (response) {
+        //   var cuisineid = gettingCuisineid(response)
+        //   var paramarray = [{ cuisines: cuisineid }, { sort: "cost" }, { radius: "10M" }]
+        //   var lat = currentWeather.latitude
+        //   var lon = currentWeather.longitude
+        //   var city = currentWeather.cityName
+        //   var baseURL = "https://developers.zomato.com/api/v2.1/search?"
+        //   var urlObj = {
+        //     entity_id: b,
+        //     q: city,
+        //     lat: lat,
+        //     lon: lon,
+        //     start: "0",
+        //     count: "5"
+        //   }
+        //   paramarray.forEach(function (item) {
+        //     Object.keys(item).forEach(function (key) {
+        //       if (item[key] !== "") { urlObj[key] = item[key] }
+        //     })
+        //   })
+        //   var buildURL = baseURL + $.param(urlObj)
+        //   $.ajax({
+        //     url: buildURL,
+        //     method: "GET",
+        //     headers: {
+        //       "user-key": "19132a3a025302edc9b08eb44608d7c0",
+        //       "content-type": "application/json"
+        //     },
+        //   }).then(function (response) {
+        //     DisplayResponse(response)
+        //   })
+        // })
 
 }
 
@@ -580,11 +581,11 @@ function buildLocationIDUrl() {
     var city = currentWeather.cityName
     var baseURL = "https://developers.zomato.com/api/v2.1/locations?"
     var urlObj = {
-        query: getCityInput() || "melbourne", // default search to melbourne if no location
-        count: 20,
-    }
-    // Click event on the submit form button should trigger this
-    // buildAdvancedUrl(urlObj)
+            query: getCityInput() || "melbourne", // default search to melbourne if no location
+            count: 20,
+        }
+        // Click event on the submit form button should trigger this
+        // buildAdvancedUrl(urlObj)
     var buildlocalURL = baseURL + $.param(urlObj)
     return buildlocalURL
 }
@@ -598,9 +599,9 @@ function renderEatform(entityid) {
             "user-key": "19132a3a025302edc9b08eb44608d7c0",
             "content-type": "application/json"
         },
-    }).then(function (response) {
+    }).then(function(response) {
         var cuisines = response.cuisines
-        cuisines.forEach(function (item) {
+        cuisines.forEach(function(item) {
             var option = $("<option>").text(item.cuisine.cuisine_name).attr("value", item.cuisine.cuisine_id)
             $("#cuisines").append(option)
         })
@@ -620,7 +621,7 @@ function gettingEntityId() {
             "user-key": "19132a3a025302edc9b08eb44608d7c0",
             "content-type": "application/json"
         },
-    }).then(function (response) {
+    }).then(function(response) {
         var entityid = response.location_suggestions[0].entity_id
         var entityType = response.location_suggestions[0].entity_type
 
@@ -632,7 +633,7 @@ function gettingEntityId() {
                 "user-key": "19132a3a025302edc9b08eb44608d7c0",
                 "content-type": "application/json"
             },
-        }).then(function (response) {
+        }).then(function(response) {
             renderEatform(entityid)
             DisplayResponse(response)
         })
@@ -640,6 +641,6 @@ function gettingEntityId() {
 }
 
 $("#eatNav").on("click", gettingEntityId)
-//Tells 
+    //Tells 
 $("#cuisines").change(gettingEntityId)
 $("#eatFormSort").change(gettingEntityId)
