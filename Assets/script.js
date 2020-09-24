@@ -387,24 +387,32 @@ createInputTimes();
 // Then I get an API response with 6 recommended restraunts
 
 // building URL
-function buildURL(entityid) {
-    var lat = currentWeather.latitude
-    var lon = currentWeather.longitude
-    var city = currentWeather.cityName
-    var baseURL = "https://developers.zomato.com/api/v2.1/search?"
+function buildURL(entityid, entityType) {
+    // Get the value of whatever option is selected from the drop down and store it in variable
+    var cuisineElement = $("#cuisines")
+    var cuisineidval = cuisineElement.val()
+    var sortElement = $("#eatFormSort")
+    var sortval = sortElement.val()
+
+    var paramarray = [{ cuisines: cuisineidval }, { sort: sortval }]
+  
+    var baseUrl = "https://developers.zomato.com/api/v2.1/search?"
     var urlObj = {
             entity_id: entityid,
-            q: city,
-            lat: lat,
-            lon: lon,
+            entity_type: entityType,
             start: "0",
             count: "5",
         }
-        // Click event on the submit form button should trigger this
-        // buildAdvancedUrl(urlObj)
-    var buildURL = baseURL + $.param(urlObj)
-    console.log(buildURL)
-    return buildURL
+
+    paramarray.forEach(function (item) {
+          Object.keys(item).forEach(function (key) {
+            if (item[key] !== "") { urlObj[key] = item[key] }
+          })
+        })
+
+    buildUrl = baseUrl + $.param(urlObj)
+    console.log(buildUrl)
+    return buildUrl
 }
 
 function DisplayResponse(obj) {
@@ -419,7 +427,7 @@ function DisplayResponse(obj) {
     var img = $("<img>").attr("class","restaurantImg").attr("src", restaurant.thumb);
     var restaurantInfo = $("<div>").attr("class","restaurantInfo")
     var restaurantName = $("<div>").attr("class","restaurantName").text(restaurant.name)
-    var restaurantRating =$("<div>").attr("class","restaurantRating").text(restaurant.user_rating.aggregate_rating)
+    var restaurantRating =$("<div>").attr("class","restaurantRating").text(`${restaurant.user_rating.aggregate_rating}⭐`)
     var restaurantNumber= $("<div>").attr("class","restaurantNumber").text(restaurant.phone_numbers)
 
     restaurantInfo.append(restaurantName)
@@ -541,7 +549,7 @@ function buildLocationIDUrl() {
   var city = currentWeather.cityName
   var baseURL = "https://developers.zomato.com/api/v2.1/locations?"
   var urlObj = {
-    query: getCityInput(),
+    query: getCityInput() || "melbourne", // default search to melbourne if no location
     count: 20,
   }
   // Click event on the submit form button should trigger this
@@ -580,20 +588,12 @@ function gettingEntityId() {
       "content-type": "application/json"
   },
 }).then(function(response) {
-  var entityid = response.location_suggestions[0].entity_id
-      // zomatoAPIcall(entityid)
-  $.ajax({
-      url: buildLocationIDUrl(),
-      method: "GET",
-      headers: {
-          "user-key": "19132a3a025302edc9b08eb44608d7c0",
-          "content-type": "application/json"
-      },
-  }).then(function(response) {
       var entityid = response.location_suggestions[0].entity_id
+      var entityType = response.location_suggestions[0].entity_type
+
           // zomatoAPIcall(entityid)
       $.ajax({
-          url: buildURL(entityid),
+          url: buildURL(entityid, entityType),
           method: "GET",
           headers: {
               "user-key": "19132a3a025302edc9b08eb44608d7c0",
@@ -604,7 +604,6 @@ function gettingEntityId() {
           DisplayResponse(response)
       })
   })
-})
 }
   
 $("#eatNav").on("click", gettingEntityId)
