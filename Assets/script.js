@@ -47,7 +47,6 @@ function getFinishTime() {
 // retrieves the temperature for the time of the day
 function hourlyTempCheck(response) {
     var temperature = response.temp;
-    console.log(`Temperature: ${temperature}`);
 }
 
 // checks the uv for the time of the day
@@ -58,16 +57,13 @@ function hourlyUvCheck(response) {
     if (uvIndex >= uvThreshold) {
         // display uv message - this is where functions can got to display to the user what to wear - PLACEHOLDER
         $('body').css('background-image', 'url(../Assets/img/Sunny-background.jpg)');
-        console.log(`UV Index: ${uvIndex}`);
-        console.log("You will need sunprotection today, wear a hat or apply sunscreen regularly");
         if (!chosenWears.includes("sunglasses")) {
             chosenWears.push("sunglasses");
         }
 
     } else {
         // else because we don't want to give false info, this is a disclaimer
-        console.log("UV is low but it is still advised to protect yourself from UV");
-        $('body').css('background-image', 'url(../Assets/img/mountains.jpg)');
+        $('body').css('background-image', 'url(../Assets/img/bluesky.jpg)');
     }
 }
 
@@ -79,8 +75,6 @@ function hourlyRainCheck(response) {
     if (precip > precipThreshold) {
         // display to the user what to wear - this is where functions can go to display info to the user - PLACEHOLDER
         $('body').css('background-image', 'url(../Assets/img/rainingwallpaper.jpg)');
-        console.log(`Precipitation: ${precip}mm`);
-        console.log("You will need a waterproof or an umbrella");
         if (!chosenWears.includes("umbrella")) {
             chosenWears.push("umbrella");
         }
@@ -96,8 +90,6 @@ function hourlyWindCheck(response) {
 
     if (windSpeed > windSpeedThreshold) {
         // display to the user what to wear - this is where functions can go to update the display - PLACEHOLDER
-        console.log(`Wind Speed: ${windSpeed}km/h`);
-        console.log("You will need wind protection");
         if (!chosenWears.includes("scarve")) {
             chosenWears.push("scarve");
         }
@@ -108,7 +100,6 @@ function hourlyWindCheck(response) {
 function hourlyDisplayIcon(response) {
     var iconCode = response.weather.icon;
     var iconUrl = `https://www.weatherbit.io/static/img/icons/${iconCode}.png`
-    console.log(`Icon: ${iconUrl}`);
 }
 
 // finds the minimum temperature in an array of temps provided by the api
@@ -121,7 +112,6 @@ function findMinTemp(temps) {
             minTemp = temp;
         }
     });
-    console.log(`Min Temp: ${minTemp}`);
     return minTemp;
 }
 
@@ -134,7 +124,6 @@ function findMaxTemp(temps) {
             maxTemp = temp;
         }
     });
-    console.log(`Max Temp: ${maxTemp}`);
     return maxTemp;
 }
 
@@ -146,7 +135,6 @@ function findAverageTemp(temps) {
         sum += temp;
     });
     avgTemp = sum / temps.length;
-    console.log(`Avg Temp: ${avgTemp.toFixed(2)}`);
     return avgTemp;
 }
 
@@ -154,36 +142,26 @@ function findAverageTemp(temps) {
 function processHourlyWeatherData(response) {
 
     // stores response object in currentWeather object
-    console.log(response);
     currentWeather.response = response;
 
-    // store, retrieve in currentWeather object and console log the location and country
+    // store, retrieve in currentWeather object
     currentWeather.cityName = response.city_name;
     currentWeather.countryCode = response.country_code
-
-    console.log(`Location: ${currentWeather.cityName}`);
-    console.log(`Country: ${currentWeather.countryCode}`);
 
     // retrieve and store the latitude and longitude of the responded weather data
     // to be used for zomato api
     currentWeather.latitude = getLatitude(response);
     currentWeather.longitude = getLongitude(response);
 
-    console.log(`Latitude: ${currentWeather.latitude}`);
-    console.log(`Longitude: ${currentWeather.longitude}`);
-
     // grab the start and finish times from the user input
     currentWeather.startTime = getStartTime();
     currentWeather.finishTime = getFinishTime();
 
-    console.log(`Start Time: ${currentWeather.startTime}`);
-    console.log(`Finish Time: ${currentWeather.finishTime}`);
-
     // array to store the temps for every hour
     currentWeather.temps = [];
 
-    // go through every hour for the next 48 hours and display the data in the console
-    response.data.forEach(function (dataObject) {
+    // go through every hour for the next 48 hours and display the data
+    response.data.forEach(function(dataObject) {
 
         // retrieve and store 
         var time = moment(dataObject.timestamp_local);
@@ -193,16 +171,12 @@ function processHourlyWeatherData(response) {
             moment(time).isAfter(moment(currentWeather.startTime)) && moment(time).isBefore(moment(currentWeather.finishTime)) ||
             moment(time).isSame(moment(currentWeather.finishTime))) {
 
-            console.log(`------------------------------`);
-            console.log(`Time: ${moment(dataObject.timestamp_local).format("MMM Do, k:mm")}`);
-            console.log(`Weather Description: ${dataObject.weather.description}`);
             hourlyTempCheck(dataObject);
             currentWeather.temps.push(dataObject.temp);
             hourlyUvCheck(dataObject);
             hourlyRainCheck(dataObject);
             hourlyWindCheck(dataObject);
             hourlyDisplayIcon(dataObject);
-            console.log(`------------------------------`);
         }
     });
 
@@ -288,11 +262,7 @@ function callWeatherApi() {
         $.ajax({
             url: queryUrl,
             method: "GET"
-        }).
-            then(processHourlyWeatherData).
-            catch(function (error) {
-                console.log("Catch error: " + error.message);
-            });
+        }).then(processHourlyWeatherData)
     }
 }
 
@@ -317,9 +287,7 @@ function renderChosenWears() {
 
     // find and store the min and max temps of the currentWeather object
     var minTemp = findMinTemp(currentWeather.temps);
-    console.log("minTemp: " + minTemp);
     var maxTemp = findMaxTemp(currentWeather.temps);
-    console.log("maxtemp: " + maxTemp);
 
     //if the min temp is higher than the optimal temprature, it will suggest basic clothing
     if (minTemp >= optimalTemp) {
@@ -374,7 +342,6 @@ function renderChosenWears() {
             }
         }
     }
-    console.log(chosenWears);
     renderClothRec();
 }
 
