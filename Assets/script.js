@@ -385,7 +385,7 @@ function renderClothRec() {
         var wearImage = $("<img>");
         var wearP = $("<p>");
         wearP.text(value);
-        var wearURL = "/Assets/img/" + value + ".jpg";
+        var wearURL = "Assets/img/" + value + ".jpg";
         $(wearImage).attr({ src: wearURL, alt: value });
         wearDiv.append(wearImage, wearP);
         //Dan can you please add the div your want to append the pics to
