@@ -526,7 +526,7 @@ function buildAdvancedResponse(b) {
         //   })
         // })
 
-}
+})
 
 function buildLocationIDUrl() {
   var lat = currentWeather.latitude
@@ -558,7 +558,7 @@ function renderEatform(entityid) {
       var option = $("<option>").text(item.cuisine.cuisine_name).attr("value", item.cuisine.cuisine_id )
       $("#cuisines").append(option)
     })
-}
+})
 $(".eat").on("click", function gettingEntityId() {
     $.ajax({
         url: buildLocationIDUrl(),
@@ -609,17 +609,17 @@ $("#eatform").on("click", function gettingEntityId() {
     })
 })
 
-//function to append recommended itmes on the html
+// function to append recommended itmes on the html
 function renderClothRec() {
-    $(chosenWears).each(function(index, value) {
-        var wearDiv = $('<div class= "wearDiv>');
-        var wearImage = $("<img>");
-        var wearP = $("<p>");
-        wearP.text(value);
-        var wearURL = "/Assets/img/" + value + ".jpg";
-        $(wearImage).attr({ src: wearURL, alt: value });
-        wearDiv.append(wearImage, wearP);
-        //Dan can you please add the div your want to append the pics to
-        $("").append(wearDiv);
-    })
+  $(chosenWears).each(function(index, value) {
+    var wearDiv = $('<div class= "wearDiv>');
+    var wearImage = $("<img>");
+    var wearP = $("<p>");
+    wearP.text(value);
+    var wearURL = "/Assets/img/" + value + ".jpg";
+    $(wearImage).attr({ src: wearURL, alt: value });
+    wearDiv.append(wearImage, wearP);
+    //Dan can you please add the div your want to append the pics to
+    $("").append(wearDiv);
+})
 }
