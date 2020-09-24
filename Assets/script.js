@@ -67,7 +67,7 @@ function hourlyUvCheck(response) {
     } else {
         // else because we don't want to give false info, this is a disclaimer
         console.log("UV is low but it is still advised to protect yourself from UV");
-        $('body').css('background-image', 'url(../Assets/img/bluesky.jpg)');
+        $('body').css('background-image', 'url(../Assets/img/mountains.jpg)');
     }
 }
 
@@ -85,7 +85,7 @@ function hourlyRainCheck(response) {
             chosenWears.push("umbrella");
         }
     } else {
-        $('body').css('background-image', 'url(../Assets/img/bluesky.jpg)');
+        $('body').css('background-image', 'url(../Assets/img/mountains.jpg)');
     }
 }
 
