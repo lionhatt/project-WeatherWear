@@ -317,9 +317,7 @@ function renderChosenWears() {
 
     // find and store the min and max temps of the currentWeather object
     var minTemp = findMinTemp(currentWeather.temps);
-    console.log("minTemp: " + minTemp);
     var maxTemp = findMaxTemp(currentWeather.temps);
-    console.log("maxtemp: " + maxTemp);
 
     //if the min temp is higher than the optimal temprature, it will suggest basic clothing
     if (minTemp >= optimalTemp) {
@@ -374,7 +372,6 @@ function renderChosenWears() {
             }
         }
     }
-    console.log(chosenWears);
     renderClothRec();
 }
 
@@ -395,7 +392,6 @@ function renderClothRec() {
         var wearURL = "Assets/img/" + value + ".jpg";
         $(wearImage).attr({ src: wearURL, alt: value });
         wearDiv.append(wearImage, wearP);
-        //Dan can you please add the div your want to append the pics to
         $(".weatherDisplay").append(wearDiv);
     })
 }
