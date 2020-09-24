@@ -24,3 +24,5 @@ The following third party API's are used to fetch the weather information and lo
 ![WeatherWear Screenshot 1](./Assets/img/screenshots/weather-wear-screenshot-1.png "WeatherWear Screenshot 1")
 
 ![WeatherWear Screenshot 2](./Assets/img/screenshots/weather-wear-screenshot-2.png "WeatherWear Screenshot 2")
+
+![WeatherWear Screenshot 3](./Assets/img/screenshots/weather-wear-screenshot-3.png "WeatherWear Screenshot 3")
