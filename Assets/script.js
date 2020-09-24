@@ -401,7 +401,7 @@ function buildURL(entityid, entityType) {
             entity_id: entityid,
             entity_type: entityType,
             start: "0",
-            count: "5",
+            count: "10",
         }
 
     paramarray.forEach(function (item) {
