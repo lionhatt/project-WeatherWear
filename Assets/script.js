@@ -469,6 +469,10 @@ function DisplayResponse(obj) {
         $(".restaurantsContainer").append(restaurantElem)
     });
     $(".restaurantsContainer").append($("<button>").attr("class", "closeBtn").text("CLOSE"))
+    $(".closeBtn").on("click", function (event) {
+        $(".restaurantsContainer").empty()
+        $("#eat-form").addClass("hide")
+    })
     var name = restaurants.restaurant.name
     console.log(name)
     var image = obj.restaurants[0].restaurant.thumb
