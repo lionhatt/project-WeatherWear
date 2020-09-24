@@ -57,14 +57,17 @@ function hourlyUvCheck(response) {
 
     if (uvIndex >= uvThreshold) {
         // display uv message - this is where functions can got to display to the user what to wear - PLACEHOLDER
+        $('body').css('background-image', 'url(../Assets/img/Sunny-background.jpg)');
         console.log(`UV Index: ${uvIndex}`);
         console.log("You will need sunprotection today, wear a hat or apply sunscreen regularly");
         if (!chosenWears.includes("sunglasses")) {
             chosenWears.push("sunglasses");
         }
+
     } else {
         // else because we don't want to give false info, this is a disclaimer
         console.log("UV is low but it is still advised to protect yourself from UV");
+        $('body').css('background-image', 'url(../Assets/img/bluesky.jpg)');
     }
 }
 
@@ -75,11 +78,14 @@ function hourlyRainCheck(response) {
 
     if (precip > precipThreshold) {
         // display to the user what to wear - this is where functions can go to display info to the user - PLACEHOLDER
+        $('body').css('background-image', 'url(../Assets/img/rainingwallpaper.jpg)');
         console.log(`Precipitation: ${precip}mm`);
         console.log("You will need a waterproof or an umbrella");
         if (!chosenWears.includes("umbrella")) {
             chosenWears.push("umbrella");
         }
+    } else {
+        $('body').css('background-image', 'url(../Assets/img/bluesky.jpg)');
     }
 }
 
@@ -201,6 +207,8 @@ function processHourlyWeatherData(response) {
     });
 
     findAverageTemp(currentWeather.temps);
+    // clear the clothes
+    $(".weatherDisplay").empty();
     renderChosenWears();
 }
 
@@ -445,6 +453,7 @@ function DisplayResponse(obj) {
 
     obj.restaurants.forEach(function(eatData) {
         var restaurant = eatData.restaurant;
+
         function openPage() {
             window.open(restaurant.url, "_blank")
         }
@@ -470,7 +479,7 @@ function DisplayResponse(obj) {
         $(".restaurantsContainer").append(restaurantElem)
     });
     $(".restaurantsContainer").append($("<button>").attr("class", "closeBtn").text("CLOSE"))
-    $(".closeBtn").on("click", function (event) {
+    $(".closeBtn").on("click", function(event) {
         $(".restaurantsContainer").empty()
         $("#eat-form").addClass("hide")
     })
@@ -609,10 +618,14 @@ function renderEatform(entityid) {
 }
 
 $("#eatform").on("click", gettingEntityId)
-//Tells 
+    //Tells 
 
 function gettingEntityId() {
+    // clear the clothes
+    $(".weatherDisplay").empty();
     $(".restaurantsContainer").empty()
+
+    $('body').css('background-image', 'url(../Assets/img/backgroundrestaurant.jpg)');
 
     $.ajax({
         url: buildLocationIDUrl(),

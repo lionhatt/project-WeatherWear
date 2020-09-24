@@ -6,7 +6,6 @@
 
 body {
     background-image: url(/Assets/img/bluesky.jpg);
-
 }
 
 .eat {
@@ -33,7 +32,7 @@ body {
 }
 
 .main_menu {
-    background:rgb(36, 126, 243);
+    background: rgb(36, 126, 243);
     color: white;
 }
 
@@ -64,6 +63,7 @@ body {
     text-align: center;
     padding-top: 50px;
 }
+
 .closeBtn {
     display: block;
     width: 100%;
@@ -84,6 +84,13 @@ body {
 
 .btn:hover {
     opacity: 1;
+}
+
+.weatherDisplay img {
+    height: 400px;
+    width: 400px;
+    border-style: solid;
+    border-width: 2px;
 }
 
 .modal {
@@ -120,14 +127,13 @@ body {
     cursor: pointer;
 }
 
-
 .eatFormInputs {
     display: flex;
     flex-direction: horizontal;
-    justify-content: space-between; 
+    justify-content: space-between;
 }
 
-.spaceRight{
+.spaceRight {
     margin-right: 50px;
 }
 
@@ -150,9 +156,7 @@ body {
     }
 }
 
-.restaurantImg {
-
-}
+.restaurantImg {}
 
 .restaurantInfo {
     padding: 10px;
@@ -163,10 +167,6 @@ body {
     font-weight: bold;
 }
 
-.restaurantRating {
+.restaurantRating {}
 
-}
-
-.restaurantPhone {
-
-}
+.restaurantPhone {}
