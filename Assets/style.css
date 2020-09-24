@@ -5,7 +5,7 @@
 }
 
 body {
-    background-image: url(/Assets/img/bluesky.jpg);
+    background-image: url(/Assets/img/mountains.jpg);
 }
 
 .eat {
@@ -86,11 +86,21 @@ body {
     opacity: 1;
 }
 
+#weatherDiv {
+    font-size: medium;
+    font-weight: bold;
+}
+
 .weatherDisplay img {
     height: 400px;
     width: 400px;
     border-style: solid;
     border-width: 2px;
+}
+
+.weatherDisplay p {
+    font-size: medium;
+    font-weight: bold;
 }
 
 .modal {
