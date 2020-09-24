@@ -59,8 +59,9 @@ function hourlyUvCheck(response) {
         // display uv message - this is where functions can got to display to the user what to wear - PLACEHOLDER
         console.log(`UV Index: ${uvIndex}`);
         console.log("You will need sunprotection today, wear a hat or apply sunscreen regularly");
-        chosenWears.push("sunglasses");
-        $('body').css('background-image', 'url(../Assets/img/Sunny-background.jpg)');
+        if (!chosenWears.includes("sunglasses")) {
+            chosenWears.push("sunglasses");
+        }
     } else {
         // else because we don't want to give false info, this is a disclaimer
         console.log("UV is low but it is still advised to protect yourself from UV");
@@ -76,8 +77,9 @@ function hourlyRainCheck(response) {
         // display to the user what to wear - this is where functions can go to display info to the user - PLACEHOLDER
         console.log(`Precipitation: ${precip}mm`);
         console.log("You will need a waterproof or an umbrella");
-        chosenWears.push("umbrella");
-        $('body').css('background-image', 'url(../Assets/img/rainingwallpaper.jpg)');
+        if (!chosenWears.includes("umbrella")) {
+            chosenWears.push("umbrella");
+        }
     }
 }
 
@@ -90,7 +92,9 @@ function hourlyWindCheck(response) {
         // display to the user what to wear - this is where functions can go to update the display - PLACEHOLDER
         console.log(`Wind Speed: ${windSpeed}km/h`);
         console.log("You will need wind protection");
-        chosenWears.push("scarve");
+        if (!chosenWears.includes("scarve")) {
+            chosenWears.push("scarve");
+        }
     }
 }
 
@@ -295,18 +299,22 @@ var wears = {
 // array of suggested clothing based on temprature
 var chosenWears = [];
 
-// thi is the optimal temprature trying to achive at 26°C
-var i = 26
-
 // function to append suggested clothing into chosenWears array
 function renderChosenWears() {
 
+    // thi is the optimal temprature trying to achive at 26°C
+    var optimalTemp = 26
+
+    chosenWears = [];
+
     // find and store the min and max temps of the currentWeather object
     var minTemp = findMinTemp(currentWeather.temps);
+    console.log("minTemp: " + minTemp);
     var maxTemp = findMaxTemp(currentWeather.temps);
+    console.log("maxtemp: " + maxTemp);
 
     //if the min temp is higher than the optimal temprature, it will suggest basic clothing
-    if (minTemp >= i) {
+    if (minTemp >= optimalTemp) {
         chosenWears.push(wears.baseLayer[0]);
         //if the min temp is lower then 5°C, it will give the maximum clothing suggestion  
     } else if (minTemp <= 5) {
@@ -315,8 +323,8 @@ function renderChosenWears() {
         //if the min temp is in between 5-26°C:  
     } else {
         //if the maxtemp is higher then the optimal temprature, it will set maxtemp as the optimal at 26°C
-        if (maxTemp >= i) {
-            maxTemp = i;
+        if (maxTemp >= optimalTemp) {
+            maxTemp = optimalTemp;
         }
         //if the difference between max and min temp is greater than 11°C, it will append down-jacket to suggestion
         if ((maxTemp - minTemp) >= 11) {
@@ -333,33 +341,48 @@ function renderChosenWears() {
         }
         //if the temprature is greater then 16°C, it will itterate through the base layer to append suggestions
         if (maxTemp >= 16) {
-            i = i - maxTemp;
+            optimalTemp = optimalTemp - maxTemp;
             for (let k = wears.baseLayer.length - 1; k >= 0; k--) {
-                if (i >= (k + 1)) {
-                    i = i - (k + 1);
+                if (optimalTemp >= (k + 1)) {
+                    optimalTemp = optimalTemp - (k + 1);
                     chosenWears.push(wears.baseLayer[k]);
                 }
             }
             //if the temparture is less then 16°C  , it will itterate through the outer layer for 1 itme ,and then through base layer to append suggestions
         } else if (maxTemp < 16) {
-            i = i - maxTemp;
+            optimalTemp = optimalTemp - maxTemp;
             for (let u = wears.outerLayer.length - 1; u >= 0; u--) {
-                if (i >= (u + 9)) {
-                    i = i - (u + 9);
+                if (optimalTemp >= (u + 9)) {
+                    optimalTemp = optimalTemp - (u + 9);
                     chosenWears.push(wears.outerLayer[u]);
                     break;
                 }
             }
             for (let k = wears.baseLayer.length - 1; k >= 0; k--) {
-                if (i >= (k + 1)) {
-                    i = i - (k + 1);
+                if (optimalTemp >= (k + 1)) {
+                    optimalTemp = optimalTemp - (k + 1);
                     chosenWears.push(wears.baseLayer[k]);
                 }
             }
         }
     }
-    console.log("Chosen wears: " + chosenWears);
+    console.log(chosenWears);
     renderClothRec();
+}
+
+//function to append recommended itmes on the html
+function renderClothRec() {
+    $.each(chosenWears, function(index, value) {
+        var wearDiv = $('<div class="wearDiv">');
+        var wearImage = $("<img>");
+        var wearP = $("<p>");
+        wearP.text(value);
+        var wearURL = "/Assets/img/" + value + ".jpg";
+        $(wearImage).attr({ src: wearURL, alt: value });
+        wearDiv.append(wearImage, wearP);
+        //Dan can you please add the div your want to append the pics to
+        $(".weatherDisplay").append(wearDiv);
+    })
 }
 
 function closeModal() {
@@ -389,63 +412,78 @@ createInputTimes();
 // Then I get an API response with 6 recommended restraunts
 
 // building URL
-function buildURL(entityid) {
-    var lat = currentWeather.latitude
-    var lon = currentWeather.longitude
-    var city = currentWeather.cityName
-    var baseURL = "https://developers.zomato.com/api/v2.1/search?"
+function buildURL(entityid, entityType) {
+    // Get the value of whatever option is selected from the drop down and store it in variable
+    var cuisineElement = $("#cuisines")
+    var cuisineidval = cuisineElement.val()
+    var sortElement = $("#eatFormSort")
+    var sortval = sortElement.val()
+
+    var paramarray = [{ cuisines: cuisineidval }, { sort: sortval }]
+
+    var baseUrl = "https://developers.zomato.com/api/v2.1/search?"
     var urlObj = {
-            entity_id: entityid,
-            q: city,
-            lat: lat,
-            lon: lon,
-            start: "0",
-            count: "5",
-        }
-        // Click event on the submit form button should trigger this
-        // buildAdvancedUrl(urlObj)
-    var buildURL = baseURL + $.param(urlObj)
-    console.log(buildURL)
-    return buildURL
+        entity_id: entityid,
+        entity_type: entityType,
+        start: "0",
+        count: "10",
+    }
+
+    paramarray.forEach(function(item) {
+        Object.keys(item).forEach(function(key) {
+            if (item[key] !== "") { urlObj[key] = item[key] }
+        })
+    })
+
+    buildUrl = baseUrl + $.param(urlObj)
+    console.log(buildUrl)
+    return buildUrl
 }
 
 function DisplayResponse(obj) {
-  var restaurants = obj.restaurants[0]
+    var restaurants = obj.restaurants[0]
 
-  obj.restaurants.forEach(function (eatData) {
-    var restaurant = eatData.restaurant;
+    obj.restaurants.forEach(function(eatData) {
+        var restaurant = eatData.restaurant;
+        function openPage() {
+            window.open(restaurant.url, "_blank")
+        }
+        console.log("yo", restaurant.thumb)
 
-    console.log("yo", restaurant.thumb)
+        var restaurantElem = $("<div>").attr("class", "restaurant");
+        var img = $("<img>").attr("class", "restaurantImg").attr("src", restaurant.thumb);
+        var restaurantInfo = $("<div>").attr("class", "restaurantInfo")
+        var restaurantName = $("<div>").attr("class", "restaurantName").text(restaurant.name)
+        var restaurantRating = $("<div>").attr("class", "restaurantRating").text(`${restaurant.user_rating.aggregate_rating}⭐`)
+        var restaurantNumber = $("<div>").attr("class", "restaurantNumber").text(restaurant.phone_numbers)
 
-    var restaurantElem = $("<div>").attr("class", "restaurant");
-    var img = $("<img>").attr("class","restaurantImg").attr("src", restaurant.thumb);
-    var restaurantInfo = $("<div>").attr("class","restaurantInfo")
-    var restaurantName = $("<div>").attr("class","restaurantName").text(restaurant.name)
-    var restaurantRating =$("<div>").attr("class","restaurantRating").text(restaurant.user_rating.aggregate_rating)
-    var restaurantNumber= $("<div>").attr("class","restaurantNumber").text(restaurant.phone_numbers)
+        restaurantInfo.append(restaurantName)
+        restaurantInfo.append(restaurantRating)
+        restaurantInfo.append(restaurantNumber)
 
-    restaurantInfo.append(restaurantName)
-    restaurantInfo.append(restaurantRating)
-    restaurantInfo.append(restaurantNumber)
-    
-    restaurantElem.append(img)
-    restaurantElem.append(restaurantInfo)
+        restaurantElem.append(img)
+        restaurantElem.append(restaurantInfo)
+        restaurantElem.on("click", openPage)
 
-    
 
-    $(".restaurantsContainer").append(restaurantElem)
-  });
 
-  var name = restaurants.restaurant.name
-  console.log(name)
-  var image = obj.restaurants[0].restaurant.thumb
-  console.log(image)
-  var review = obj.restaurants[0].restaurant.user_rating
-  console.log(review)
-  var address = obj.restaurants[0].restaurant.location.address
-  console.log(address)
-  var pn = obj.restaurants[0].restaurant.phone_numbers
-  console.log(pn)
+        $(".restaurantsContainer").append(restaurantElem)
+    });
+    $(".restaurantsContainer").append($("<button>").attr("class", "closeBtn").text("CLOSE"))
+    $(".closeBtn").on("click", function (event) {
+        $(".restaurantsContainer").empty()
+        $("#eat-form").addClass("hide")
+    })
+    var name = restaurants.restaurant.name
+    console.log(name)
+    var image = obj.restaurants[0].restaurant.thumb
+    console.log(image)
+    var review = obj.restaurants[0].restaurant.user_rating
+    console.log(review)
+    var address = obj.restaurants[0].restaurant.location.address
+    console.log(address)
+    var pn = obj.restaurants[0].restaurant.phone_numbers
+    console.log(pn)
 
 }
 // function gettingCuisineid(response) {
@@ -459,42 +497,42 @@ function DisplayResponse(obj) {
 //   return id
 // }
 function buildAdvancedResponse(b) {
-  // Get the value of whatever option is selected from the drop down and store it in variable
-  var cuisineElement = $("#cuisines")
-  var cuisineidval = cuisineElement.val()
-  var sortElement = $("#eatFormSort")
-  var sortval = sortElement.val()
-  
-  var paramarray = [{ cuisines: cuisineidval }, { sort: sortval }]
-  // Shouldn't use lon/lat for search, use city instead
-  var lat = currentWeather.latitude
-  var lon = currentWeather.longitude
-  var city = currentWeather.cityName
-  var baseURL = "https://developers.zomato.com/api/v2.1/search?"
-  var urlObj = {
-    entity_id: b,
-    q: city,
-    lat: lat,
-    lon: lon,
-    start: "0",
-    count: "5"
-  }
-  paramarray.forEach(function (item) {
-    Object.keys(item).forEach(function (key) {
-      if (item[key] !== "") { urlObj[key] = item[key] }
-    })
-    var buildURL = baseURL + $.param(urlObj)
-    $.ajax({
-            url: buildURL,
-            method: "GET",
-            headers: {
-                "user-key": "19132a3a025302edc9b08eb44608d7c0",
-                "content-type": "application/json"
-            },
-        }).then(function(response) {
-            DisplayResponse(response)
+    // Get the value of whatever option is selected from the drop down and store it in variable
+    var cuisineElement = $("#cuisines")
+    var cuisineidval = cuisineElement.val()
+    var sortElement = $("#eatFormSort")
+    var sortval = sortElement.val()
+
+    var paramarray = [{ cuisines: cuisineidval }, { sort: sortval }]
+        // Shouldn't use lon/lat for search, use city instead
+    var lat = currentWeather.latitude
+    var lon = currentWeather.longitude
+    var city = currentWeather.cityName
+    var baseURL = "https://developers.zomato.com/api/v2.1/search?"
+    var urlObj = {
+        entity_id: b,
+        q: city,
+        lat: lat,
+        lon: lon,
+        start: "0",
+        count: "5"
+    }
+    paramarray.forEach(function(item) {
+            Object.keys(item).forEach(function(key) {
+                if (item[key] !== "") { urlObj[key] = item[key] }
+            })
+            var buildURL = baseURL + $.param(urlObj)
+            $.ajax({
+                url: buildURL,
+                method: "GET",
+                headers: {
+                    "user-key": "19132a3a025302edc9b08eb44608d7c0",
+                    "content-type": "application/json"
+                },
+            }).then(function(response) {
+                DisplayResponse(response)
+            })
         })
-      })
         // $.ajax({
         //   url: "https://developers.zomato.com/api/v2.1/cuisines?city_id=" + b,
         //   method: "GET",
@@ -538,94 +576,71 @@ function buildAdvancedResponse(b) {
 }
 
 function buildLocationIDUrl() {
-  var lat = currentWeather.latitude
-  var lon = currentWeather.longitude
-  var city = currentWeather.cityName
-  var baseURL = "https://developers.zomato.com/api/v2.1/locations?"
-  var urlObj = {
-    query: getCityInput(),
-    count: 20,
-  }
-  // Click event on the submit form button should trigger this
-  // buildAdvancedUrl(urlObj)
-  var buildlocalURL = baseURL + $.param(urlObj)
-  return buildlocalURL
+    var lat = currentWeather.latitude
+    var lon = currentWeather.longitude
+    var city = currentWeather.cityName
+    var baseURL = "https://developers.zomato.com/api/v2.1/locations?"
+    var urlObj = {
+            query: getCityInput() || "melbourne", // default search to melbourne if no location
+            count: 20,
+        }
+        // Click event on the submit form button should trigger this
+        // buildAdvancedUrl(urlObj)
+    var buildlocalURL = baseURL + $.param(urlObj)
+    return buildlocalURL
 }
 
 function renderEatform(entityid) {
-  $("#eat-form").removeClass("hide")
-  $.ajax({
-    url: "https://developers.zomato.com/api/v2.1/cuisines?city_id=" + entityid,
-    method: "GET",
-    headers: {
-      "user-key": "19132a3a025302edc9b08eb44608d7c0",
-      "content-type": "application/json"
-    },
-  }).then(function (response) {
-    var cuisines = response.cuisines
-    cuisines.forEach(function (item) {
-      var option = $("<option>").text(item.cuisine.cuisine_name).attr("value", item.cuisine.cuisine_id )
-      $("#cuisines").append(option)
+    $("#eat-form").removeClass("hide")
+    $.ajax({
+        url: "https://developers.zomato.com/api/v2.1/cuisines?city_id=" + entityid,
+        method: "GET",
+        headers: {
+            "user-key": "19132a3a025302edc9b08eb44608d7c0",
+            "content-type": "application/json"
+        },
+    }).then(function(response) {
+        var cuisines = response.cuisines
+        cuisines.forEach(function(item) {
+            var option = $("<option>").text(item.cuisine.cuisine_name).attr("value", item.cuisine.cuisine_id)
+            $("#cuisines").append(option)
+        })
     })
-  })
 }
 
+$("#eatform").on("click", gettingEntityId)
+//Tells 
 
 function gettingEntityId() {
- $(".restaurantsContainer").empty()
- $('body').css('background-image', 'url(../Assets/img/backgroundrestaurant.jpg)');
+    $(".restaurantsContainer").empty()
 
- $.ajax({
-  url: buildLocationIDUrl(),
-  method: "GET",
-  headers: {
-      "user-key": "19132a3a025302edc9b08eb44608d7c0",
-      "content-type": "application/json"
-  },
-}).then(function(response) {
-  var entityid = response.location_suggestions[0].entity_id
-      // zomatoAPIcall(entityid)
-  $.ajax({
-      url: buildLocationIDUrl(),
-      method: "GET",
-      headers: {
-          "user-key": "19132a3a025302edc9b08eb44608d7c0",
-          "content-type": "application/json"
-      },
-  }).then(function(response) {
-      var entityid = response.location_suggestions[0].entity_id
-          // zomatoAPIcall(entityid)
-      $.ajax({
-          url: buildURL(entityid),
-          method: "GET",
-          headers: {
-              "user-key": "19132a3a025302edc9b08eb44608d7c0",
-              "content-type": "application/json"
-          },
-      }).then(function(response) {
-          renderEatform(entityid)
-          DisplayResponse(response)
-      })
-  })
-})
-}
-  
-$("#eatNav").on("click", gettingEntityId)
-  //Tells 
-$("#cuisines").change(gettingEntityId)
-$("#eatFormSort").change(gettingEntityId)
+    $.ajax({
+        url: buildLocationIDUrl(),
+        method: "GET",
+        headers: {
+            "user-key": "19132a3a025302edc9b08eb44608d7c0",
+            "content-type": "application/json"
+        },
+    }).then(function(response) {
+        var entityid = response.location_suggestions[0].entity_id
+        var entityType = response.location_suggestions[0].entity_type
 
-//function to append recommended itmes on the html
-function renderClothRec() {
-    $(chosenWears).each(function(index, value) {
-        var wearDiv = $('<div class= "wearDiv>');
-        var wearImage = $("<img>");
-        var wearP = $("<p>");
-        wearP.text(value);
-        var wearURL = "/Assets/img/" + value + ".jpg";
-        $(wearImage).attr({ src: wearURL, alt: value });
-        wearDiv.append(wearImage, wearP);
-        //Dan can you please add the div your want to append the pics to
-        $("").append(wearDiv);
+        // zomatoAPIcall(entityid)
+        $.ajax({
+            url: buildURL(entityid, entityType),
+            method: "GET",
+            headers: {
+                "user-key": "19132a3a025302edc9b08eb44608d7c0",
+                "content-type": "application/json"
+            },
+        }).then(function(response) {
+            renderEatform(entityid)
+            DisplayResponse(response)
+        })
     })
 }
+
+$("#eatNav").on("click", gettingEntityId)
+    //Tells 
+$("#cuisines").change(gettingEntityId)
+$("#eatFormSort").change(gettingEntityId)
