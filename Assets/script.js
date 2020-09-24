@@ -161,7 +161,7 @@ function processHourlyWeatherData(response) {
     currentWeather.temps = [];
 
     // go through every hour for the next 48 hours and display the data
-    response.data.forEach(function(dataObject) {
+    response.data.forEach(function (dataObject) {
 
         // retrieve and store 
         var time = moment(dataObject.timestamp_local);
@@ -349,9 +349,9 @@ function renderChosenWears() {
 function renderClothRec() {
     var weatherDiv = $('<div id= "weatherDiv">');
     var maxP = $('<p id="maxP">');
-    maxP.append("Maximum Temprature: " + findMaxTemp(currentWeather.temps));
+    maxP.append("Maximum Temprature: " + findMaxTemp(currentWeather.temps) + "°C");
     var minP = $('<p id="minP">');
-    minP.append("Minimum Temprature: " + findMinTemp(currentWeather.temps));
+    minP.append("Minimum Temprature: " + findMinTemp(currentWeather.temps) + "°C");
     weatherDiv.append(maxP, minP);
     $(".weatherDisplay").append(weatherDiv);
     $.each(chosenWears, function (index, value) {
