@@ -63,6 +63,15 @@ body {
     text-align: center;
     padding-top: 50px;
 }
+.closeBtn {
+    display: block;
+    width: 100%;
+    height: 30px;
+    justify-content: center;
+    text-align: center;
+    background-color: #26a69a;
+    color: white;
+}
 
 .btn {
     display: block;
