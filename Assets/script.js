@@ -457,7 +457,6 @@ function DisplayResponse(obj) {
         function openPage() {
             window.open(restaurant.url, "_blank")
         }
-        console.log("yo", restaurant.thumb)
 
         var restaurantElem = $("<div>").attr("class", "restaurant");
         var img = $("<img>").attr("class", "restaurantImg").attr("src", restaurant.thumb);
@@ -485,28 +484,9 @@ function DisplayResponse(obj) {
         $(".restaurantsContainer").empty()
         $("#eat-form").addClass("hide")
     })
-    var name = restaurants.restaurant.name
-    console.log(name)
-    var image = obj.restaurants[0].restaurant.thumb
-    console.log(image)
-    var review = obj.restaurants[0].restaurant.user_rating
-    console.log(review)
-    var address = obj.restaurants[0].restaurant.location.address
-    console.log(address)
-    var pn = obj.restaurants[0].restaurant.phone_numbers
-    console.log(pn)
 
 }
-// function gettingCuisineid(response) {
-//   var cuisines = response.cuisines
-//   var id = ""
-//   cuisines.forEach(function (item) {
-//     if ("Indian" == item.cuisine.cuisine_name) {
-//       id = item.cuisine.cuisine_id
-//     }
-//   })
-//   return id
-// }
+
 function buildAdvancedResponse(b) {
     // Get the value of whatever option is selected from the drop down and store it in variable
     var cuisineElement = $("#cuisines")
@@ -544,52 +524,10 @@ function buildAdvancedResponse(b) {
             DisplayResponse(response)
         })
     })
-    // $.ajax({
-    //   url: "https://developers.zomato.com/api/v2.1/cuisines?city_id=" + b,
-    //   method: "GET",
-    //   headers: {
-    //     "user-key": "19132a3a025302edc9b08eb44608d7c0",
-    //     "content-type": "application/json"
-    //   },
-    // }).then(function (response) {
-    //   var cuisineid = gettingCuisineid(response)
-    //   var paramarray = [{ cuisines: cuisineid }, { sort: "cost" }, { radius: "10M" }]
-    //   var lat = currentWeather.latitude
-    //   var lon = currentWeather.longitude
-    //   var city = currentWeather.cityName
-    //   var baseURL = "https://developers.zomato.com/api/v2.1/search?"
-    //   var urlObj = {
-    //     entity_id: b,
-    //     q: city,
-    //     lat: lat,
-    //     lon: lon,
-    //     start: "0",
-    //     count: "5"
-    //   }
-    //   paramarray.forEach(function (item) {
-    //     Object.keys(item).forEach(function (key) {
-    //       if (item[key] !== "") { urlObj[key] = item[key] }
-    //     })
-    //   })
-    //   var buildURL = baseURL + $.param(urlObj)
-    //   $.ajax({
-    //     url: buildURL,
-    //     method: "GET",
-    //     headers: {
-    //       "user-key": "19132a3a025302edc9b08eb44608d7c0",
-    //       "content-type": "application/json"
-    //     },
-    //   }).then(function (response) {
-    //     DisplayResponse(response)
-    //   })
-    // })
 
 }
 
 function buildLocationIDUrl() {
-    var lat = currentWeather.latitude
-    var lon = currentWeather.longitude
-    var city = currentWeather.cityName
     var baseURL = "https://developers.zomato.com/api/v2.1/locations?"
     var urlObj = {
         query: getCityInput() || "melbourne", // default search to melbourne if no location
