@@ -444,7 +444,9 @@ function DisplayResponse(obj) {
 
     obj.restaurants.forEach(function (eatData) {
         var restaurant = eatData.restaurant;
-
+        function openPage() {
+            window.open(restaurant.url, "_blank")
+        }
         console.log("yo", restaurant.thumb)
 
         var restaurantElem = $("<div>").attr("class", "restaurant");
@@ -460,12 +462,13 @@ function DisplayResponse(obj) {
 
         restaurantElem.append(img)
         restaurantElem.append(restaurantInfo)
+        restaurantElem.on("click", openPage)
 
 
 
         $(".restaurantsContainer").append(restaurantElem)
     });
-
+    $(".restaurantsContainer").append($("<button>").attr("class", "closeBtn").text("CLOSE"))
     var name = restaurants.restaurant.name
     console.log(name)
     var image = obj.restaurants[0].restaurant.thumb
