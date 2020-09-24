@@ -376,23 +376,6 @@ $("#close-modal").on("click", closeModal);
 
 createInputTimes();
 
-// when I click the eat button
-// Then I get an API response with 6 recommended restraunts
-// I also have a scondary form at the top of the page acting as filters for the response
-
-// When I click the button I need to get the URL (basic)
-// it needs to have city name, lat, lon and entity ID
-// Need a function to call the API with the basic URL
-// Need a function for the Display aspect
-// When I put input into the secondary eat form (filters)
-// it takes in the new input and adds it to the URL
-// Function to call the API
-// Function to display new response
-
-// when I click the eat button
-// Then I get an API response with 6 recommended restraunts
-
-// building URL
 function buildURL(entityid, entityType) {
     // Get the value of whatever option is selected from the drop down and store it in variable
     var cuisineElement = $("#cuisines")
@@ -408,6 +391,7 @@ function buildURL(entityid, entityType) {
         entity_type: entityType,
         start: "0",
         count: "10",
+        order: sortval === "cost" ? "asc" : "desc"
     }
 
     paramarray.forEach(function (item) {
@@ -435,14 +419,16 @@ function DisplayResponse(obj) {
         var img = $("<img>").attr("class", "restaurantImg").attr("src", restaurant.thumb);
         var restaurantInfo = $("<div>").attr("class", "restaurantInfo")
         var restaurantName = $("<div>").attr("class", "restaurantName").text(restaurant.name)
-        var restaurantRating = $("<div>").attr("class", "restaurantRating").text("Rating:" + " " + `${restaurant.user_rating.aggregate_rating}⭐`)
-        var restaurantNumber = $("<div>").attr("class", "restaurantNumber").text("Phone Number:" + " " + restaurant.phone_numbers)
-        var restaurantAddress = $("<div>").attr("class", "restaurantAdress").text("Address:" + " " + restaurant.location.address)
+        var restaurantRating = $("<div>").attr("class", "restaurantRating").text(`Rating: ${restaurant.user_rating.aggregate_rating}⭐`)
+        var restaurantNumber = $("<div>").attr("class", "restaurantNumber").text(`Phone Number: ${restaurant.phone_numbers}`)
+        var restaurantAddress = $("<div>").attr("class", "restaurantAdress").text(`Adress: ${restaurant.location.address}`)
+        var restaurantCost = $("<div>").attr("class", "restaurantCost").text(`Cost: ${restaurant.currency}${restaurant.average_cost_for_two}`)
 
         restaurantInfo.append(restaurantName)
         restaurantInfo.append(restaurantRating)
         restaurantInfo.append(restaurantNumber)
         restaurantInfo.append(restaurantAddress)
+        restaurantInfo.append(restaurantCost)
 
         restaurantElem.append(img)
         restaurantElem.append(restaurantInfo)
@@ -456,46 +442,6 @@ function DisplayResponse(obj) {
     $(".closeBtn").on("click", function (event) {
         $(".restaurantsContainer").empty()
         $("#eat-form").addClass("hide")
-    })
-
-}
-
-function buildAdvancedResponse(b) {
-    // Get the value of whatever option is selected from the drop down and store it in variable
-    var cuisineElement = $("#cuisines")
-    var cuisineidval = cuisineElement.val()
-    var sortElement = $("#eatFormSort")
-    var sortval = sortElement.val()
-
-    var paramarray = [{ cuisines: cuisineidval }, { sort: sortval }]
-    // Shouldn't use lon/lat for search, use city instead
-    var lat = currentWeather.latitude
-    var lon = currentWeather.longitude
-    var city = currentWeather.cityName
-    var baseURL = "https://developers.zomato.com/api/v2.1/search?"
-    var urlObj = {
-        entity_id: b,
-        q: city,
-        lat: lat,
-        lon: lon,
-        start: "0",
-        count: "5"
-    }
-    paramarray.forEach(function (item) {
-        Object.keys(item).forEach(function (key) {
-            if (item[key] !== "") { urlObj[key] = item[key] }
-        })
-        var buildURL = baseURL + $.param(urlObj)
-        $.ajax({
-            url: buildURL,
-            method: "GET",
-            headers: {
-                "user-key": "19132a3a025302edc9b08eb44608d7c0",
-                "content-type": "application/json"
-            },
-        }).then(function (response) {
-            DisplayResponse(response)
-        })
     })
 
 }
@@ -518,7 +464,7 @@ function renderEatform(entityid) {
         url: "https://developers.zomato.com/api/v2.1/cuisines?city_id=" + entityid,
         method: "GET",
         headers: {
-            "user-key": "19132a3a025302edc9b08eb44608d7c0",
+            "user-key": "5eece0acc0b44cc0d90cea4773975dea",
             "content-type": "application/json"
         },
     }).then(function (response) {
@@ -544,7 +490,7 @@ function gettingEntityId() {
         url: buildLocationIDUrl(),
         method: "GET",
         headers: {
-            "user-key": "19132a3a025302edc9b08eb44608d7c0",
+            "user-key": "5eece0acc0b44cc0d90cea4773975dea",
             "content-type": "application/json"
         },
     }).then(function (response) {
@@ -556,7 +502,7 @@ function gettingEntityId() {
             url: buildURL(entityid, entityType),
             method: "GET",
             headers: {
-                "user-key": "19132a3a025302edc9b08eb44608d7c0",
+                "user-key": "5eece0acc0b44cc0d90cea4773975dea",
                 "content-type": "application/json"
             },
         }).then(function (response) {
