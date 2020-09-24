@@ -2,20 +2,22 @@
 
 ## Introduction
 
-A JavaScript web app that helps users decide what to wear when they go out depending on the current weather forecast. Whilst out users can look up local places to eat.
+A JavaScript web app that helps you decide what to wear when you are going out depending on the current weather forecast. You can also look up places to eat in the local area whilst you are out.
 
 ## Description
 
-User's enter their location and use the drop down menus to select what time they are going out and what time they are coming home. WeatherWear will fetch the local weather information for the selected time period and find the average temperature. Users will be presented with what they should wear or bring with them when they are out depending on the temperature and rainfall.
+Simply enter your location and use the drop down menus to select what time you are going out and what time you are expexting to coming home. WeatherWear will fetch the local weather information for the selected time period and find the average temperature. You will be presented with suggestions of what to wear or bring with you whilst you are out depending on the temperature and rainfall.
 
-WeatherWear also allows users to search for restaurants in the area to visit whilst they are out.
+WeatherWear also allows you to search for local places to eat in the area whilst you are out. The places to eat list can be filtered by cuisine type and ordered by rating or by cost.
+
+This is app features a slick, easy to use interface and can be used for when you are abroad travelling or close to home. WeatherWear can help you plan your day for unexpected weather whilst making sure you don't go hungry.
 
 ## Third Party API's
 
 The following third party API's are used to fetch the weather information and local restaurant information
 
-weatherbit: https://www.weatherbit.io/
-zomato: https://developers.zomato.com/api
+- weatherbit: https://www.weatherbit.io/
+- zomato: https://developers.zomato.com/api
 
 ## Deployed Link
 
