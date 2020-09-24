@@ -418,10 +418,16 @@ function DisplayResponse(obj) {
     var img = $("<img>").attr("class","restaurantImg").attr("src", restaurant.thumb);
     var restaurantInfo = $("<div>").attr("class","restaurantInfo")
     var restaurantName = $("<div>").attr("class","restaurantName").text(restaurant.name)
-    
+    var restaurantRating =$("<div>").attr("class","restaurantRating").text(restaurant.user_rating.aggregate_rating)
+    var restaurantNumber= $("<div>").attr("class","restaurantNumber").text(restaurant.phone_numbers)
+
     restaurantInfo.append(restaurantName)
+    restaurantInfo.append(restaurantRating)
+    restaurantInfo.append(restaurantNumber)
+    
     restaurantElem.append(img)
     restaurantElem.append(restaurantInfo)
+
     
 
     $(".restaurantsContainer").append(restaurantElem)
@@ -593,20 +599,27 @@ $(".eat").on("click", function gettingEntityId() {
     })
   })
 })
-$("#eatform").on("click", function gettingEntityId() {
-    $.ajax({
-        url: buildLocationIDUrl(),
-        method: "GET",
-        headers: {
-            "user-key": "19132a3a025302edc9b08eb44608d7c0",
-            "content-type": "application/json"
-        },
-    }).then(function(response) {
-        var entityid = response.location_suggestions[0].entity_id
-            // zomatoAPIcall(entityid)
-        buildAdvancedResponse(entityid)
-    })
-})
+function gettingEntityId() {
+ $(".restaurantsContainer").empty()
+
+  $.ajax({
+      url: buildLocationIDUrl(),
+      method: "GET",
+      headers: {
+          "user-key": "19132a3a025302edc9b08eb44608d7c0",
+          "content-type": "application/json"
+      },
+  }).then(function(response) {
+      var entityid = response.location_suggestions[0].entity_id
+          // zomatoAPIcall(entityid)
+      buildAdvancedResponse(entityid)
+  })
+}
+  
+$("#eatform").on("click", gettingEntityId)
+  //Tells 
+$("#cuisines").change(gettingEntityId)
+$("#eatFormSort").change(gettingEntityId)
 
 //function to append recommended itmes on the html
 function renderClothRec() {
