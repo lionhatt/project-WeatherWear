@@ -1,7 +1,5 @@
 # WeatherWear
 
-## Introduction
-
 A JavaScript web app that helps you decide what to wear when you are going out depending on the current weather forecast. You can also look up places to eat in the local area whilst you are out.
 
 ## Description
