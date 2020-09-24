@@ -380,6 +380,13 @@ function renderChosenWears() {
 
 //function to append recommended itmes on the html
 function renderClothRec() {
+    var weatherDiv = $('<div id= "weatherDiv">');
+    var maxP = $('<p id="maxP">');
+    maxP.append("Maximum Temprature: " + findMaxTemp(currentWeather.temps));
+    var minP = $('<p id="minP">');
+    minP.append("Minimum Temprature: " + findMinTemp(currentWeather.temps));
+    weatherDiv.append(maxP, minP);
+    $(".weatherDisplay").append(weatherDiv);
     $.each(chosenWears, function (index, value) {
         var wearDiv = $('<div class="wearDiv">');
         var wearImage = $("<img>");
@@ -562,7 +569,7 @@ $("#eatform").on("click", gettingEntityId)
 
 function gettingEntityId() {
     // clear the clothes
-    $(".weatherDisplay").empty();
+    $(".weatherDisplay").hide();
     $(".restaurantsContainer").empty()
 
     $('body').css('background-image', 'url(../Assets/img/backgroundrestaurant.jpg)');
@@ -597,3 +604,9 @@ $("#eatNav").on("click", gettingEntityId)
 //Tells 
 $("#cuisines").change(gettingEntityId)
 $("#eatFormSort").change(gettingEntityId)
+
+$("#wearNav").on("click", function () {
+    $(".weatherDisplay").show();
+    $(".restaurantsContainer").empty();
+    $("#eat-form").addClass("hide");
+})
