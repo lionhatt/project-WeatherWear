@@ -492,6 +492,7 @@ function buildAdvancedResponse(b) {
         }).then(function(response) {
             DisplayResponse(response)
         })
+      })
         // $.ajax({
         //   url: "https://developers.zomato.com/api/v2.1/cuisines?city_id=" + b,
         //   method: "GET",
@@ -564,7 +565,9 @@ function renderEatform(entityid) {
       var option = $("<option>").text(item.cuisine.cuisine_name).attr("value", item.cuisine.cuisine_id )
       $("#cuisines").append(option)
     })
+  })
 }
+
 $(".eat").on("click", function gettingEntityId() {
     $.ajax({
         url: buildLocationIDUrl(),
