@@ -5,7 +5,7 @@
 }
 
 body {
-    background-image: url(/Assets/img/mountains.jpg);
+    background-image: url(../Assets/img/mountains.jpg);
 }
 
 .eat {
