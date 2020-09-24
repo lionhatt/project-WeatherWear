@@ -623,6 +623,47 @@ function gettingEntityId() {
 
 $("#eatform").on("click", gettingEntityId)
 //Tells 
+
+function gettingEntityId() {
+ $(".restaurantsContainer").empty()
+
+ $.ajax({
+  url: buildLocationIDUrl(),
+  method: "GET",
+  headers: {
+      "user-key": "19132a3a025302edc9b08eb44608d7c0",
+      "content-type": "application/json"
+  },
+}).then(function(response) {
+  var entityid = response.location_suggestions[0].entity_id
+      // zomatoAPIcall(entityid)
+  $.ajax({
+      url: buildLocationIDUrl(),
+      method: "GET",
+      headers: {
+          "user-key": "19132a3a025302edc9b08eb44608d7c0",
+          "content-type": "application/json"
+      },
+  }).then(function(response) {
+      var entityid = response.location_suggestions[0].entity_id
+          // zomatoAPIcall(entityid)
+      $.ajax({
+          url: buildURL(entityid),
+          method: "GET",
+          headers: {
+              "user-key": "19132a3a025302edc9b08eb44608d7c0",
+              "content-type": "application/json"
+          },
+      }).then(function(response) {
+          renderEatform(entityid)
+          DisplayResponse(response)
+      })
+  })
+})
+}
+  
+$("#eatNav").on("click", gettingEntityId)
+  //Tells 
 $("#cuisines").change(gettingEntityId)
 $("#eatFormSort").change(gettingEntityId)
 
