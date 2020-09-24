@@ -60,6 +60,7 @@ function hourlyUvCheck(response) {
         console.log(`UV Index: ${uvIndex}`);
         console.log("You will need sunprotection today, wear a hat or apply sunscreen regularly");
         chosenWears.push("sunglasses");
+        $('body').css('background-image', 'url(../Assets/img/Sunny-background.jpg)');
     } else {
         // else because we don't want to give false info, this is a disclaimer
         console.log("UV is low but it is still advised to protect yourself from UV");
@@ -76,6 +77,7 @@ function hourlyRainCheck(response) {
         console.log(`Precipitation: ${precip}mm`);
         console.log("You will need a waterproof or an umbrella");
         chosenWears.push("umbrella");
+        $('body').css('background-image', 'url(../Assets/img/rainingwallpaper.jpg)');
     }
 }
 
@@ -571,6 +573,7 @@ function renderEatform(entityid) {
 
 function gettingEntityId() {
  $(".restaurantsContainer").empty()
+ $('body').css('background-image', 'url(../Assets/img/backgroundrestaurant.jpg)');
 
  $.ajax({
   url: buildLocationIDUrl(),
