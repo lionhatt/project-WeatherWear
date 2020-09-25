@@ -106,7 +106,7 @@ function hourlyDisplayIcon(response) {
 function findMinTemp(temps) {
 
     var minTemp = temps[0];
-    temps.forEach(function (temp) {
+    temps.forEach(function(temp) {
 
         if (minTemp > temp) {
             minTemp = temp;
@@ -118,7 +118,7 @@ function findMinTemp(temps) {
 // finds the maximum temperature in an array of temps provided by the api
 function findMaxTemp(temps) {
     var maxTemp = temps[0];
-    temps.forEach(function (temp) {
+    temps.forEach(function(temp) {
 
         if (maxTemp < temp) {
             maxTemp = temp;
@@ -131,7 +131,7 @@ function findMaxTemp(temps) {
 function findAverageTemp(temps) {
     var avgTemp = 0;
     var sum = 0;
-    temps.forEach(function (temp) {
+    temps.forEach(function(temp) {
         sum += temp;
     });
     avgTemp = sum / temps.length;
@@ -161,7 +161,7 @@ function processHourlyWeatherData(response) {
     currentWeather.temps = [];
 
     // go through every hour for the next 48 hours and display the data
-    response.data.forEach(function (dataObject) {
+    response.data.forEach(function(dataObject) {
 
         // retrieve and store 
         var time = moment(dataObject.timestamp_local);
@@ -354,7 +354,7 @@ function renderClothRec() {
     minP.append("Minimum Temprature: " + findMinTemp(currentWeather.temps) + "°C");
     weatherDiv.append(maxP, minP);
     $(".weatherDisplay").append(weatherDiv);
-    $.each(chosenWears, function (index, value) {
+    $.each(chosenWears, function(index, value) {
         var wearDiv = $('<div class="wearDiv">');
         var wearImage = $("<img>");
         var wearP = $("<p>");
@@ -394,8 +394,8 @@ function buildURL(entityid, entityType) {
         order: sortval === "cost" ? "asc" : "desc"
     }
 
-    paramarray.forEach(function (item) {
-        Object.keys(item).forEach(function (key) {
+    paramarray.forEach(function(item) {
+        Object.keys(item).forEach(function(key) {
             if (item[key] !== "") { urlObj[key] = item[key] }
         })
     })
@@ -408,7 +408,7 @@ function buildURL(entityid, entityType) {
 function DisplayResponse(obj) {
     var restaurants = obj.restaurants[0]
 
-    obj.restaurants.forEach(function (eatData) {
+    obj.restaurants.forEach(function(eatData) {
         var restaurant = eatData.restaurant;
 
         function openPage() {
@@ -421,7 +421,7 @@ function DisplayResponse(obj) {
         var restaurantName = $("<div>").attr("class", "restaurantName").text(restaurant.name)
         var restaurantRating = $("<div>").attr("class", "restaurantRating").text(`Rating: ${restaurant.user_rating.aggregate_rating}⭐`)
         var restaurantNumber = $("<div>").attr("class", "restaurantNumber").text(`Phone Number: ${restaurant.phone_numbers}`)
-        var restaurantAddress = $("<div>").attr("class", "restaurantAdress").text(`Adress: ${restaurant.location.address}`)
+        var restaurantAddress = $("<div>").attr("class", "restaurantAddress").text(`Adress: ${restaurant.location.address}`)
         var restaurantCost = $("<div>").attr("class", "restaurantCost").text(`Cost: ${restaurant.currency}${restaurant.average_cost_for_two}`)
 
         restaurantInfo.append(restaurantName)
@@ -439,7 +439,7 @@ function DisplayResponse(obj) {
         $(".restaurantsContainer").append(restaurantElem)
     });
     $(".restaurantsContainer").append($("<button>").attr("class", "closeBtn").text("CLOSE"))
-    $(".closeBtn").on("click", function (event) {
+    $(".closeBtn").on("click", function(event) {
         $(".restaurantsContainer").empty()
         $("#eat-form").addClass("hide")
     })
@@ -449,11 +449,11 @@ function DisplayResponse(obj) {
 function buildLocationIDUrl() {
     var baseURL = "https://developers.zomato.com/api/v2.1/locations?"
     var urlObj = {
-        query: getCityInput() || "melbourne", // default search to melbourne if no location
-        count: 20,
-    }
-    // Click event on the submit form button should trigger this
-    // buildAdvancedUrl(urlObj)
+            query: getCityInput() || "melbourne", // default search to melbourne if no location
+            count: 20,
+        }
+        // Click event on the submit form button should trigger this
+        // buildAdvancedUrl(urlObj)
     var buildlocalURL = baseURL + $.param(urlObj)
     return buildlocalURL
 }
@@ -467,9 +467,9 @@ function renderEatform(entityid) {
             "user-key": "5eece0acc0b44cc0d90cea4773975dea",
             "content-type": "application/json"
         },
-    }).then(function (response) {
+    }).then(function(response) {
         var cuisines = response.cuisines
-        cuisines.forEach(function (item) {
+        cuisines.forEach(function(item) {
             var option = $("<option>").text(item.cuisine.cuisine_name).attr("value", item.cuisine.cuisine_id)
             $("#cuisines").append(option)
         })
@@ -477,7 +477,7 @@ function renderEatform(entityid) {
 }
 
 $("#eatform").on("click", gettingEntityId)
-//Tells 
+    //Tells 
 
 function gettingEntityId() {
     // clear the clothes
@@ -493,7 +493,7 @@ function gettingEntityId() {
             "user-key": "5eece0acc0b44cc0d90cea4773975dea",
             "content-type": "application/json"
         },
-    }).then(function (response) {
+    }).then(function(response) {
         var entityid = response.location_suggestions[0].entity_id
         var entityType = response.location_suggestions[0].entity_type
 
@@ -505,7 +505,7 @@ function gettingEntityId() {
                 "user-key": "5eece0acc0b44cc0d90cea4773975dea",
                 "content-type": "application/json"
             },
-        }).then(function (response) {
+        }).then(function(response) {
             renderEatform(entityid)
             DisplayResponse(response)
         })
@@ -513,11 +513,11 @@ function gettingEntityId() {
 }
 
 $("#eatNav").on("click", gettingEntityId)
-//Tells 
+    //Tells 
 $("#cuisines").change(gettingEntityId)
 $("#eatFormSort").change(gettingEntityId)
 
-$("#wearNav").on("click", function () {
+$("#wearNav").on("click", function() {
     $(".weatherDisplay").show();
     $(".restaurantsContainer").empty();
     $("#eat-form").addClass("hide");
