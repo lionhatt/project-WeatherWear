@@ -44,51 +44,75 @@ function getFinishTime() {
     var finishTime = moment(comingHomeselect);
     return finishTime;
 }
-// retrieves the temperature for the time of the day
-function hourlyTempCheck(response) {
-    var temperature = response.temp;
+
+function findAverageUv(uvs) {
+    var avgUv = 0;
+    var sum = 0;
+    uvs.forEach(function(uv) {
+        sum += uv;
+    });
+    avgUv = sum / uvs.length;
+    console.log(`UV: ${avgUv}`);
+    uvCheck(avgUv)
 }
 
 // checks the uv for the time of the day
-function hourlyUvCheck(response) {
-    var uvIndex = response.uv;
+function uvCheck(avgUv) {
     var uvThreshold = 2;
 
-    if (uvIndex >= uvThreshold) {
+    if (avgUv >= uvThreshold) {
         // display uv message - this is where functions can got to display to the user what to wear - PLACEHOLDER
-        $('body').css('background-image', 'url(../Assets/img/Sunny-background.jpg)');
+        currentWeather.backgroundImage = "var(--sunny-image)";
         if (!chosenWears.includes("sunglasses")) {
             chosenWears.push("sunglasses");
         }
-
     } else {
-        // else because we don't want to give false info, this is a disclaimer
-        $('body').css('background-image', 'url(../Assets/img/bluesky.jpg)');
+        currentWeather.backgroundImage = "var(--bluesky-image)"
     }
 }
 
+function findAverageRain(rains) {
+    var avgRain = 0;
+    var sum = 0;
+    rains.forEach(function(rain) {
+        sum += rain;
+    });
+    avgRain = sum / rains.length;
+    console.log(`Rain: ${avgRain}`);
+    uvCheck(avgRain)
+}
+
 // checks the precipitation for the time of the day
-function hourlyRainCheck(response) {
-    var precip = response.precip;
+function rainCheck(avgRain) {
     var precipThreshold = 5;
 
-    if (precip > precipThreshold) {
+    if (avgRain > precipThreshold) {
         // display to the user what to wear - this is where functions can go to display info to the user - PLACEHOLDER
-        $('body').css('background-image', 'url(../Assets/img/rainingwallpaper.jpg)');
+        currentWeather.bakcgroundImage = "var(--rainy-image)"
         if (!chosenWears.includes("umbrella")) {
             chosenWears.push("umbrella");
         }
     } else {
-        $('body').css('background-image', 'url(../Assets/img/mountains.jpg)');
+        currentWeather.bakcgroundImage = "var(--bluesky-image)"
     }
 }
 
+function findAverageWind(winds) {
+    var avgWind = 0;
+    var sum = 0;
+    winds.forEach(function(wind) {
+        sum += wind;
+    });
+    avgWind = sum / winds.length;
+    console.log(`Wind: ${avgWind}`);
+    uvCheck(avgWind)
+}
+
 // checks the wind speed for the given time of day
-function hourlyWindCheck(response) {
-    var windSpeed = response.wind_spd;
+function windCheck(avgWind) {
     var windSpeedThreshold = 10;
 
-    if (windSpeed > windSpeedThreshold) {
+    if (avgWind > windSpeedThreshold) {
         // display to the user what to wear - this is where functions can go to update the display - PLACEHOLDER
         if (!chosenWears.includes("scarve")) {
             chosenWears.push("scarve");
@@ -96,17 +120,16 @@ function hourlyWindCheck(response) {
     }
 }
 
-// retrieves and stores the url for the weather icon for the time of the day
-function hourlyDisplayIcon(response) {
-    var iconCode = response.weather.icon;
-    var iconUrl = `https://www.weatherbit.io/static/img/icons/${iconCode}.png`
+function setBackgroundImage() {
+    var backgroundImage = currentWeather.backgroundImage;
+    $('body').css('background-image', backgroundImage);
 }
 
 // finds the minimum temperature in an array of temps provided by the api
 function findMinTemp(temps) {
 
     var minTemp = temps[0];
-    temps.forEach(function (temp) {
+    temps.forEach(function(temp) {
 
         if (minTemp > temp) {
             minTemp = temp;
@@ -118,7 +141,7 @@ function findMinTemp(temps) {
 // finds the maximum temperature in an array of temps provided by the api
 function findMaxTemp(temps) {
     var maxTemp = temps[0];
-    temps.forEach(function (temp) {
+    temps.forEach(function(temp) {
 
         if (maxTemp < temp) {
             maxTemp = temp;
@@ -131,7 +154,7 @@ function findMaxTemp(temps) {
 function findAverageTemp(temps) {
     var avgTemp = 0;
     var sum = 0;
-    temps.forEach(function (temp) {
+    temps.forEach(function(temp) {
         sum += temp;
     });
     avgTemp = sum / temps.length;
@@ -140,6 +163,8 @@ function findAverageTemp(temps) {
 
 // processes the weather data retrieved from the weather api
 function processHourlyWeatherData(response) {
+
+    console.log(response);
 
     // stores response object in currentWeather object
     currentWeather.response = response;
@@ -159,9 +184,12 @@ function processHourlyWeatherData(response) {
 
     // array to store the temps for every hour
     currentWeather.temps = [];
+    currentWeather.uvs = [];
+    currentWeather.rains = [];
+    currentWeather.winds = [];
 
     // go through every hour for the next 48 hours and display the data
-    response.data.forEach(function (dataObject) {
+    response.data.forEach(function(dataObject) {
 
         // retrieve and store 
         var time = moment(dataObject.timestamp_local);
@@ -171,16 +199,18 @@ function processHourlyWeatherData(response) {
             moment(time).isAfter(moment(currentWeather.startTime)) && moment(time).isBefore(moment(currentWeather.finishTime)) ||
             moment(time).isSame(moment(currentWeather.finishTime))) {
 
-            hourlyTempCheck(dataObject);
             currentWeather.temps.push(dataObject.temp);
-            hourlyUvCheck(dataObject);
-            hourlyRainCheck(dataObject);
-            hourlyWindCheck(dataObject);
-            hourlyDisplayIcon(dataObject);
+            currentWeather.uvs.push(dataObject.uv);
+            currentWeather.rains.push(dataObject.precip);
+            currentWeather.winds.push(dataObject.wind_spd);
         }
     });
 
     findAverageTemp(currentWeather.temps);
+    findAverageUv(currentWeather.uvs);
+    findAverageRain(currentWeather.rains);
+    findAverageWind(currentWeather.winds);
+    setBackgroundImage();
     // clear the clothes
     $(".weatherDisplay").empty();
     renderChosenWears();
@@ -354,7 +384,7 @@ function renderClothRec() {
     minP.append("Minimum Temprature: " + findMinTemp(currentWeather.temps) + "°C");
     weatherDiv.append(maxP, minP);
     $(".weatherDisplay").append(weatherDiv);
-    $.each(chosenWears, function (index, value) {
+    $.each(chosenWears, function(index, value) {
         var wearDiv = $('<div class="wearDiv">');
         var wearImage = $("<img>");
         var wearP = $("<p>");
@@ -394,8 +424,8 @@ function buildURL(entityid, entityType) {
         order: sortval === "cost" ? "asc" : "desc"
     }
 
-    paramarray.forEach(function (item) {
-        Object.keys(item).forEach(function (key) {
+    paramarray.forEach(function(item) {
+        Object.keys(item).forEach(function(key) {
             if (item[key] !== "") { urlObj[key] = item[key] }
         })
     })
@@ -408,7 +438,7 @@ function buildURL(entityid, entityType) {
 function DisplayResponse(obj) {
     var restaurants = obj.restaurants[0]
 
-    obj.restaurants.forEach(function (eatData) {
+    obj.restaurants.forEach(function(eatData) {
         var restaurant = eatData.restaurant;
 
         function openPage() {
@@ -439,7 +469,7 @@ function DisplayResponse(obj) {
         $(".restaurantsContainer").append(restaurantElem)
     });
     $(".restaurantsContainer").append($("<button>").attr("class", "closeBtn").text("CLOSE"))
-    $(".closeBtn").on("click", function (event) {
+    $(".closeBtn").on("click", function(event) {
         $(".restaurantsContainer").empty()
         $("#eat-form").addClass("hide")
     })
@@ -449,11 +479,11 @@ function DisplayResponse(obj) {
 function buildLocationIDUrl() {
     var baseURL = "https://developers.zomato.com/api/v2.1/locations?"
     var urlObj = {
-        query: getCityInput() || "melbourne", // default search to melbourne if no location
-        count: 20,
-    }
-    // Click event on the submit form button should trigger this
-    // buildAdvancedUrl(urlObj)
+            query: getCityInput() || "melbourne", // default search to melbourne if no location
+            count: 20,
+        }
+        // Click event on the submit form button should trigger this
+        // buildAdvancedUrl(urlObj)
     var buildlocalURL = baseURL + $.param(urlObj)
     return buildlocalURL
 }
@@ -467,9 +497,9 @@ function renderEatform(entityid) {
             "user-key": "5eece0acc0b44cc0d90cea4773975dea",
             "content-type": "application/json"
         },
-    }).then(function (response) {
+    }).then(function(response) {
         var cuisines = response.cuisines
-        cuisines.forEach(function (item) {
+        cuisines.forEach(function(item) {
             var option = $("<option>").text(item.cuisine.cuisine_name).attr("value", item.cuisine.cuisine_id)
             $("#cuisines").append(option)
         })
@@ -477,14 +507,14 @@ function renderEatform(entityid) {
 }
 
 $("#eatform").on("click", gettingEntityId)
-//Tells 
+    //Tells 
 
 function gettingEntityId() {
     // clear the clothes
     $(".weatherDisplay").hide();
     $(".restaurantsContainer").empty()
 
-    $('body').css('background-image', 'url(../Assets/img/backgroundrestaurant.jpg)');
+    $('body').css('background-image', 'var(--restaurant-image');
 
     $.ajax({
         url: buildLocationIDUrl(),
@@ -493,7 +523,7 @@ function gettingEntityId() {
             "user-key": "5eece0acc0b44cc0d90cea4773975dea",
             "content-type": "application/json"
         },
-    }).then(function (response) {
+    }).then(function(response) {
         var entityid = response.location_suggestions[0].entity_id
         var entityType = response.location_suggestions[0].entity_type
 
@@ -505,7 +535,7 @@ function gettingEntityId() {
                 "user-key": "5eece0acc0b44cc0d90cea4773975dea",
                 "content-type": "application/json"
             },
-        }).then(function (response) {
+        }).then(function(response) {
             renderEatform(entityid)
             DisplayResponse(response)
         })
@@ -513,11 +543,11 @@ function gettingEntityId() {
 }
 
 $("#eatNav").on("click", gettingEntityId)
-//Tells 
+    //Tells 
 $("#cuisines").change(gettingEntityId)
 $("#eatFormSort").change(gettingEntityId)
 
-$("#wearNav").on("click", function () {
+$("#wearNav").on("click", function() {
     $(".weatherDisplay").show();
     $(".restaurantsContainer").empty();
     $("#eat-form").addClass("hide");
