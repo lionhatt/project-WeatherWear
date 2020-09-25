@@ -451,7 +451,7 @@ function DisplayResponse(obj) {
         var restaurantName = $("<div>").attr("class", "restaurantName").text(restaurant.name)
         var restaurantRating = $("<div>").attr("class", "restaurantRating").text(`Rating: ${restaurant.user_rating.aggregate_rating}⭐`)
         var restaurantNumber = $("<div>").attr("class", "restaurantNumber").text(`Phone Number: ${restaurant.phone_numbers}`)
-        var restaurantAddress = $("<div>").attr("class", "restaurantAdress").text(`Adress: ${restaurant.location.address}`)
+        var restaurantAddress = $("<div>").attr("class", "restaurantAddress").text(`Adress: ${restaurant.location.address}`)
         var restaurantCost = $("<div>").attr("class", "restaurantCost").text(`Cost: ${restaurant.currency}${restaurant.average_cost_for_two}`)
 
         restaurantInfo.append(restaurantName)
