@@ -1,9 +1,9 @@
 :root {
     --mountain-image: url("../Assets/img/mountains.jpg");
-    --sunny-image: url("../Assets/img/Sunny-background.jpg");
-    --rainy-image: url("../Assets/img/rainingwallpaper.jpg");
-    --bluesky-image: url("../Assets/img/bluesky.jpg");
-    --restaurant-image: url("../Assets/img/backgroundrestaurant.jpg");
+    --sunny-image: url("./Assets/img/Sunny-background.jpg");
+    --rainy-image: url("./Assets/img/rainingwallpaper.jpg");
+    --bluesky-image: url("./Assets/img/bluesky.jpg");
+    --restaurant-image: url("./Assets/img/backgroundrestaurant.jpg");
 }
 
 .btn1 {
