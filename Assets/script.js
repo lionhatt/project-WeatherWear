@@ -52,13 +52,12 @@ function findAverageUv(uvs) {
         sum += uv;
     });
     avgUv = sum / uvs.length;
-    console.log(`UV: ${avgUv}`);
     uvCheck(avgUv)
 }
 
 // checks the uv for the time of the day
 function uvCheck(avgUv) {
-    var uvThreshold = 2;
+    var uvThreshold = 2.0;
 
     if (avgUv >= uvThreshold) {
         // display uv message - this is where functions can got to display to the user what to wear - PLACEHOLDER
@@ -78,8 +77,7 @@ function findAverageRain(rains) {
         sum += rain;
     });
     avgRain = sum / rains.length;
-    console.log(`Rain: ${avgRain}`);
-    uvCheck(avgRain)
+    rainCheck(avgRain)
 }
 
 // checks the precipitation for the time of the day
@@ -104,8 +102,7 @@ function findAverageWind(winds) {
         sum += wind;
     });
     avgWind = sum / winds.length;
-    console.log(`Wind: ${avgWind}`);
-    uvCheck(avgWind)
+    windCheck(avgWind)
 }
 
 // checks the wind speed for the given time of day
@@ -163,8 +160,6 @@ function findAverageTemp(temps) {
 
 // processes the weather data retrieved from the weather api
 function processHourlyWeatherData(response) {
-
-    console.log(response);
 
     // stores response object in currentWeather object
     currentWeather.response = response;
@@ -431,7 +426,6 @@ function buildURL(entityid, entityType) {
     })
 
     buildUrl = baseUrl + $.param(urlObj)
-    console.log(buildUrl)
     return buildUrl
 }
 
